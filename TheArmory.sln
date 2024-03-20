@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheArmory.WebAPI", "TheArmory.WebAPI\TheArmory.WebAPI.csproj", "{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheArmory.Domain", "TheArmory.Domain\TheArmory.Domain.csproj", "{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
