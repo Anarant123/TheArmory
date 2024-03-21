@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 namespace TheArmory.Domain.Models.Database;
 
 /// <summary>
-/// Роль
+/// Состояние оружия
 /// </summary>
-public class Role : DbEntity
+public class Сondition : DbEntity
 {
     /// <summary>
     /// Название
@@ -15,3 +15,9 @@ public class Role : DbEntity
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 }
+
+
+// идеальное
+// хорошее
+// среднее
+// требует ремонта

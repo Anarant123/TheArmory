@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 namespace TheArmory.Domain.Models.Database;
 
 /// <summary>
-/// Роль
+/// Регион РФ
 /// </summary>
-public class Role : DbEntity
+public class Region : DbEntity
 {
     /// <summary>
     /// Название
@@ -14,4 +14,11 @@ public class Role : DbEntity
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Код региона
+    /// </summary>
+    [Column("code")]
+    [JsonPropertyName("code")]
+    public int Code { get; set; }
 }
