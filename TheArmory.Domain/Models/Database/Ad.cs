@@ -55,7 +55,20 @@ public class Ad : DbEntity
     // foreign key
     // todo заполнить на основе виртуальных свойств ниже
     
+    /// <summary>
+    /// Id Состояния
+    /// </summary>
+    public Guid ConditionId { get; set; }
     
+    /// <summary>
+    /// Id Региона
+    /// </summary>
+    public Guid RegionId { get; set; }
+    
+    /// <summary>
+    /// Id пользователя
+    /// </summary>
+    public Guid UserId { get; set; }
     
     // virtual 
     
