@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Database;
 
@@ -43,6 +44,21 @@ public class User : DbEntity
     // foreign key
     // todo заполнить на основе виртуальных свойств ниже
     
+    /// <summary>
+    /// Id региона
+    /// </summary>
+    public Guid RegionId { get; set; }
+    
+    /// <summary>
+    /// Id Роли
+    /// </summary>
+    public UserRole RoleId { get; set; }
+
+    /// <summary>
+    /// Id статуса
+    /// </summary>
+    public StateStatus StatusId { get; set; }
+
     // virtual 
     
     /// <summary>
@@ -51,7 +67,28 @@ public class User : DbEntity
     public virtual Region Region { get; set; }
     
     /// <summary>
+    /// Роль пользователя
+    /// </summary>
+    public virtual Role Role { get; set; }
+    
+    /// <summary>
+    /// Статус пользователя
+    /// </summary>
+    public virtual Status Status { get; set; }
+    
+    /// <summary>
     /// Список объявлений
     /// </summary>
     public virtual List<Ad> Ads { get; set; }
+    
+    /// <summary>
+    /// Жалобы пользователя
+    /// </summary>
+    public virtual List<Complaint> Complaints { get; set; }
+    
+    /// <summary>
+    /// Избранное пользователя
+    /// </summary>
+    public virtual List<Favorite> Favorites { get; set; }
+    
 }

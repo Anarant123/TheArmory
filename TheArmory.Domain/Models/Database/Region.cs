@@ -21,4 +21,9 @@ public class Region : DbEntity
     [Column("code")]
     [JsonPropertyName("code")]
     public int Code { get; set; }
+    
+    // virtual
+    public virtual List<Ad> Ads { get; set; }
+    
+    public virtual List<User> Users { get; set; }
 }

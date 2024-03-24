@@ -5,15 +5,12 @@ using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Database;
 
-/// <summary>
-/// Роль
-/// </summary>
-public class Role
+public class Status
 {
     [Key]
     [Column("id")]
     [JsonPropertyName("id")]
-    public static UserRole Id { get; set; }
+    public static StateStatus Id { get; set; }
     
     /// <summary>
     /// Название
@@ -25,4 +22,6 @@ public class Role
     // virtual
     
     public virtual List<User> Users { get; set; }
+    
+    public virtual List<Ad> Ads { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿namespace TheArmory.Domain.Models.Database;
+﻿using TheArmory.Domain.Models.Enums;
+
+namespace TheArmory.Domain.Models.Database;
 
 /// <summary>
 /// Объявление
@@ -70,12 +72,17 @@ public class Ad : DbEntity
     /// </summary>
     public Guid UserId { get; set; }
     
+    /// <summary>
+    /// Id статуса
+    /// </summary>
+    public StateStatus StatusId { get; set; }
+    
     // virtual 
     
     /// <summary>
     /// Состояние
     /// </summary>
-    public virtual Сondition Condition { get; set; }
+    public virtual Condition Condition { get; set; }
     
     /// <summary>
     /// Регион продажи
@@ -86,4 +93,15 @@ public class Ad : DbEntity
     /// Пользователь, разместивший объявление
     /// </summary>
     public virtual User User { get; set; }
+    
+    /// <summary>
+    /// Статус объявления
+    /// </summary>
+    public virtual Status Status { get; set; }
+    
+    public virtual List<Complaint> Complaints { get; set; }
+    
+    public virtual List<Favorite> Favorites { get; set; }
+    
+    public virtual List<Media> Medias { get; set; }
 }

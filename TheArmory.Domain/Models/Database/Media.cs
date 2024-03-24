@@ -8,7 +8,6 @@ public class Media : DbEntity
     public string Name { get; set; } = string.Empty;
     
     // foreign key
-    // todo заполнить на основе виртуальных свойств ниже
     
     /// <summary>
     /// Id объявления
