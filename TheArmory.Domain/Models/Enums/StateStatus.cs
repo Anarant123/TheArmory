@@ -4,5 +4,6 @@ public enum StateStatus
 {
     Actively = 0,
     Inactive = 1,
-    Banned = 2
+    Banned = 2,
+    Deleted = 3
 }
