@@ -12,17 +12,6 @@ public class ApplicationContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //todo настроить связи
-        // // связь один к одному между телефоном и информацией о нем
-        // modelBuilder.Entity<LoadInfo>()
-        //     .HasOne<Load>(li => li.Load)
-        //     .WithOne(l => l.LoadInfo);
-        // modelBuilder.Entity<Load>()
-        //     .HasOne<LoadInfo>(l => l.LoadInfo)
-        //     .WithOne(li => li.Load)
-        //     .HasForeignKey<LoadInfo>(li => li.Id)
-        //     .OnDelete(DeleteBehavior.Cascade);
-        
         // связи сущности Ad 
         modelBuilder.Entity<Ad>()
             .HasOne<Condition>(a => a.Condition)

@@ -10,7 +10,7 @@ public class Status
     [Key]
     [Column("id")]
     [JsonPropertyName("id")]
-    public static StateStatus Id { get; set; }
+    public StateStatus Id { get; set; }
     
     /// <summary>
     /// Название

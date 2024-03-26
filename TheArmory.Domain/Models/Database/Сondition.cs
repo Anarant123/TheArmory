@@ -13,7 +13,7 @@ public class Condition : DbEntity
     [Key]
     [Column("id")]
     [JsonPropertyName("id")]
-    public static WeaponCondition Id { get; set; }
+    public WeaponCondition Id { get; set; }
     
     /// <summary>
     /// Название

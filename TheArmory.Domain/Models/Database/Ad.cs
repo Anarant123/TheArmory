@@ -60,7 +60,7 @@ public class Ad : DbEntity
     /// <summary>
     /// Id Состояния
     /// </summary>
-    public Guid ConditionId { get; set; }
+    public WeaponCondition ConditionId { get; set; }
     
     /// <summary>
     /// Id Региона

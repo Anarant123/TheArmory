@@ -13,7 +13,7 @@ public class Role
     [Key]
     [Column("id")]
     [JsonPropertyName("id")]
-    public static UserRole Id { get; set; }
+    public UserRole Id { get; set; }
     
     /// <summary>
     /// Название

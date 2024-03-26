@@ -1,9 +1,43 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using TheArmory.Domain.Context;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var connectionString = builder.Configuration.GetConnectionString("PostgresConnection");
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Transient);
+builder.Services.AddControllersWithViews(opt => { opt.Filters.Add(new IgnoreAntiforgeryTokenAttribute()); });
+builder.Services.AddSession();
+
+
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.MaxDepth = 2;
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+});
+
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "NewsAggregator Rest API",
+            Description = ""
+        });
+        
+        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NewsAggregator.Domain.xml"));
+        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "NewsAggregator.WebAPI.xml"));
+    }
+);
 
 var app = builder.Build();
 
@@ -16,29 +50,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+await context.Database.EnsureCreatedAsync();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
