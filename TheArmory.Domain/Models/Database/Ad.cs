@@ -20,7 +20,7 @@ public class Ad : DbEntity
     /// <summary>
     /// Старая цена
     /// </summary>
-    public decimal OldPrice { get; set; }
+    public decimal? OldPrice { get; set; }
 
     /// <summary>
     /// Описание
@@ -31,16 +31,16 @@ public class Ad : DbEntity
     /// Дата создания
     /// </summary>
     public DateTime CreationDateTime { get; set; } = DateTime.Now;
-    
+
     /// <summary>
     /// Количество просмотров
     /// </summary>
-    public int CountOfViews { get; set; }
-    
+    public int CountOfViews { get; set; } = 0;
+
     /// <summary>
     /// Количество просмотров за сегодня
     /// </summary>
-    public int CountOfViewsToday { get; set; }
+    public int CountOfViewsToday { get; set; } = 0;
 
     /// <summary>
     /// Дата последнего посещения
@@ -55,7 +55,6 @@ public class Ad : DbEntity
     //todo поле координатов
     
     // foreign key
-    // todo заполнить на основе виртуальных свойств ниже
     
     /// <summary>
     /// Id Состояния
@@ -71,11 +70,11 @@ public class Ad : DbEntity
     /// Id пользователя
     /// </summary>
     public Guid UserId { get; set; }
-    
+
     /// <summary>
     /// Id статуса
     /// </summary>
-    public StateStatus StatusId { get; set; }
+    public StateStatus StatusId { get; set; } = StateStatus.Actively;
     
     // virtual 
     

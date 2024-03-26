@@ -4,6 +4,12 @@ namespace TheArmory.Domain.Models.Responce.Result.BaseResult;
 
 public abstract class BaseResult
 {
+    public BaseResult(){}
+    public BaseResult(string error)
+    {
+        Error = error;
+    }
+    
     /// <summary>
     /// Успешное выполнение запроса
     /// </summary>
@@ -19,9 +25,20 @@ public abstract class BaseResult
 
 public class BaseResult<T> : BaseResult
 {
+    public BaseResult(T item) 
+    {
+        Item = item;
+    }
+    
+    public BaseResult(string error)
+    {
+        Error = error;
+    }
+    
     /// <summary>
     /// Результат запроса
     /// </summary>
     [JsonPropertyName("item")]
     public T Item { get; set; }
 }
+

@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\Request\Command\" />
       <Folder Include="Models\Responce\" />
     </ItemGroup>
 
