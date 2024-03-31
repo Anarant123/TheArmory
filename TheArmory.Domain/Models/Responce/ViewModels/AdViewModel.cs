@@ -1,7 +1,7 @@
 ﻿using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 
-namespace TheArmory.Domain.Models.Responce.Result.ViewModels;
+namespace TheArmory.Domain.Models.Responce.ViewModels;
 
 public class AdViewModel
 {

@@ -2,19 +2,19 @@
 
 namespace TheArmory.Domain.Models.Responce.Result.BaseResult;
 
-public abstract class BaseResult
+public class BaseResult
 {
     public BaseResult(){}
     public BaseResult(string error)
     {
         Error = error;
     }
-    
+
     /// <summary>
     /// Успешное выполнение запроса
     /// </summary>
     [JsonPropertyName("success")]
-    public bool Success { get; set; }
+    public bool Success { get; set; } = true;
     
     /// <summary>
     /// Строка с подробностями об ошибке
@@ -25,6 +25,8 @@ public abstract class BaseResult
 
 public class BaseResult<T> : BaseResult
 {
+    public BaseResult() { }
+    
     public BaseResult(T item) 
     {
         Item = item;
@@ -33,6 +35,7 @@ public class BaseResult<T> : BaseResult
     public BaseResult(string error)
     {
         Error = error;
+        Success = false;
     }
     
     /// <summary>

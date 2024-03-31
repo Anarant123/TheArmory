@@ -5,7 +5,7 @@ using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.Result.ViewModels;
+using TheArmory.Domain.Models.Responce.ViewModels;
 
 namespace TheArmory.Repository;
 
@@ -16,6 +16,11 @@ public class AdsRepository : BaseRepository
     {
     }
 
+    // todo получить свое объявление
+    
+    
+    // todo получить объявление
+    
     // todo получить свои объявления
     
     // todo получить все объявления
@@ -140,4 +145,35 @@ public class AdsRepository : BaseRepository
     }
     
     // todo пожаловаться 
+    /// <summary>
+    /// Оставить жалобу на объявление
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> AdToComplaint(
+        Guid userId,
+        AdToComplaintCommand command)
+    {
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.AdId));
+        if (ad is null)
+            return new BaseResult<AdViewModel>("Объявление не найдено");
+    
+        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+    
+        var complaint = new Complaint()
+        {
+            AdId = command.AdId,
+            UserId = userId,
+            Description = command.Description
+        };
+    
+        Context.Complaints.Add(complaint);
+            
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<AdViewModel>()
+        };
+    }
 }
