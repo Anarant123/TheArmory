@@ -26,4 +26,9 @@ public class UserLoginCommand
     [StringLength(64, MinimumLength = 8, ErrorMessage = "Пароль должен содержать от 8 до 64 символов")]
     [JsonPropertyName("password")]
     public string? Password { set; get; }
+
+    /// <summary>
+    /// Сохранить сессию
+    /// </summary>
+    public bool RememberMe { get; set; } = true;
 }

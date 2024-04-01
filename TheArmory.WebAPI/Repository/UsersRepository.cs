@@ -35,11 +35,18 @@ public class UsersRepository : BaseRepository
         if (user is null || user.StatusId.Equals(StateStatus.Deleted))
             return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
 
-        return _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, command.Password) switch
+        var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, command.Password);
+
+        if (result is not (PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded))
         {
-            PasswordVerificationResult.Success or PasswordVerificationResult.SuccessRehashNeeded =>
-                new BaseResult<UserViewModel>(new UserViewModel(user)),
-            _ => new BaseResult<UserViewModel>(ErrorsMessage.InvalidPassword)
+            return new BaseResult<UserViewModel>(ErrorsMessage.InvalidPassword);
+        }
+        
+        user.LastVisitDate = DateTime.Now;
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<UserViewModel>(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult<UserViewModel>(new UserViewModel(user))
         };
     }
     
@@ -59,15 +66,17 @@ public class UsersRepository : BaseRepository
 
         if (await Context.Users.AnyAsync(p => p.Email.Equals(command.Email))!)
             return new BaseResult(ErrorsMessage.InaccessibleEmail);
-
-        var role = await Context.Roles.FirstAsync(r => r.Id == UserRole.Client);
+        
+        if (await Context.Users.AnyAsync(p => p.PhoneNumber.Equals(command.PhoneNumber))!)
+            return new BaseResult(ErrorsMessage.InaccessiblePhoneNumber);
+        
         
         var user = new User()
         {
             Name = command.Name,
             PhoneNumber = command.PhoneNumber,
             Email = command.Email,
-            Role = role,
+            RoleId = UserRole.Client,
             StatusId = StateStatus.Actively,
             RegistrationDateTime = DateTime.Now,
         };
@@ -100,6 +109,20 @@ public class UsersRepository : BaseRepository
     }
     
     // todo Изменение своего профиля
+    public async Task<BaseResult<UserViewModel>> Update(
+        Guid userId)
+    {
+        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+        if (user is null)
+            return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
+        user.LastVisitDate = DateTime.Now;
+        
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<UserViewModel>(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult<UserViewModel>(new UserViewModel(user))
+        };
+    }
     
     // todo Удаление своего профиля
     

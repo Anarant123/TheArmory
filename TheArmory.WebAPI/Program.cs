@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Domain.Context;
+using TheArmory.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(c
 builder.Services.AddControllersWithViews(opt => { opt.Filters.Add(new IgnoreAntiforgeryTokenAttribute()); });
 builder.Services.AddSession();
 
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddTransient<UsersRepository>();
+builder.Services.AddTransient<AdsRepository>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

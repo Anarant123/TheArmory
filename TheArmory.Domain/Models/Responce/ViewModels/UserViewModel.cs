@@ -8,6 +8,11 @@ namespace TheArmory.Domain.Models.Responce.ViewModels;
 public class UserViewModel
 {
     /// <summary>
+    /// Идентификатор сущности
+    /// </summary>
+    public Guid Id { get; set; }
+    
+    /// <summary>
     /// Название
     /// </summary>
     [Column("name")]
@@ -41,6 +46,7 @@ public class UserViewModel
 
     public UserViewModel(User user)
     {
+        Id = user.Id;
         Name = user.Name;
         PhoneNumber = user.PhoneNumber;
         Email = user.Email;
