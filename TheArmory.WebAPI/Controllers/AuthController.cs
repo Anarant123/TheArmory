@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
@@ -43,7 +42,8 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpPost]
     [Route("Login")]
-    public async Task<ActionResult<BaseResult<UserViewModel>>> Login(UserLoginCommand command)
+    public async Task<ActionResult<BaseResult<UserViewModel>>> Login(
+        [FromBody]UserLoginCommand command)
     {
         var userResponse = await _usersRepository.Login(command);
 
@@ -63,7 +63,8 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     [HttpPost]
     [Route("Register")]
-    public async Task<ActionResult<BaseResult>> Register(UserCreateCommand command)
+    public async Task<ActionResult<BaseResult>> Register(
+        [FromBody]UserCreateCommand command)
     {
         var userResponse = await _usersRepository.Create(command);
 
