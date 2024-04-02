@@ -1,6 +1,0 @@
-@TheArmory_HostAddress = http://localhost:5160
-
-GET {{TheArmory_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
