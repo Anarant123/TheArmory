@@ -1,8 +1,7 @@
-﻿using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TheArmory.Domain.Models.Database;
 
-namespace TheArmory.Domain.Context;
+namespace TheArmory.Context;
 
 public class ApplicationContext : DbContext
 {

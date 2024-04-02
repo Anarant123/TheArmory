@@ -47,7 +47,7 @@ public class User : DbEntity
     /// <summary>
     /// Id региона
     /// </summary>
-    public Guid RegionId { get; set; }
+    public Guid? RegionId { get; set; }
     
     /// <summary>
     /// Id Роли
