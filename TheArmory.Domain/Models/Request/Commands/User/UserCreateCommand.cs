@@ -15,6 +15,7 @@ public class UserCreateCommand
     /// <summary>
     /// Номер телефона
     /// </summary>
+    [Required(ErrorMessage = "Введите номер телефона")]
     [Display(Name = "Номер телефона")]
     [RegularExpression(@"^(?:\+7\d{10})?$", ErrorMessage = "Введите корректный номер телефона или оставьте поле пустым")]
     [StringLength(12)]
