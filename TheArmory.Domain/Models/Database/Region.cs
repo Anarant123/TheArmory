@@ -26,4 +26,10 @@ public class Region : DbEntity
     public virtual List<Ad> Ads { get; set; }
     
     public virtual List<User> Users { get; set; }
+
+    public Region(string name, int code)
+    {
+        Name = name;
+        Code = code;
+    }
 }

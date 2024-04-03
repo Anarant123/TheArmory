@@ -24,4 +24,10 @@ public class Status
     public virtual List<User> Users { get; set; }
     
     public virtual List<Ad> Ads { get; set; }
+
+    public Status(StateStatus id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }
