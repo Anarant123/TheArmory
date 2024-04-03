@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
     }
     
     /// <summary>
-    /// Авторизация
+    /// Регистрация
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>

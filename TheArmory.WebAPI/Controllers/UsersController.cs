@@ -18,6 +18,10 @@ public class UsersController : BaseController
         _usersRepository = usersRepository;
     }
     
+    /// <summary>
+    /// Получить себя
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route("Me")]
     public async Task<ActionResult<BaseResult<UserViewModel>>> GetMe()

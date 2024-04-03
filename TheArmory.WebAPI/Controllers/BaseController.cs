@@ -23,9 +23,6 @@ public class BaseController : ControllerBase
         if (User.Identity is null or { IsAuthenticated: false })
             return new BaseResult<User?>("Пользователь не аутентифицирован.");
 
-        if (string.IsNullOrEmpty(User.Identity.Name))
-            return new BaseResult<User?>("Произошла ошибка");
-
         var value = User.FindFirst("Id")?.Value;
         
         if (value == null) 
