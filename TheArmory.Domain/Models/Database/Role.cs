@@ -25,4 +25,10 @@ public class Role
     // virtual
     
     public virtual List<User> Users { get; set; }
+
+    public Role(UserRole id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }

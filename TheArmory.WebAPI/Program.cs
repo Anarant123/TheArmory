@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Enums;
 using TheArmory.Repository;
+using TheArmory.Utils.Initializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -97,10 +99,15 @@ app.UseCors(options =>
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapControllers();
 
-// using var scope = app.Services.CreateScope();
-// using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+using var scope = app.Services.CreateScope();
+await using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 // await context.Database.EnsureCreatedAsync();
+await ConditionInitializer.InitializeAsync(context);
+await RegionInitializer.InitializeAsync(context);
+await RoleInitializer.InitializeAsync(context);
+await StatusInitializer.InitializeAsync(context);
+
+app.MapControllers();
 
 app.Run(); 

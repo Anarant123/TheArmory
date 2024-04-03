@@ -93,18 +93,18 @@ public class UsersRepository : BaseRepository
     }
     
     // todo Получение своего профиля
-    public async Task<BaseResult<UserViewModel>> Get(
+    public async Task<BaseResult<User>> Get(
         Guid userId)
     {
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
         if (user is null)
-            return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
+            return new BaseResult<User>(ErrorsMessage.UserNotFound);
         user.LastVisitDate = DateTime.Now;
         
         return await Context.SaveChangesAsync() switch
         {
-            0 => new BaseResult<UserViewModel>(ErrorsMessage.ErrorSavingChanges),
-            _ => new BaseResult<UserViewModel>(new UserViewModel(user))
+            0 => new BaseResult<User>(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult<User>(user)
         };
     }
     

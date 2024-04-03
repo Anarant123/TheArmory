@@ -24,4 +24,10 @@ public class Condition : DbEntity
     
     // virtual
     public virtual List<Ad> Ads { get; set; }
+
+    public Condition(WeaponCondition id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
 }
