@@ -73,7 +73,7 @@ builder.Services.AddSwaggerGen(
         });
         
         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.Domain.xml"));
-        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.WebAPI.xml"));
+        c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.APIAPI.xml"));
     }
 );
 

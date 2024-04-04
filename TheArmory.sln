@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheArmory.WebAPI", "TheArmory.WebAPI\TheArmory.WebAPI.csproj", "{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheArmory.API", "TheArmory.API\TheArmory.API.csproj", "{C89B25B4-C2B1-4F9E-BD7C-E3B1B3740254}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheArmory.Domain", "TheArmory.Domain\TheArmory.Domain.csproj", "{DCAE0A46-CEFD-47C3-AF03-92D4FB22BDB6}"
 EndProject
