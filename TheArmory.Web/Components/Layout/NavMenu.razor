@@ -4,7 +4,7 @@
 
 <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">TheArmory.Web</a>
+        <a class="navbar-brand" href="">TheArmory</a>
     </div>
 </div>
 
@@ -31,10 +31,36 @@
         </div>
 
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
+            <NavLink class="nav-link" href="counter">
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
             </NavLink>
         </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="ads">
+                <span class="bi bi-newspaper" aria-hidden="true"></span> Объявления
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="createAd">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Добавить объявление
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="favorite">
+                <span class="bi bi-bookmark-fill" aria-hidden="true"></span> Избранное
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="myAds">
+                <span class="bi bi-archive" aria-hidden="true"></span> Мои объявления
+            </NavLink>
+        </div>
+        
+        
 
         <AuthorizeView>
             <Authorized>

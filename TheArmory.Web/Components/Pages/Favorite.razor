@@ -1,0 +1,19 @@
+﻿@page "/favorite"
+
+<PageTitle>Избранное</PageTitle>
+
+<h1>Избранные объявления о продаже и покупке оружия</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+}
