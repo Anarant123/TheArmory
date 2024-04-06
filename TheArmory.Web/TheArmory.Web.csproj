@@ -18,4 +18,23 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.min.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.js.map" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js.map" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TheArmory.Domain\TheArmory.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
