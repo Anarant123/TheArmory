@@ -4,37 +4,6 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <UserSecretsId>aspnet-TheArmory.Web-CBBFD876-EDED-4071-A31F-50130C237710</UserSecretsId>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Update="Data\app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.bundle.min.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.esm.min.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.js.map" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js" />
-      <_ContentIncludedByDefault Remove="wwwroot\bootstrap\js\bootstrap.min.js.map" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\TheArmory.Domain\TheArmory.Domain.csproj" />
-    </ItemGroup>
 
 </Project>
