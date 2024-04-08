@@ -1,7 +1,22 @@
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using TheArmory.Web.Models;
+using TheArmory.Web.Service;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<AuthService>();
+
+
+builder.Services.TryAddSingleton(s => new BaseUrlOptions
+{
+    BaseApiUrl =
+        builder.Configuration.GetValue("ApiWebAddress",
+            "https://192.168.20.89:8443") 
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
