@@ -10,9 +10,9 @@ public class UserLoginCommand
     /// </summary>
     [Required(ErrorMessage = "Введите логин (электронную почту или номер телефона)")]
     [Display(Name = "Login")]
-    [JsonPropertyName("login")]
     [RegularExpression(@"^(?:\+7\d{10})?$|^\S+@\S+\.\S+$", ErrorMessage = "Введите корректный логин (электронную почту или номер телефона)")]
     [StringLength(128)]
+    [JsonPropertyName("login")]
     public string? Login { set; get; }
 
     /// <summary>
@@ -21,14 +21,13 @@ public class UserLoginCommand
     [Required(ErrorMessage = "Введите пароль")]
     [Display(Name = "Пароль")]
     [DataType(DataType.Password)]
-    [RegularExpression(@"^(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])(?=.*\d).{8,64}$",
-        ErrorMessage = "Пароль должен содержать от 8 до 64 символов, включая как минимум одну заглавную букву, одну строчную букву и одну цифру")]
-    [StringLength(64, MinimumLength = 8, ErrorMessage = "Пароль должен содержать от 8 до 64 символов")]
+    [RegularExpression(@"^\S+$", ErrorMessage = "Пароль не должен содержать пробелы")]
     [JsonPropertyName("password")]
-    public string? Password { set; get; }
+    public string? Password { get; set; }
 
     /// <summary>
     /// Сохранить сессию
     /// </summary>
+    [JsonPropertyName("rememberMe")]
     public bool RememberMe { get; set; } = true;
 }

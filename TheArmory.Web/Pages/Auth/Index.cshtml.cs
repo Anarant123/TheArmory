@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.User;
@@ -23,7 +24,7 @@ public class Index : PageModel
         
     }
     
-    public async Task<IActionResult> OnPostAsync(UserLoginCommand command)
+    public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {

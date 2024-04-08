@@ -20,7 +20,7 @@ public class AuthService : BaseService<User>
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Login";
+            var uri = $"{baseUrlOptions.GetFullApiUrl("Auth")}/Login";
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)

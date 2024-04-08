@@ -9,18 +9,18 @@
     <h1 class="text-center">Авторизация</h1>
     <form method="post" class="mt-4">
         <div class="mb-3">
-            <label for="login" class="form-label">Логин:</label>
-            <input type="text" id="login" name="login" asp-for="Command.Login" class="form-control" required>
+            <label class="form-label">Логин:</label>
+            <input type="text" asp-for="Command.Login" class="form-control" required>
             <span asp-validation-for="Command.Login" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Пароль:</label>
-            <input type="password" id="password" name="password" asp-for="Command.Password" class="form-control" required>
+            <label class="form-label">Пароль:</label>
+            <input type="password" asp-for="Command.Password" class="form-control" required>
             <span asp-validation-for="Command.Password" class="text-danger"></span>
         </div>
         <div class="mb-3 form-check">
-            <input type="checkbox" id="rememberMe" name="rememberMe" asp-for="Command.RememberMe" class="form-check-input">
-            <label for="rememberMe" class="form-check-label">Запомнить меня</label>
+            <input type="checkbox" id="RememberMe" asp-for="Command.RememberMe" class="form-check-input">
+            <label for="RememberMe" class="form-check-label">Запомнить меня</label>
         </div>
         <button type="submit" class="btn btn-primary">Войти</button>
         <div class="mt-3">
