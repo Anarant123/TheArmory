@@ -27,11 +27,12 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Удаление cookie текущей сессии
     /// </summary>
-    [HttpGet]
+    [HttpPost]
     [Route("Logout")]
-    public async Task Logout()
+    public async Task<ActionResult<BaseResult>> Logout()
     {
         await HttpContext.SignOutAsync();
+        return new BaseResult();
     }
 
     /// <summary>
@@ -62,7 +63,7 @@ public class AuthController : ControllerBase
     /// <returns></returns>
     [AllowAnonymous]
     [HttpPost]
-    [Route("Register")]
+    [Route("Registration")]
     public async Task<ActionResult<BaseResult>> Register(
         [FromBody]UserCreateCommand command)
     {

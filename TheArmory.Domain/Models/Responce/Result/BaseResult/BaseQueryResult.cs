@@ -37,6 +37,11 @@ public class BaseQueryResult<T> : global::TheArmory.Domain.Models.Responce.Resul
     public IEnumerable<T> Items { get; set; } = default!;
 
     public BaseQueryResult() {}
+
+    public BaseQueryResult(string error)
+    {
+        Error = error;
+    }
     
     public BaseQueryResult(List<T> items)
     {
