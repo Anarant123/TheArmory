@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Repository;
 using TheArmory.Utils;
 

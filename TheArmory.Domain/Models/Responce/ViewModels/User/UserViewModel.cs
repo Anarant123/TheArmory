@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
-using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 
-namespace TheArmory.Domain.Models.Responce.ViewModels;
+namespace TheArmory.Domain.Models.Responce.ViewModels.User;
 
 public class UserViewModel
 {
@@ -44,7 +43,7 @@ public class UserViewModel
     /// </summary>
     public StateStatus StatusId { get; set; }
 
-    public UserViewModel(User user)
+    public UserViewModel(Database.User user)
     {
         Id = user.Id;
         Name = user.Name;

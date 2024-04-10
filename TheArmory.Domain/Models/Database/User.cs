@@ -12,7 +12,6 @@ public class User : DbEntity
     /// <summary>
     /// Название
     /// </summary>
-    [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
@@ -40,6 +39,11 @@ public class User : DbEntity
     /// Дата последнего посещения
     /// </summary>
     public DateTime LastVisitDate { get; set; } = DateTime.Now;
+    
+    /// <summary>
+    /// Фото профиля
+    /// </summary>
+    public string? PhotoName { get; set; }
      
     // foreign key
     // todo заполнить на основе виртуальных свойств ниже

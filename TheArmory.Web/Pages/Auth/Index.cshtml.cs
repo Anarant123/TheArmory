@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Web.Service;
+using TheArmory.Web.Utils;
 
 namespace TheArmory.Web.Pages.Auth;
 
@@ -32,14 +33,13 @@ public class Index : PageModel
         }
 
         var result = await _service.Login(Command);
-        if (result?.Item != null)
+        if (result.Success)
         {
+            await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);
             return RedirectToPage("/Account/Index");
         }
-        else
-        {
-            ModelState.AddModelError(string.Empty, "Неверный логин или пароль.");
-            return Page();
-        }
+
+        ModelState.AddModelError(string.Empty, result.Error);
+        return Page();
     }
 }

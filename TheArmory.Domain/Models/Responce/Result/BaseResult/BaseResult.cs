@@ -7,6 +7,7 @@ public class BaseResult
     public BaseResult(){}
     public BaseResult(string error)
     {
+        Success = false;
         Error = error;
     }
 

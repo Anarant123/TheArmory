@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;

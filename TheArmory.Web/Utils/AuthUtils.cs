@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Responce.ViewModels;
-using TheArmory.Domain.Models.Responce.ViewModels.User;
 
-namespace TheArmory.Utils;
+namespace TheArmory.Web.Utils;
 
 public class AuthUtils
 {
@@ -14,7 +13,7 @@ public class AuthUtils
     /// </summary>
     /// <param name="user"></param>
     /// <param name="isPersistent"></param>
-    public static async Task SetLoginClaims(UserViewModel user, HttpContext httpContext, bool isPersistent = false)
+    public static async Task SetLoginClaims(User user, HttpContext httpContext, bool isPersistent = false)
     {
         var claims = new List<Claim>()
         {

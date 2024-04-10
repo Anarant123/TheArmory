@@ -7,6 +7,7 @@ using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 
 namespace TheArmory.Repository;
 

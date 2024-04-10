@@ -1,14 +1,27 @@
 ﻿@page
+@model TheArmory.Web.Pages.Account.Index
 
-<div class="sidebar">
-    <ul>
-        <li><a href="PersonalInfo">Персональная информация</a></li>
-        <li><a href="ChangePassword">Смена пароля</a></li>
-        <li><a href="DeleteAccount">Удаление аккаунта</a></li>
-        <li><a href="MyAds">Мои объявления</a></li>
+@{
+    ViewData["Title"] = "Профиль";
+}
+
+<div class="col-md-3 sidebar">
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Account/PersonalInfo">Персональная информация</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Account/ChangePassword">Смена пароля</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Account/DeleteAccount">Удаление аккаунта</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="/Account/MyAds">Мои объявления</a>
+        </li>
     </ul>
 </div>
 
-<div class="content">
+<div class="col-md-9">
     
 </div>
