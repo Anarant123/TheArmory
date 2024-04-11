@@ -10,7 +10,8 @@
         <div class="col-md-2">
             <!-- Здесь размещаем настройки фильтров -->
             <h3>Фильтры</h3>
-            <!-- Пример фильтра -->
+            
+            <!-- Фильтр по категории -->
             <div class="form-group">
                 <label for="category">Категория:</label>
                 <select class="form-control" id="category">
@@ -20,60 +21,123 @@
                     <option>Категория 3</option>
                 </select>
             </div>
+            
+            <!-- Фильтр по региону -->
+            <div class="form-group">
+                <label for="region">Регион:</label>
+                <select class="form-control" id="region">
+                    <option>Все</option>
+                    <option>Регион 1</option>
+                    <option>Регион 2</option>
+                    <option>Регион 3</option>
+                </select>
+            </div>
+            
+            <!-- Фильтр по диапазону цены -->
+            <div class="form-group">
+                <label for="price-from">Цена от:</label>
+                <input type="text" class="form-control" id="price-from" placeholder="От">
+            </div>
+            <div class="form-group">
+                <label for="price-to">Цена до:</label>
+                <input type="text" class="form-control" id="price-to" placeholder="До">
+            </div>
+            <div class="form-group">
+                <label for="price-range">Диапазон цены:</label>
+                <input type="range" class="form-range" id="price-range">
+            </div>
+            
             <!-- Другие фильтры -->
         </div>
 
         <!-- Плитки с объявлениями -->
         <div class="col-md-10">
-            <!-- Строка поиска -->
             <div class="row mb-3">
-                <div class="col-md-12">
+                <!-- Сортировка -->
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <select class="form-control" id="category">
+                            <option>Сначала новые</option>
+                            <option>Сначала старые</option>
+                            <option>Сначала дешевле</option>
+                            <option>Сначала дороже</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Строка поиска -->
+                <div class="col-md-10">
                     <input type="text" class="form-control" placeholder="Поиск...">
                 </div>
             </div>
             
             <!-- Плитки с объявлениями -->
             <div class="row">
-                <!-- Плитка 1 -->
+                @* @foreach (var ad in @Model.TileAds) *@
+                @* { *@
+                @*     <div class="col-md-3 mb-3"> *@
+                @*         <div class="card border"> *@
+                @*             <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления"> *@
+                @*             <div class="card-body"> *@
+                @*                 <h5 class="card-title">Название объявления</h5> *@
+                @*                 <p class="card-text">Описание объявления.</p> *@
+                @*                 <p class="card-text">Дата публикации: 10 апреля 2024</p> *@
+                @*             </div> *@
+                @*         </div> *@
+                @*     </div> *@
+                @* } *@
                 <div class="col-md-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Содержимое плитки -->
-                            <h5 class="card-title">Объявление 1</h5>
-                            <p class="card-text">Описание объявления 1.</p>
-                        </div>
-                    </div>
-                </div>
+                                        <div class="card border">
+                                            <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Название объявления</h5>
+                                                <p class="card-text">Описание объявления.</p>
+                                                <p class="card-text">Дата публикации: 10 апреля 2024</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                <div class="col-md-3 mb-3">
+                                        <div class="card border">
+                                            <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Название объявления</h5>
+                                                <p class="card-text">Описание объявления.</p>
+                                                <p class="card-text">Дата публикации: 10 апреля 2024</p>
+                                            </div>
+                                        </div>
+                                    </div>
                 <!-- Плитка 2 -->
                 <div class="col-md-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Содержимое плитки -->
-                            <h5 class="card-title">Объявление 2</h5>
-                            <p class="card-text">Описание объявления 2.</p>
-                        </div>
-                    </div>
-                </div>
+                                        <div class="card border">
+                                            <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Название объявления</h5>
+                                                <p class="card-text">Описание объявления.</p>
+                                                <p class="card-text">Дата публикации: 10 апреля 2024</p>
+                                            </div>
+                                        </div>
+                                    </div>
                 <!-- Плитка 3 -->
                 <div class="col-md-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Содержимое плитки -->
-                            <h5 class="card-title">Объявление 3</h5>
-                            <p class="card-text">Описание объявления 3.</p>
-                        </div>
-                    </div>
-                </div>
+                                        <div class="card border">
+                                            <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Название объявления</h5>
+                                                <p class="card-text">Описание объявления.</p>
+                                                <p class="card-text">Дата публикации: 10 апреля 2024</p>
+                                            </div>
+                                        </div>
+                                    </div>
                 <!-- Плитка 4 -->
                 <div class="col-md-3 mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Содержимое плитки -->
-                            <h5 class="card-title">Объявление 4</h5>
-                            <p class="card-text">Описание объявления 4.</p>
-                        </div>
-                    </div>
-                </div>
+                                        <div class="card border">
+                                            <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Название объявления</h5>
+                                                <p class="card-text">Описание объявления.</p>
+                                                <p class="card-text">Дата публикации: 10 апреля 2024</p>
+                                            </div>
+                                        </div>
+                                    </div>
                 <!-- Продолжайте добавлять плитки, чтобы получить нужное количество в строке -->
             </div>
         </div>

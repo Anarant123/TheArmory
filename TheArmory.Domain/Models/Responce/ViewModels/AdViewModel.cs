@@ -62,7 +62,7 @@ public class AdViewModel
     /// </summary>
     public Guid RegionId { get; set; }
 
-    public AdViewModel(Ad ad)
+    public AdViewModel(Database.Ad ad)
     {
         Id = ad.Id;
         Name = ad.Name;

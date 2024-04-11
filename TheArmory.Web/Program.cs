@@ -77,4 +77,6 @@ app.UseAuthorization();
 
 app.MapRazorPages();
 
+app.MapGet("/", () => Results.Redirect("/Ads/Index"));
+
 app.Run();
