@@ -1,0 +1,81 @@
+﻿@page
+@model TheArmory.Web.Pages.Ads.Index
+@{
+    ViewData["Title"] = "Объявления";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Фильтры слева -->
+        <div class="col-md-2">
+            <!-- Здесь размещаем настройки фильтров -->
+            <h3>Фильтры</h3>
+            <!-- Пример фильтра -->
+            <div class="form-group">
+                <label for="category">Категория:</label>
+                <select class="form-control" id="category">
+                    <option>Все</option>
+                    <option>Категория 1</option>
+                    <option>Категория 2</option>
+                    <option>Категория 3</option>
+                </select>
+            </div>
+            <!-- Другие фильтры -->
+        </div>
+
+        <!-- Плитки с объявлениями -->
+        <div class="col-md-10">
+            <!-- Строка поиска -->
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <input type="text" class="form-control" placeholder="Поиск...">
+                </div>
+            </div>
+            
+            <!-- Плитки с объявлениями -->
+            <div class="row">
+                <!-- Плитка 1 -->
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Содержимое плитки -->
+                            <h5 class="card-title">Объявление 1</h5>
+                            <p class="card-text">Описание объявления 1.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Плитка 2 -->
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Содержимое плитки -->
+                            <h5 class="card-title">Объявление 2</h5>
+                            <p class="card-text">Описание объявления 2.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Плитка 3 -->
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Содержимое плитки -->
+                            <h5 class="card-title">Объявление 3</h5>
+                            <p class="card-text">Описание объявления 3.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Плитка 4 -->
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Содержимое плитки -->
+                            <h5 class="card-title">Объявление 4</h5>
+                            <p class="card-text">Описание объявления 4.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Продолжайте добавлять плитки, чтобы получить нужное количество в строке -->
+            </div>
+        </div>
+    </div>
+</div>

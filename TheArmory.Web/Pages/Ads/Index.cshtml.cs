@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace TheArmory.Web.Pages;
+namespace TheArmory.Web.Pages.Ads;
 
-public class Ads : PageModel
+public class Index : PageModel
 {
     public void OnGet()
     {

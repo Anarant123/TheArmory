@@ -11,22 +11,33 @@
     }
     
     #image-area {
-            width: 100%; /* Ширина контейнера, можете изменить на желаемую */
-            height: 500px; /* Высота контейнера, можете изменить на желаемую */
-            overflow: hidden; /* Скрытие части изображения, если оно выходит за пределы контейнера */
-            position: relative; /* Позиционирование контейнера */
-        }
-     
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        position: relative;
+    }
+    
     #image-area img {
-                width: auto; /* Автоматическое определение ширины изображения */
-                height: 100%; /* Высота изображения занимает всю высоту контейнера */
-                position: absolute; /* Позиционирование изображения внутри контейнера */
-                top: 0; /* Расположение изображения сверху */
-                left: 0; /* Расположение изображения слева */
-                right: 0; /* Расположение изображения справа */
-                bottom: 0; /* Расположение изображения снизу */
-                margin: auto; /* Выравнивание изображения по центру контейнера */
-                }
+        width: auto;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+    
+    .image-cell {
+        width: 100px; /* Ширина ячейки */
+        height: 100px; /* Высота ячейки */
+        overflow: hidden; /* Скрытие избыточного контента */
+        display: flex; /* Использование flexbox */
+        align-items: center; /* Выравнивание по вертикали */
+        justify-content: center; /* Выравнивание по горизонтали */
+        margin: 5px; /* Отступы между ячейками */
+    }
+
 </style>
 
 <div class="row">
@@ -42,6 +53,10 @@
         <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
     </div>
 </div>
+
+<!-- Контейнер для ячеек с изображениями -->
+<div id="thumbnails-container" class="row mt-3"></div>
+
 <div class="row mt-3">
     <div class="col-md-1 text-center"></div>
     <div class="col-md-5 text-center">
@@ -58,7 +73,6 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <!-- Поля для заполнения модели AdCreateCommand -->
         <form>
             <div class="form-group">
                 <label for="name">Наименование:</label>
@@ -94,69 +108,124 @@
                     }
                 </select>
             </div>
+            <div id="map" style="width: 600px; height: 400px"></div>
 
             <button type="submit" class="btn btn-primary">Сохранить</button>
         </form>
     </div>
 </div>
 
-
+<script src="https://api-maps.yandex.ru/v3/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU"></script>
 <script>
     function autoResize(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = (textarea.scrollHeight) + 'px';
+        textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто
+        textarea.style.height = (textarea.scrollHeight) + 'px'; // Устанавливаем высоту текстового поля равной его высоте контента
     }
     
     function validatePrice(input) {
-            input.value = input.value.replace(/[^0-9.]/g, ''); // Оставить только цифры и точку
-            // Удалить лишние точки
-            var countDots = (input.value.match(/\./g) || []).length;
-            if (countDots > 1) {
-                input.value = input.value.replace(/\./g, '');
+        input.value = input.value.replace(/[^0-9.]/g, ''); // Заменяем все символы, кроме цифр и точки, на пустую строку
+        // Удалить лишние точки
+        var countDots = (input.value.match(/\./g) || []).length; // Подсчитываем количество точек в значении поля ввода
+        if (countDots > 1) { // Если количество точек больше 1
+            input.value = input.value.replace(/\./g, ''); // Удаляем все точки из значения поля ввода, кроме первой
+        }
+    }
+    
+    let images = []; // Массив для хранения путей к изображениям
+    let currentImageIndex = 0; // Индекс текущего изображения
+    
+    function prevImage() {
+        if (images.length < 2) 
+            return; 
+        if (currentImageIndex > 0) { 
+            currentImageIndex--; 
+        } else { 
+            currentImageIndex = images.length - 1; 
+        }
+        updateImage(); 
+    }
+    
+    function nextImage() {
+        if (images.length < 2)
+            return;
+        if (currentImageIndex < images.length - 1) { 
+            currentImageIndex++; 
+        } else { 
+            currentImageIndex = 0; 
+        }
+        updateImage(); 
+    }
+    
+    function updateImage() {
+        var image = document.getElementById("current-image"); 
+        image.src = images[currentImageIndex];
+    }
+    
+    function handleFileSelect(event) {
+        if (images.length >= 5) { // Проверяем, есть ли уже 5 изображений
+            alert("Вы уже добавили максимальное количество изображений.");
+            return;
+        }
+    
+        let files = event.target.files;
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        let numberOfImagesToAdd = Math.min(files.length, 5 - images.length); // Определяем количество изображений, которые можно добавить
+        let numberOfImagesAdded = 0; // Счетчик добавленных изображений
+    
+        for (let i = 0; i < files.length && numberOfImagesAdded < numberOfImagesToAdd; i++) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                images.push(e.target.result);
+    
+                let thumbnailContainer = document.createElement('div');
+                thumbnailContainer.className = 'col-md text-center image-cell';
+                let thumbnail = document.createElement('img');
+                thumbnail.className = 'img-thumbnail';
+                thumbnail.src = e.target.result;
+                thumbnailContainer.appendChild(thumbnail);
+                thumbnailsContainer.appendChild(thumbnailContainer);
+    
+                numberOfImagesAdded++;
+    
+                if (images.length === 5) { // Если теперь в массиве images 5 изображений, показываем кнопки управления
+                    document.querySelectorAll('.image-controls').forEach(function (element) {
+                        element.style.display = 'flex';
+                    });
+                }
+            };
+            reader.readAsDataURL(files[i]);
+        }
+        updateImage(); // Обновляем основное изображение после добавления
+    }
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
+    
+    initMap();
+    
+    async function initMap() {
+        // Промис `ymaps3.ready` будет зарезолвлен, когда загрузятся все компоненты основного модуля API
+        await ymaps3.ready;
+    
+        const {YMap, YMapDefaultSchemeLayer} = ymaps3;
+    
+        // Иницилиазируем карту
+        const map = new YMap(
+            // Передаём ссылку на HTMLElement контейнера
+            document.getElementById('map'),
+    
+            // Передаём параметры инициализации карты
+            {
+                location: {
+                    // Координаты центра карты
+                    center: [37.588144, 55.733842],
+    
+                    // Уровень масштабирования
+                    zoom: 10
+                }
             }
-        }
-        
-        
-    // Добавление фоток 
-    var images = []; // Массив для хранения путей к изображениям
-        var currentImageIndex = 0; // Индекс текущего изображения
+        );
     
-        function prevImage() {
-            if (currentImageIndex > 0) {
-                currentImageIndex--;
-            } else {
-                currentImageIndex = images.length - 1;
-            }
-            updateImage();
-        }
+        // Добавляем слой для отображения схематической карты
+        map.addChild(new YMapDefaultSchemeLayer());
+    }
     
-        function nextImage() {
-            if (currentImageIndex < images.length - 1) {
-                currentImageIndex++;
-            } else {
-                currentImageIndex = 0;
-            }
-            updateImage();
-        }
-    
-        function updateImage() {
-            var image = document.getElementById("current-image");
-            image.src = images[currentImageIndex];
-        }
-    
-        function handleFileSelect(event) {
-            var files = event.target.files;
-            for (var i = 0; i < files.length; i++) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    images.push(e.target.result);
-                    if (images.length === 1) {
-                        updateImage();
-                    }
-                };
-                reader.readAsDataURL(files[i]);
-            }
-        }
-    
-        document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
 </script>
