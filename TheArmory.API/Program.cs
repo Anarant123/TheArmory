@@ -24,6 +24,9 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 builder.Services.AddTransient<AdsRepository>();
 builder.Services.AddTransient<AuthorizationsRepository>();
 builder.Services.AddTransient<UsersRepository>();
+builder.Services.AddTransient<ConditionsRepository>();
+builder.Services.AddTransient<RegionsRepository>();
+
 builder.Services.AddTransient<PasswordHasher<User>>();
 
 

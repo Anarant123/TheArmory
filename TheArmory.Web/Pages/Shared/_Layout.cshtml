@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - TheArmory.Web</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/TheArmory.Web.styles.css" asp-append-version="true"/>
@@ -21,31 +21,37 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Ads">Объявления</a>
+                            <a class="nav-link text-dark" asp-page="/Ads">Объявления</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Правила сайта</a>
+                            <a class="nav-link text-dark" asp-page="/Privacy">Правила сайта</a>
                         </li>
                         
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Favorites">Избранное</a>
-                        </li>
+                        @if (User.Identity is {IsAuthenticated: true })
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Favorites">Избранное</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-page="/Publication/Index">Разместить объявление</a>
+                            </li>
+                        }
                     </ul>
                     
                     <ul class="navbar-nav ml-auto">
                         @if (User.Identity is {IsAuthenticated: true })
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Account/Index">Профиль</a>
+                                <a class="nav-link text-dark" asp-page="/Account/Index">Профиль</a>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Index">Войти</a>
+                                <a class="nav-link text-dark" asp-page="/Auth/Index">Войти</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Registration">Зарегистрироваться</a>
+                                <a class="nav-link text-dark" asp-page="/Auth/Registration">Зарегистрироваться</a>
                             </li>
                         }
                     </ul>

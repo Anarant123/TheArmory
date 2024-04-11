@@ -9,12 +9,12 @@
     <h1 class="text-center">Авторизация</h1>
     <form method="post" class="mt-4">
         <div class="mb-3">
-            <label class="form-label">Логин:</label>
+            <label asp-for="Command.Login" class="form-label">Логин:</label>
             <input type="text" asp-for="Command.Login" class="form-control" required>
             <span asp-validation-for="Command.Login" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label">Пароль:</label>
+            <label asp-for="Command.Password" class="form-label">Пароль:</label>
             <input type="password" asp-for="Command.Password" class="form-control" required>
             <span asp-validation-for="Command.Password" class="text-danger"></span>
         </div>

@@ -8,7 +8,9 @@ using TheArmory.Web.Service;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddTransient<AuthService>();
-
+builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<ConditionsService>();
+builder.Services.AddTransient<RegionsService>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

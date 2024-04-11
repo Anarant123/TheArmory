@@ -10,4 +10,9 @@
       <ProjectReference Include="..\TheArmory.Domain\TheArmory.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\Default\Images\Ad\" />
+      <Folder Include="wwwroot\Default\Images\Person\" />
+    </ItemGroup>
+
 </Project>

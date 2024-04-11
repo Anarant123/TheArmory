@@ -9,27 +9,27 @@
     <h1 class="text-center">Регистрация</h1>
     <form method="post" class="mt-4">
         <div class="mb-3">
-            <label class="form-label">Имя:</label>
+            <label asp-for="Command.Name" class="form-label">Имя:</label>
             <input type="text" asp-for="Command.Name" class="form-control" required>
             <span asp-validation-for="Command.Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label">Номер телефона:</label>
+            <label asp-for="Command.PhoneNumber" class="form-label">Номер телефона:</label>
             <input type="text" asp-for="Command.PhoneNumber" class="form-control" required>
             <span asp-validation-for="Command.PhoneNumber" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label">Email:</label>
+            <label asp-for="Command.Email" class="form-label">Email:</label>
             <input type="email" asp-for="Command.Email" class="form-control" required>
             <span asp-validation-for="Command.Email" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label">Пароль:</label>
+            <label asp-for="Command.Password" class="form-label">Пароль:</label>
             <input type="password" asp-for="Command.Password" class="form-control" required>
             <span asp-validation-for="Command.Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <label class="form-label">Подтвердите пароль:</label>
+            <label asp-for="Command.PasswordConfirm" class="form-label">Подтвердите пароль:</label>
             <input type="password" asp-for="Command.PasswordConfirm" class="form-control" required>
             <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
         </div>
