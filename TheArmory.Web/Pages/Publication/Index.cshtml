@@ -29,15 +29,21 @@
     }
     
     .image-cell {
-        width: 100px; /* Ширина ячейки */
-        height: 100px; /* Высота ячейки */
-        overflow: hidden; /* Скрытие избыточного контента */
-        display: flex; /* Использование flexbox */
-        align-items: center; /* Выравнивание по вертикали */
-        justify-content: center; /* Выравнивание по горизонтали */
-        margin: 5px; /* Отступы между ячейками */
-    }
-
+            width: 100px; /* Ширина ячейки */
+            height: 100px; /* Высота ячейки */
+            overflow: hidden; /* Скрытие избыточного контента */
+            display: flex; /* Использование flexbox */
+            align-items: center; /* Выравнивание по вертикали */
+            justify-content: center; /* Выравнивание по горизонтали */
+            margin: 0; /* Убираем отступы между ячейками */
+        }
+    
+    .image-cell img {
+                max-width: 100%; /* Максимальная ширина изображения внутри ячейки */
+                max-height: 100%; /* Максимальная высота изображения внутри ячейки */
+                width: auto; /* Автоматическое вычисление ширины для сохранения пропорций */
+                height: auto; /* Автоматическое вычисление высоты для сохранения пропорций */
+            }
 </style>
 
 <div class="row">
@@ -108,9 +114,8 @@
                     }
                 </select>
             </div>
-            <div id="map" style="width: 600px; height: 400px"></div>
 
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="submit" class="btn btn-primary">Добавить</button>
         </form>
     </div>
 </div>
@@ -157,7 +162,7 @@
     }
     
     function updateImage() {
-        var image = document.getElementById("current-image"); 
+        let image = document.getElementById("current-image"); 
         image.src = images[currentImageIndex];
     }
     
@@ -178,14 +183,16 @@
                 images.push(e.target.result);
     
                 let thumbnailContainer = document.createElement('div');
-                thumbnailContainer.className = 'col-md text-center image-cell';
+                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
                 let thumbnail = document.createElement('img');
-                thumbnail.className = 'img-thumbnail';
+                thumbnail.className = 'img-thumbnail img-fluid';
                 thumbnail.src = e.target.result;
                 thumbnailContainer.appendChild(thumbnail);
                 thumbnailsContainer.appendChild(thumbnailContainer);
     
                 numberOfImagesAdded++;
+                currentImageIndex = images.length - 1; // Устанавливаем текущий индекс в последнее добавленное изображение
+                updateImage(); // Обновляем основное изображение после добавления
     
                 if (images.length === 5) { // Если теперь в массиве images 5 изображений, показываем кнопки управления
                     document.querySelectorAll('.image-controls').forEach(function (element) {
@@ -195,37 +202,30 @@
             };
             reader.readAsDataURL(files[i]);
         }
-        updateImage(); // Обновляем основное изображение после добавления
     }
     document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
     
-    initMap();
-    
-    async function initMap() {
-        // Промис `ymaps3.ready` будет зарезолвлен, когда загрузятся все компоненты основного модуля API
-        await ymaps3.ready;
-    
-        const {YMap, YMapDefaultSchemeLayer} = ymaps3;
-    
-        // Иницилиазируем карту
-        const map = new YMap(
-            // Передаём ссылку на HTMLElement контейнера
-            document.getElementById('map'),
-    
-            // Передаём параметры инициализации карты
-            {
-                location: {
-                    // Координаты центра карты
-                    center: [37.588144, 55.733842],
-    
-                    // Уровень масштабирования
-                    zoom: 10
-                }
+    function removeImage(index) {
+        images.splice(index, 1); // Удаляем изображение из массива по указанному индексу
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]); // Удаляем соответствующий блок с миниатюрой изображения из контейнера
+        if (currentImageIndex === index) {
+            if (currentImageIndex === images.length) {
+                currentImageIndex--; // Переключаемся на предыдущее изображение, если удалено было последнее
             }
-        );
-    
-        // Добавляем слой для отображения схематической карты
-        map.addChild(new YMapDefaultSchemeLayer());
+            updateImage(); // Обновляем отображение после удаления
+        } else if (currentImageIndex > index) {
+            currentImageIndex--; // Корректируем текущий индекс, если он находится после удаленного изображения
+        }
+        if (images.length < 5) { // Если теперь в массиве images меньше 5 изображений, скрываем кнопки управления
+            document.querySelectorAll('.image-controls').forEach(function (element) {
+                element.style.display = 'none';
+            });
+        }
     }
+    document.querySelector('.btn-danger').addEventListener('click', function () {
+        removeImage(currentImageIndex);
+    });
+
     
 </script>

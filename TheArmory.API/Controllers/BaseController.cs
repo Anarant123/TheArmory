@@ -18,22 +18,22 @@ public class BaseController : ControllerBase
         _usersRepository = usersRepository;
     }
 
-    protected async Task<BaseResult<User?>> GetUser()
+    protected async Task<BaseResult<User>> GetUser()
     {
         if (User.Identity is null or { IsAuthenticated: false })
-            return new BaseResult<User?>("Пользователь не аутентифицирован.");
+            return new BaseResult<User>("Пользователь не аутентифицирован.");
 
         var value = User.FindFirst("Id")?.Value;
         
         if (value == null) 
-            return new BaseResult<User?>("Пользователь не аутентифицирован.");
+            return new BaseResult<User>("Пользователь не аутентифицирован.");
         
         var userResponse = await _usersRepository
             .Get(Guid.Parse(value));
 
         return !userResponse.Success ? 
-            new BaseResult<User?>(ErrorsMessage.UserNotFound) 
-            : new BaseResult<User?>(userResponse.Item);
+            new BaseResult<User>(ErrorsMessage.UserNotFound) 
+            : new BaseResult<User>(userResponse.Item);
 
     }
 }

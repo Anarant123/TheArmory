@@ -11,6 +11,7 @@ builder.Services.AddTransient<AuthService>();
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<ConditionsService>();
 builder.Services.AddTransient<RegionsService>();
+builder.Services.AddTransient<AdsService>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

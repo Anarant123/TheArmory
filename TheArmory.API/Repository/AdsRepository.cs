@@ -6,6 +6,7 @@ using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
+using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 
 namespace TheArmory.Repository;
 
@@ -78,7 +79,7 @@ public class AdsRepository : BaseRepository
         if (!string.IsNullOrEmpty(command.Description))
             ad.Description = command.Description;
         if (!string.IsNullOrEmpty(command.YouToubeLink))
-            ad.YouToubeLink = command.YouToubeLink;
+            ad.YouTubeLink = command.YouToubeLink;
         if (command.ConditionId is not null)
             ad.ConditionId = (WeaponCondition)command.ConditionId;
         if (command.RegionId is not null)

@@ -50,7 +50,7 @@ public class Ad : DbEntity
     /// <summary>
     /// Ссылка на ютуб видео с обзором
     /// </summary>
-    public string? YouToubeLink { get; set; } = string.Empty;
+    public string? YouTubeLink { get; set; } = string.Empty;
     
     //todo поле координатов
     

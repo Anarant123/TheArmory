@@ -1,5 +1,6 @@
 ﻿using TheArmory.Domain.Models.Enums;
-using System.Text.Json.Serialization; 
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad
 {
@@ -40,5 +41,11 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         /// </summary>
         [JsonPropertyName("regionId")]
         public Guid RegionId { get; set; }
+
+        /// <summary>
+        /// Фотографии
+        /// </summary>
+        [JsonPropertyName("photos")]
+        public List<IFormFile> Photos { get; set; } = new List<IFormFile>();
     }
 }
