@@ -12,9 +12,14 @@ namespace TheArmory.Repository;
 
 public class AdsRepository : BaseRepository
 {
-    public AdsRepository(ApplicationContext context, ILogger<BaseRepository<Ad>> logger)
+    private readonly MediasRepository _mediasRepository;
+    public AdsRepository(
+        ApplicationContext context,
+        ILogger<BaseRepository<Ad>> logger,
+        MediasRepository mediasRepository)
         : base(context, logger)
     {
+        _mediasRepository = mediasRepository;
     }
 
     // todo получить свое объявление
@@ -37,6 +42,9 @@ public class AdsRepository : BaseRepository
         Guid userId,
         AdCreateCommand command)
     {
+        if (command.Photos.Count > 5)
+            return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
+        
         var newAd = new Ad()
         {
             Name = command.Name,
@@ -46,6 +54,12 @@ public class AdsRepository : BaseRepository
             RegionId = command.RegionId,
             UserId = userId,
         };
+        
+        var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
+        if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
+
+        
+        newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
         return await Context.SaveChangesAsync() switch
@@ -53,8 +67,10 @@ public class AdsRepository : BaseRepository
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
             _ => new BaseResult<AdViewModel>(new AdViewModel(newAd))
         };
-    }
 
+    }
+    
+    
     /// <summary>
     /// Обновление объявления
     /// </summary>

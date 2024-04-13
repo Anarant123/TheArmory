@@ -20,7 +20,7 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
 // Включение поддержки Legacy Timestamp Behavior для Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-
+builder.Services.AddTransient<MediasRepository>();
 builder.Services.AddTransient<AdsRepository>();
 builder.Services.AddTransient<AuthorizationsRepository>();
 builder.Services.AddTransient<UsersRepository>();

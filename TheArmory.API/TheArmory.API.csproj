@@ -24,4 +24,8 @@
       <ProjectReference Include="..\TheArmory.Domain\TheArmory.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Files\" />
+    </ItemGroup>
+
 </Project>

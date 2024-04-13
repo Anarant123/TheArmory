@@ -24,6 +24,23 @@ public class ApplicationContext : DbContext
             .HasOne<User>(a => a.User)
             .WithMany(u => u.Ads)
             .HasForeignKey(a => a.UserId);
+        modelBuilder.Entity<Ad>()
+            .HasOne<Status>(a => a.Status)
+            .WithMany(u => u.Ads)
+            .HasForeignKey(a => a.StatusId);
+        modelBuilder.Entity<Ad>()
+            .HasMany<Complaint>(a => a.Complaints )
+            .WithOne(c => c.Ad)
+            .HasForeignKey(c => c.AdId);
+        modelBuilder.Entity<Ad>()
+            .HasMany<Favorite>(a => a.Favorites )
+            .WithOne(f => f.Ad)
+            .HasForeignKey(f => f.AdId);
+        modelBuilder.Entity<Ad>()
+            .HasMany<Media>(a => a.Medias )
+            .WithOne(m => m.Ad)
+            .HasForeignKey(m => m.AdId);
+        
         
         // связи сущности Complaint
         modelBuilder.Entity<Complaint>()
