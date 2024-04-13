@@ -33,6 +33,17 @@ public class Index : PageModel
         _regionsService = regionsService;
     }
     
+    // public async Task OnGetAsync(AdCreateCommand сommand)
+    // {
+    //     ConditionsQueryResult = await _conditionsService.GetSelectList();
+    //     Conditions = ConditionsQueryResult.Items.ToList();
+    //     
+    //     RegionsQueryResult = await _regionsService.GetSelectList();
+    //     Regions = RegionsQueryResult.Items.ToList();
+    //
+    //     Command = сommand;
+    // }
+    
     public async Task OnGetAsync()
     {
         ConditionsQueryResult = await _conditionsService.GetSelectList();
@@ -45,7 +56,10 @@ public class Index : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
+        {
+            await OnGetAsync();
             return Page();
+        }
 
         var result = await _adsService.PostAd(Command);
         

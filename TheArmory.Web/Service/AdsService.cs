@@ -24,6 +24,16 @@ public class AdsService : BaseService<Ad>
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+            // var formContent = new MultipartFormDataContent();
+            //
+            // var stream = File.OpenRead(UserImagePath);
+            // formContent.Add(new StringContent(user.Id.ToString()), "userId");
+            //
+            // var imageContent = new StreamContent(stream);
+            // imageContent.Headers.ContentType =
+            //     MediaTypeHeaderValue.Parse($"image/{UserImagePath.Split('/').Last().Split('.').Last()}");
+            // formContent.Add(imageContent, "image", $"{UserImagePath.Split('/').Last()}");
+            
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)

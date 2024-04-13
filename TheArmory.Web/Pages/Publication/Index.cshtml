@@ -1,4 +1,5 @@
 ﻿@page
+@using Microsoft.EntityFrameworkCore
 @model TheArmory.Web.Pages.Publication.Index
 
 @{
@@ -63,12 +64,13 @@
 <!-- Контейнер для ячеек с изображениями -->
 <div id="thumbnails-container" class="row mt-3"></div>
 
+<form method="post" enctype="multipart/form-data" id="form">
 <div class="row mt-3">
     <div class="col-md-1 text-center"></div>
     <div class="col-md-5 text-center">
         <label class="btn btn-primary btn-block">
             Добавить
-            <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+            <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;">
         </label>
     </div>
     <div class="col-md-5 text-center">
@@ -79,46 +81,45 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
-        <form>
-            <div class="form-group">
-                <label for="name">Наименование:</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Введите наименование" maxlength="255">
+            <div class="mb-3">
+                <label asp-for="Command.Name" class="form-label">Наименование:</label>
+                <input type="text" asp-for="Command.Name" class="form-control" placeholder="Введите наименование" maxlength="255">
             </div>
-            <div class="form-group">
-                <label for="price">Цена:</label>
-                <input type="text" class="form-control" id="price" name="price" placeholder="Введите цену" oninput="validatePrice(this)">
+            <div class="mb-3">
+                <label asp-for="Command.Price" class="form-label">Цена:</label>
+                <input type="text" asp-for="Command.Price" class="form-control" placeholder="Введите цену" oninput="validatePrice(this)">
             </div>
-            <div class="form-group">
-                <label for="description">Описание:</label>
-                <textarea class="form-control" id="description" name="description" placeholder="Введите описание" oninput="autoResize(this)"></textarea>
+            <div class="mb-3">
+                <label asp-for="Command.Description" class="form-label">Описание:</label>
+                <textarea asp-for="Command.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)"></textarea>
             </div>
-            <div class="form-group">
-                <label for="youtubeLink">Ссылка на YouTube видео с обзором:</label>
-                <input type="text" class="form-control" id="youtubeLink" name="youtubeLink" placeholder="Введите ссылку на YouTube видео">
+            <div class="mb-3">
+                <label asp-for="Command.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
+                <input type="text" asp-for="Command.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
             </div>
-            <div class="form-group">
-                <label for="conditionId">Состояние:</label>
-                <select class="form-control" id="conditionId" name="conditionId">
+            <div class="mb-3">
+                <label asp-for="Command.ConditionId" class="form-label">Состояние:</label>
+                <select asp-for="Command.ConditionId" class="form-control" id="conditionId" name="Command.ConditionId">
                     @foreach (var condition in Model.Conditions)
                     {
                         <option value="@condition.Id">@condition.Name</option>
                     }
                 </select>
             </div>
-            <div class="form-group my-2">
-                <label for="regionId">Регион:</label>
-                <select class="form-control" id="regionId" name="regionId">
+            <div class="mb-3">
+                <label asp-for="Command.RegionId" class="form-label">Регион:</label>
+                <select asp-for="Command.RegionId" class="form-control" id="regionId" name="Command.RegionId">
                     @foreach (var region in Model.Regions)
                     {
                         <option value="@region.Id">@region.Code @region.Name</option>
                     }
                 </select>
             </div>
-
-            <button type="submit" class="btn btn-primary">Добавить</button>
-        </form>
+        
+            <button type="button" onclick="submitForm(event)" class="btn btn-primary">Добавить</button>
     </div>
 </div>
+</form>
 
 <script src="https://api-maps.yandex.ru/v3/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU"></script>
 <script>
@@ -136,8 +137,8 @@
         }
     }
     
-    let images = []; // Массив для хранения путей к изображениям
-    let currentImageIndex = 0; // Индекс текущего изображения
+    let images = []; 
+    let currentImageIndex = 0;
     
     function prevImage() {
         if (images.length < 2) 
@@ -162,45 +163,51 @@
     }
     
     function updateImage() {
-        let image = document.getElementById("current-image"); 
-        image.src = images[currentImageIndex];
+        let image = document.getElementById("current-image");
+        let blob = new Blob([new Uint8Array(images[currentImageIndex])], { type: 'image/jpeg' });
+        image.src = URL.createObjectURL(blob);
     }
     
     function handleFileSelect(event) {
-        if (images.length >= 5) { // Проверяем, есть ли уже 5 изображений
+        if (images.length >= 5) { 
             alert("Вы уже добавили максимальное количество изображений.");
             return;
         }
     
         let files = event.target.files;
         let thumbnailsContainer = document.getElementById('thumbnails-container');
-        let numberOfImagesToAdd = Math.min(files.length, 5 - images.length); // Определяем количество изображений, которые можно добавить
-        let numberOfImagesAdded = 0; // Счетчик добавленных изображений
+        let numberOfImagesToAdd = Math.min(files.length, 5 - images.length); 
+        let numberOfImagesAdded = 0;
     
         for (let i = 0; i < files.length && numberOfImagesAdded < numberOfImagesToAdd; i++) {
             let reader = new FileReader();
             reader.onload = function (e) {
-                images.push(e.target.result);
-    
+                let arrayBuffer = e.target.result; 
+        
+                images.push(arrayBuffer);
+        
                 let thumbnailContainer = document.createElement('div');
                 thumbnailContainer.className = 'col-md text-center image-cell position-relative';
                 let thumbnail = document.createElement('img');
                 thumbnail.className = 'img-thumbnail img-fluid';
-                thumbnail.src = e.target.result;
+                
+                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                thumbnail.src = URL.createObjectURL(blob);
+        
                 thumbnailContainer.appendChild(thumbnail);
                 thumbnailsContainer.appendChild(thumbnailContainer);
-    
+        
                 numberOfImagesAdded++;
-                currentImageIndex = images.length - 1; // Устанавливаем текущий индекс в последнее добавленное изображение
-                updateImage(); // Обновляем основное изображение после добавления
-    
-                if (images.length === 5) { // Если теперь в массиве images 5 изображений, показываем кнопки управления
+                currentImageIndex = images.length - 1; 
+                updateImage();
+        
+                if (images.length === 5) { 
                     document.querySelectorAll('.image-controls').forEach(function (element) {
                         element.style.display = 'flex';
                     });
                 }
             };
-            reader.readAsDataURL(files[i]);
+            reader.readAsArrayBuffer(files[i]); 
         }
     }
     document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
@@ -226,6 +233,26 @@
     document.querySelector('.btn-danger').addEventListener('click', function () {
         removeImage(currentImageIndex);
     });
+
+    
+    function submitForm(event) {
+        event.preventDefault(); // Отменяем стандартное поведение отправки формы
+        let formData = new FormData($('#form')[0]); // Создаем объект FormData из формы с id="form"
+    
+        // Добавляем каждое изображение из массива images в FormData
+        for (let i = 0; i < images.length; i++) {
+            formData.append('Command.Photos', new Blob([new Uint8Array(images[i])], { type: 'image/jpeg' }), 'image_' + i + '.jpg');
+        }
+    
+        // Выполняем AJAX-запрос
+        $.ajax({
+            url: '/Publication',
+            data: formData,
+            processData: false, // Отключаем автоматическую обработку данных перед отправкой
+            contentType: false, // Отключаем автоматическое определение типа контента
+            type: 'POST'
+        });
+    }
 
     
 </script>

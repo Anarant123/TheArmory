@@ -35,7 +35,7 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> PostAd(
-        [FromQuery]AdCreateCommand command)
+        [FromForm]AdCreateCommand command)
     {
         var userResponse = await GetUser();
 
