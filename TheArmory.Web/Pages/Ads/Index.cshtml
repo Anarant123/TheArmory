@@ -24,11 +24,11 @@
             <!-- Фильтр по региону -->
             <div class="form-group">
                 <label for="region">Регион:</label>
-                <select class="form-control" id="region">
-                    <option>Все</option>
-                    <option>Регион 1</option>
-                    <option>Регион 2</option>
-                    <option>Регион 3</option>
+                <select asp-for="QueryParams.RegionId" class="form-control" id="regionId" name="Command.RegionId">
+                    @foreach (var region in Model.Regions)
+                    {
+                        <option value="@region.Id">@region.Code @region.Name</option>
+                    }
                 </select>
             </div>
             

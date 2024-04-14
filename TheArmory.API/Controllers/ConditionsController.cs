@@ -28,7 +28,6 @@ public class ConditionsController : BaseController
     /// Получить себя
     /// </summary>
     /// <returns></returns>
-    [Authorize]
     [HttpGet]
     [Route("SelectList")]
     public async Task<ActionResult<BaseQueryResult<ConditionListViewModel>>> GetSelectList()
