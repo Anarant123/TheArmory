@@ -18,6 +18,6 @@ public class MediaInfoViewModel
     public MediaInfoViewModel(Database.Ad ad, Database.Media media)
     {
         Id = media.Id;
-        LocalPath = Path.Combine("Files", ad.UserId.ToString(), "Ads", ad.Id.ToString(), media.Name);
+        LocalPath = Path.Combine(ad.UserId.ToString(), "Ads", ad.Id.ToString(), media.Name);
     }
 }

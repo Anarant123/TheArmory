@@ -71,28 +71,34 @@
             
             <!-- Плитки с объявлениями -->
             <div class="row">
-                @foreach (var ad in @Model.TileAds)
-                {
-                    <div class="col-md-3 mb-3">
-                        <div class="card border">
-                            @if (ad.Images.Count > 0)
-                            {
-                                <img src="@("https://localhost:5160" + '/' + ad.Images.First().LocalPath)" class="card-img-top" alt="Фотография объявления">
-                            }
-                            else
-                            {
-                                <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top" alt="Фотография объявления">
-                            }
-                            <div class="card-body">
-                                <h5 class="card-title">@ad.Name</h5>
-                                <p class="card-text">@ad.Price</p>
-                                <p class="card-text">Дата публикации: @ad.CreationDateTime</p>
-                            </div>
-                        </div>
-                    </div>
-                }
-                
+               @foreach (var ad in Model.TileAds)
+               {
+                   <div class="col-md-3 mb-3">
+                       <a href="@Url.Page("AdInfo", new { id = ad.Id })" class="card-link">
+                           <div class="card border">
+                               <div class="image-container">
+                                   @if (ad.Images.Count > 0)
+                                   {
+                                       <img src="@(Model.BaseUrl + '/' + ad.Images.First().LocalPath)" class="card-img-top current-image" alt="Фотография объявления">
+                                   }
+                                   else
+                                   {
+                                       <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top current-image" alt="Фотография объявления">
+                                   }
+                               </div>
+                               <div class="card-body">
+                                   <h5 class="card-title">@ad.Name</h5>
+                                   <p class="card-text">@ad.Price</p>
+                                   <p class="card-text">Дата публикации: @ad.CreationDateTime</p>
+                               </div>
+                           </div>
+                       </a>
+                   </div>
+                               }
             </div>
         </div>
     </div>
 </div>
+
+
+

@@ -41,6 +41,9 @@ public class AdsRepository : BaseRepository
         Guid adId)
     {
         var ad = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId));
 
         if (ad is null)
@@ -55,6 +58,8 @@ public class AdsRepository : BaseRepository
     {
         var ads = await Context.Ads
             .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
             .Where(a => a.UserId.Equals(userId))
             .Select(s => new TileAdViewModel(s))
             .ToListAsync();

@@ -1,0 +1,125 @@
+﻿@page
+@model TheArmory.Web.Pages.Ads.AdInfo
+@{
+    ViewData["Title"] = Model.AdViewModel.Name;
+}
+
+<style>
+    .btn-block {
+        width: 100%;
+    }
+    
+    #image-area {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    #image-area img {
+        width: auto;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+    
+    .image-cell {
+        width: 100px; /* Ширина ячейки */
+        height: 100px; /* Высота ячейки */
+        overflow: hidden; /* Скрытие избыточного контента */
+        display: flex; /* Использование flexbox */
+        align-items: center; /* Выравнивание по вертикали */
+        justify-content: center; /* Выравнивание по горизонтали */
+        margin: 0; /* Убираем отступы между ячейками */
+    }
+    
+    .image-cell img {
+        max-width: 100%; /* Максимальная ширина изображения внутри ячейки */
+        max-height: 100%; /* Максимальная высота изображения внутри ячейки */
+        width: auto; /* Автоматическое вычисление ширины для сохранения пропорций */
+        height: auto; /* Автоматическое вычисление высоты для сохранения пропорций */
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+    </div>
+    <div class="col-md-10 text-center">
+        <div id="image-area" class="position-relative">
+            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+        </div>
+    </div>
+    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+    </div>
+</div>
+
+<!-- Контейнер для ячеек с изображениями -->
+<div id="thumbnails-container" class="row mt-3">
+    @foreach (var image in Model.AdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+    {
+        <div class="col-md text-center image-cell position-relative">
+            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid">
+        </div>
+    }
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="mb-3">
+            <input type="text" asp-for="AdViewModel.Name" class="form-control" placeholder="Наименование" readonly>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="AdViewModel.Price" class="form-control" placeholder="Цена" readonly>
+        </div>
+        <div class="mb-3">
+            <textarea asp-for="AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="AdViewModel.YouTubeLink" class="form-control" placeholder="Ссылка на YouTube видео" readonly>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="AdViewModel.Condition" class="form-control" placeholder="Состояние" readonly>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="AdViewModel.Region" class="form-control" placeholder="Регион" readonly>
+        </div>
+    </div>
+</div>
+
+<script>
+    let images = @Model.AdViewModel.Images.Select(s => Model.BaseUrl + '/' + s.LocalPath).ToList(); 
+    let currentImageIndex = 0;
+
+    function prevImage() {
+        if (images.length < 2)
+            return;
+        if (currentImageIndex > 0) {
+            currentImageIndex--;
+        } else {
+            currentImageIndex = images.length - 1;
+        }
+        updateImage();
+    }
+
+    function nextImage() {
+        if (images.length < 2)
+            return;
+        if (currentImageIndex < images.length - 1) {
+            currentImageIndex++;
+        } else {
+            currentImageIndex = 0;
+        }
+        updateImage();
+    }
+
+    function updateImage() {
+        let image = document.getElementById("current-image");
+        image.src = images[currentImageIndex];
+    }
+</script>

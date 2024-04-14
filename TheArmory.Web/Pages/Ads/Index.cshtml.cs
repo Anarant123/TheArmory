@@ -21,7 +21,7 @@ public class Index : PageModel
     public Index(AdsService adsService, BaseUrlOptions baseUrlOptions)
     {
         _adsService = adsService;
-        //BaseUrl = baseUrlOptions.GetFullApiUrl("");
+        BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
     
     public async Task OnGet()

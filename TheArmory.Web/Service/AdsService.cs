@@ -38,6 +38,25 @@ public class AdsService : BaseService<Ad>
         }
     }
     
+    public async Task<BaseResult<AdViewModel>> GetAd(Guid id)
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/{id}";
+            var response = await httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+            
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
+            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<AdViewModel>(exception.Message);
+        }
+    }
+    
     public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
     {
         try
