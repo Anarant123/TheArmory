@@ -25,7 +25,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Files\" />
+      <Folder Include="wwwroot\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\Files\d9a2a087-9179-424b-baa7-41ca009142c3\Ads\1b4f14de-ec98-4618-b82a-ecc289d7ab17\1.jpg" />
+      <None Include="wwwroot\Files\d9a2a087-9179-424b-baa7-41ca009142c3\Ads\1b4f14de-ec98-4618-b82a-ecc289d7ab17\3.jpg" />
+      <None Include="wwwroot\Files\d9a2a087-9179-424b-baa7-41ca009142c3\Ads\1b4f14de-ec98-4618-b82a-ecc289d7ab17\5.jpg" />
     </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Request.Commands.Ad;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
@@ -11,7 +12,7 @@ using TheArmory.Repository;
 namespace TheArmory.Controllers;
 
 
-[Route("Auth")]
+[Route("Ads")]
 [ApiController]
 public class AdsController : BaseController
 {
@@ -26,6 +27,26 @@ public class AdsController : BaseController
     {
         Logger = logger;
         _adsRepository = adsRepository;
+    }
+
+    /// <summary>
+    /// Получить все объявления
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("")]
+    public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetAds(
+    [FromQuery]BaseQueryItemsParams queryItemsParams)
+    {
+        var userResponse = await GetUser();
+        
+        var result = await _adsRepository.GetAds(userResponse.Item?.Id);
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
     }
     
     /// <summary>

@@ -18,6 +18,25 @@ public class AdsService : BaseService<Ad>
         base(httpClientFactory.CreateClient("httpClient"), baseUrlOptions, logger)
     {
     }
+
+    public async Task<BaseQueryResult<TileAdViewModel>> GetAds()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+            var response = await httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
+            
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdViewModel>>(responseStream);
+            return result ?? new BaseQueryResult<TileAdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseQueryResult<TileAdViewModel>(exception.Message);
+        }
+    }
     
     public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
     {

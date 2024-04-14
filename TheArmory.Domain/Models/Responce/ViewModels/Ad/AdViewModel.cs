@@ -78,6 +78,8 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         [JsonPropertyName("regionId")]
         public Guid RegionId { get; set; }
 
+        public AdViewModel(){}
+        
         public AdViewModel(Database.Ad ad)
         {
             Id = ad.Id;

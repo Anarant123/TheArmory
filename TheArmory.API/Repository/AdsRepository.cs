@@ -23,15 +23,68 @@ public class AdsRepository : BaseRepository
     }
 
     // todo получить свое объявление
-    
+    public async Task<BaseResult<AdViewModel>> GetMyAd(
+        Guid userId,
+        Guid adId)
+    {
+        var ad = await Context.Ads
+            .FirstOrDefaultAsync(a => a.Id.Equals(adId) && a.UserId.Equals(userId));
+
+        if (ad is null)
+            return new BaseResult<AdViewModel>("Объявление не найдено");
+
+        return new BaseResult<AdViewModel>(new AdViewModel(ad));
+    }
     
     // todo получить объявление
+    public async Task<BaseResult<AdViewModel>> GetAd(
+        Guid adId)
+    {
+        var ad = await Context.Ads
+            .FirstOrDefaultAsync(a => a.Id.Equals(adId));
+
+        if (ad is null)
+            return new BaseResult<AdViewModel>("Объявление не найдено");
+
+        return new BaseResult<AdViewModel>(new AdViewModel(ad));
+    }
     
     // todo получить свои объявления
+    public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(
+        Guid userId)
+    {
+        var ads = await Context.Ads
+            .Include(a => a.Medias)
+            .Where(a => a.UserId.Equals(userId))
+            .Select(s => new TileAdViewModel(s))
+            .ToListAsync();
+
+        if (ads.Count == 0)
+            return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
+
+        return new BaseQueryResult<TileAdViewModel>(ads);
+    }
     
     // todo получить все объявления
+    public async Task<BaseQueryResult<TileAdViewModel>> GetAds(
+        Guid? userId)
+    {
+        var ads = await Context.Ads
+            .Include(a => a.Medias)
+            .Where(a => userId != null 
+                ? !a.UserId.Equals(userId) 
+                : true 
+                  && a.StatusId.Equals(StateStatus.Actively))
+            .Select(s => new TileAdViewModel(s))
+            .ToListAsync();
+
+
+        if (ads.Count == 0)
+            return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
+
+        return new BaseQueryResult<TileAdViewModel>(ads);
+    }
     
-    // todo фоток нема
     /// <summary>
     /// Создание объявления
     /// </summary>
