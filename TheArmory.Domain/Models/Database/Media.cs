@@ -1,4 +1,6 @@
-﻿namespace TheArmory.Domain.Models.Database;
+﻿using System.Text.Json.Serialization;
+
+namespace TheArmory.Domain.Models.Database;
 
 public class Media : DbEntity
 {
@@ -15,6 +17,6 @@ public class Media : DbEntity
     public Guid AdId { get; set; }
     
     // virtual 
-    
+    [JsonIgnore]
     public virtual Ad Ad { get; set; }
 }

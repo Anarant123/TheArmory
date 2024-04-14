@@ -23,8 +23,9 @@ public class Region : DbEntity
     public int Code { get; set; }
     
     // virtual
+    [JsonIgnore]
     public virtual List<Ad> Ads { get; set; }
-    
+    [JsonIgnore]
     public virtual List<User> Users { get; set; }
 
     public Region(string name, int code)

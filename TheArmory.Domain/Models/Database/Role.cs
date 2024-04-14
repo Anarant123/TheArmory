@@ -23,7 +23,7 @@ public class Role
     public string Name { get; set; } = string.Empty;
     
     // virtual
-    
+    [JsonIgnore]
     public virtual List<User> Users { get; set; }
 
     public Role(UserRole id, string name)

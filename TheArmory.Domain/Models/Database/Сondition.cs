@@ -23,6 +23,7 @@ public class Condition : DbEntity
     public string Name { get; set; } = string.Empty;
     
     // virtual
+    [JsonIgnore]
     public virtual List<Ad> Ads { get; set; }
 
     public Condition(WeaponCondition id, string name)

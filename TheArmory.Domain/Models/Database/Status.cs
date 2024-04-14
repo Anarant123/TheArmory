@@ -20,9 +20,9 @@ public class Status
     public string Name { get; set; } = string.Empty;
     
     // virtual
-    
+    [JsonIgnore]
     public virtual List<User> Users { get; set; }
-    
+    [JsonIgnore]
     public virtual List<Ad> Ads { get; set; }
 
     public Status(StateStatus id, string name)
