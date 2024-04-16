@@ -31,6 +31,12 @@ public class UserPersonalInfoViewModel
     public string Email { get; set; }
     
     /// <summary>
+    /// Фото профиля
+    /// </summary>
+    [JsonPropertyName("photoName")]
+    public string? PhotoName { get; set; }
+    
+    /// <summary>
     /// Id региона
     /// </summary>
     [JsonPropertyName("regionId")]
@@ -45,7 +51,10 @@ public class UserPersonalInfoViewModel
     /// <summary>
     /// Дата создания
     /// </summary>
+    [JsonPropertyName("registrationDateTime")]
     public DateTime RegistrationDateTime { get; set; }
+    
+    public UserPersonalInfoViewModel(){}
 
     public UserPersonalInfoViewModel(Database.User user)
     {

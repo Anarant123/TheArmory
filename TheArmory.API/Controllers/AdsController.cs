@@ -117,7 +117,7 @@ public class AdsController : BaseController
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
-    [HttpDelete]
+    [HttpPost]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> AddMedia(
         [FromBody]AdAddMediaCommand command)

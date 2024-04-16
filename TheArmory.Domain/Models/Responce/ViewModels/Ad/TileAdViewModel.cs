@@ -20,7 +20,15 @@ public class TileAdViewModel
     
     [JsonPropertyName("creationDateTime")]
     public DateTime CreationDateTime { get; set; }
+    
+    [JsonPropertyName("countOfViews")]
+    public int CountOfViews { get; set; } = 0;
 
+    [JsonPropertyName("countOfViewsToday")]
+    public int CountOfViewsToday { get; set; } = 0;
+    
+    [JsonIgnore]
+    public string BaseUrl { get; set; } = "";
 
     public TileAdViewModel(){}
     
@@ -31,5 +39,7 @@ public class TileAdViewModel
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         Price = ad.Price;
         CreationDateTime = ad.CreationDateTime;
+        CountOfViews = ad.CountOfViews;
+        CountOfViewsToday = ad.CountOfViewsToday;
     }
 }

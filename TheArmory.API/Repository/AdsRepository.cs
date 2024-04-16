@@ -58,6 +58,16 @@ public class AdsRepository : BaseRepository
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
 
+        ad.CountOfViews += 1;
+        if (ad.LastVisitDate.Date != DateTime.Now.Date)
+        {
+            ad.LastVisitDate = DateTime.Now;
+            ad.CountOfViewsToday = 0;
+        }
+        ad.CountOfViewsToday += 1;
+
+        await Context.SaveChangesAsync();
+
         return new BaseResult<AdViewModel>(new AdViewModel(ad));
     }
     

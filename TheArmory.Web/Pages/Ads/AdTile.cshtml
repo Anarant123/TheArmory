@@ -1,0 +1,26 @@
+﻿@model TheArmory.Domain.Models.Responce.ViewModels.Ad.TileAdViewModel
+
+
+<div class="col-md-3 mb-3">
+    <a href="@Url.Page("AdInfo", new { id = Model.Id })" class="card-link" style="text-decoration: none; color: black;">
+        <div class="card border">
+            <div class="image-container">
+                @if (Model.Images.Count > 0)
+                {
+                    <img src="@(Model.BaseUrl+ '/' + Model.Images.First().LocalPath)" class="card-img-top current-image" alt="Фотография объявления">
+                }
+                else
+                {
+                    <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top current-image" alt="Фотография объявления">
+                }
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">@Model.Price</p>
+                <p class="card-text">Дата публикации: @Model.CreationDateTime</p>
+                <p class="card-text">Просмотры: @Model.CountOfViews</p>
+                <p class="card-text">Просмотры за сегодня: @Model.CountOfViewsToday</p>
+            </div>
+        </div>
+    </a>
+</div>

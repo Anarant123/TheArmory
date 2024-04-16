@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -6,7 +7,7 @@ using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
 
-[Route("User")]
+[Route("Users")]
 [ApiController]
 public class UsersController : BaseController
 {
@@ -25,13 +26,13 @@ public class UsersController : BaseController
     /// <returns></returns>
     [HttpGet]
     [Route("Me")]
-    public async Task<ActionResult<BaseResult<UserViewModel>>> GetMe()
+    public async Task<ActionResult<BaseResult<UserPersonalInfoViewModel>>> GetMe()
     {
         var userResponse = await GetUser();
         return userResponse.Success switch
         {
             false => BadRequest(userResponse),
-            true => Ok(userResponse)
+            true => Ok(new BaseResult<UserPersonalInfoViewModel>(new UserPersonalInfoViewModel(userResponse.Item)))
         };
     }
 }

@@ -1,12 +1,22 @@
 ﻿@page
 @model TheArmory.Web.Pages.Account.DeleteAccount
 
-
 @{
     ViewData["Title"] = "Удалить аккаунт";
-    Layout = "/Account/Index";
 }
 
-<div class="container mt-5">
+<div class="row">
+    @* Боковая панель *@
+    @await Html.PartialAsync("SideBar")
     
+    <div class="col-md-9">
+        <div class="container">
+            <h2>Удалить аккаунт</h2>
+            <p>При удалении вашего аккаунта все ваши объявления также будут удалены с площадки. Вы уверены, что хотите удалить свой аккаунт?</p>
+            
+            <form method="post">
+                <button type="submit" class="btn btn-danger">Удалить аккаунт</button>
+            </form>
+        </div>
+    </div>
 </div>

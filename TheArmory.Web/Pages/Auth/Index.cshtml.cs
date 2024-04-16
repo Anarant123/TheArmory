@@ -36,7 +36,7 @@ public class Index : PageModel
         if (result.Success)
         {
             await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);
-            return RedirectToPage("/Account/Index");
+            return RedirectToPage("/Account/PersonalInfo");
         }
 
         ModelState.AddModelError(string.Empty, result.Error);
