@@ -55,6 +55,5 @@ public class Index : PageModel
         
         QueryResult = await _adsService.GetAds();
     }
-
    
 }

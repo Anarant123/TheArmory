@@ -87,4 +87,78 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
+
+    /// <summary>
+    /// Добавить в избранное
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("ToFavorite")]
+    public async Task<ActionResult<BaseResult>> AddToFavorite(
+        [FromBody]AdCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+
+        var result = await _adsRepository.AdAddToFavorite(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Удалить фото объявления
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("Media")]
+    public async Task<ActionResult<BaseResult>> AddMedia(
+        [FromBody]AdAddMediaCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+
+        var result = await _adsRepository.AddMedia(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Удалить фото объявления
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("Media")]
+    public async Task<ActionResult<BaseResult>> DeleteMedia(
+        [FromBody]AdDeleteMediaCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+
+        var result = await _adsRepository.DeleteMedia(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    
 }

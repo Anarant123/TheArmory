@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 
 namespace TheArmory.Repository;
@@ -19,6 +20,13 @@ public class MediasRepository : BaseRepository<Media>
         FilesPath = Path.Combine(configuration.GetSection("FilesPath").Value ?? "Files");
     }
     
+    /// <summary>
+    /// Сохраняет фотографии объявления в файловой системе
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <param name="files"></param>
+    /// <returns></returns>
     public async Task<BaseResult<List<Media>>> SaveAdFile(
         Guid userId,
         Guid adId,
@@ -55,6 +63,67 @@ public class MediasRepository : BaseRepository<Media>
         }
 
         return new BaseResult<List<Media>>(medias);
+    }
+
+    /// <summary>
+    /// Удаляет фотографию объявления
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <param name="mediaId"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> DeleteAdFile(
+        Guid userId,
+        Guid adId,
+        Guid mediaId)
+    {
+        var media = await Context.Medias.FirstOrDefaultAsync(m => m.Id.Equals(mediaId));
+
+        if (media is null)
+            return new BaseResult("Такой фотографии не существует");
+        
+        var userFilePath = Path.Combine(FilesPath, userId.ToString());
+        var adsFilePath = Path.Combine(userFilePath, "Ads");
+        var adFilePath = Path.Combine(adsFilePath, adId.ToString());
+        var mediaFilePath = Path.Combine(adFilePath, media.Name);
+        
+        if (!File.Exists(mediaFilePath)) return new BaseResult("Файл не найден");
+        
+        File.Delete(mediaFilePath);
+        Context.Medias.Remove(media);
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult()
+        };
+    }
+    
+    /// <summary>
+    /// Добавляет фотографию к объявлению
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <param name="mediaId"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<Media>> AddAdFile(
+        Guid userId,
+        AdAddMediaCommand command)
+    {
+        var userFilePath = Path.Combine(FilesPath, userId.ToString());
+        var adsFilePath = Path.Combine(userFilePath, "Ads");
+        var adFilePath = Path.Combine(adsFilePath, command.Id.ToString());
+        var filePath = Path.Combine(adFilePath, command.Photo.FileName);
+        
+        await using var stream = new FileStream(filePath, FileMode.Create);
+        await command.Photo.CopyToAsync(stream);
+
+        var media = new Media
+        {
+            Name = command.Photo.FileName,
+            AdId = command.Id,
+        };
+
+        return new BaseResult<Media>(media);
     }
     
     public async Task<List<Media>> GetMediaByAdId(Guid adId)

@@ -64,10 +64,22 @@
     @foreach (var image in Model.AdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
     {
         <div class="col-md text-center image-cell position-relative">
-            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid">
+            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid ">
         </div>
     }
 </div>
+
+@if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
+{
+    <div class="row">
+        <div class="mb-3">
+                    <iframe width="560" height="315" src="@Model.AdViewModel.YouTubeLink" 
+                            title="YouTube video player" frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+    </div>
+}
 
 <div class="row mt-3">
     <div class="col-md-12">
@@ -81,9 +93,6 @@
             <textarea asp-for="AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
         </div>
         <div class="mb-3">
-            <input type="text" asp-for="AdViewModel.YouTubeLink" class="form-control" placeholder="Ссылка на YouTube видео" readonly>
-        </div>
-        <div class="mb-3">
             <input type="text" asp-for="AdViewModel.Condition" class="form-control" placeholder="Состояние" readonly>
         </div>
         <div class="mb-3">
@@ -91,22 +100,34 @@
         </div>
         <div class="row mb-3">
             <div class="col-6">
-                <div class="mb-3">
-                    <button type="button" class="btn btn-primary btn-block">Добавить в избранное</button>
-                </div>
+                <form asp-page-handler="addToFavorites" method="post">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary btn-block">Добавить в избранное</button>
+                    </div>
+                </form>
             </div>
             <div class="col-6">
-                <div class="mb-3">
-                    <button type="button" class="btn btn-danger btn-block">Пожаловаться</button>
-                </div>
+                <form asp-page-handler="complain" method="post">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let images = @Model.AdViewModel.Images.Select(s => Model.BaseUrl + '/' + s.LocalPath).ToList(); 
+    let images = [];
     let currentImageIndex = 0;
+    
+    // Получаем все элементы img с классом img-thumbnail
+    let thumbnailImages = document.querySelectorAll('.img-thumbnail');
+    
+    // Проходимся по каждому элементу и добавляем его src в массив images
+    thumbnailImages.forEach(function(image) {
+        images.push(image.src);
+    });
 
     function prevImage() {
         if (images.length < 2)

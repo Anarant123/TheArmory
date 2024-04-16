@@ -22,7 +22,12 @@ public class AdsRepository : BaseRepository
         _mediasRepository = mediasRepository;
     }
 
-    // todo получить свое объявление
+    /// <summary>
+    /// Возвращает объявление пользователя
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <returns></returns>
     public async Task<BaseResult<AdViewModel>> GetMyAd(
         Guid userId,
         Guid adId)
@@ -36,7 +41,11 @@ public class AdsRepository : BaseRepository
         return new BaseResult<AdViewModel>(new AdViewModel(ad));
     }
     
-    // todo получить объявление
+    /// <summary>
+    /// Возвращает объявление
+    /// </summary>
+    /// <param name="adId"></param>
+    /// <returns></returns>
     public async Task<BaseResult<AdViewModel>> GetAd(
         Guid adId)
     {
@@ -52,7 +61,11 @@ public class AdsRepository : BaseRepository
         return new BaseResult<AdViewModel>(new AdViewModel(ad));
     }
     
-    // todo получить свои объявления
+    /// <summary>
+    /// Возвращает все объявления пользователя
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(
         Guid userId)
     {
@@ -70,7 +83,11 @@ public class AdsRepository : BaseRepository
         return new BaseQueryResult<TileAdViewModel>(ads);
     }
     
-    // todo получить все объявления
+    /// <summary>
+    /// Возвращает все объявления 
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetAds(
         Guid? userId)
     {
@@ -196,9 +213,9 @@ public class AdsRepository : BaseRepository
     /// <returns></returns>
     public async Task<BaseResult> AdAddToFavorite(
         Guid userId,
-        AdAddToFavoriteCommand command)
+        AdCommand command)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.AdId));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
 
@@ -206,7 +223,7 @@ public class AdsRepository : BaseRepository
 
         var favorite = new Favorite()
         {
-            AdId = command.AdId,
+            AdId = command.Id,
             UserId = userId,
         };
 
@@ -250,5 +267,40 @@ public class AdsRepository : BaseRepository
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
             _ => new BaseResult<AdViewModel>()
         };
+    }
+    
+    
+    /// <summary>
+    /// Удалить фото
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> DeleteMedia(
+        Guid userId,
+        AdDeleteMediaCommand command)
+    {
+        var result = await _mediasRepository.DeleteAdFile(userId, command.Id, command.MediaId);
+        if (!result.Success)
+            return new BaseResult(result.Error);
+
+        return new BaseResult();
+    }
+    
+    /// <summary>
+    /// Добавить фото
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> AddMedia(
+        Guid userId,
+        AdAddMediaCommand command)
+    {
+        var result = await _mediasRepository.AddAdFile(userId, command);
+        if (!result.Success)
+            return new BaseResult(result.Error);
+
+        return new BaseResult();
     }
 }

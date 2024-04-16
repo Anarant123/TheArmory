@@ -1,6 +1,6 @@
 ﻿namespace TheArmory.Domain.Models.Request.Commands.Ad;
 
-public class AdDeleteCommand : EntityCommand
+public class AdCommand : EntityCommand
 {
     
 }

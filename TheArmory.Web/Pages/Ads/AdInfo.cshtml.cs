@@ -19,9 +19,19 @@ public class AdInfo : PageModel
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
 
-    public async Task OnGet(Guid id)
+    public async Task OnGetAsync(Guid id)
     {
         var result = await _adsService.GetAd(id);
         AdViewModel = result.Item;
+    }
+
+    public async Task OnPostAddToFavoritesAsync()
+    {
+        var g = 3 + 5;
+    }
+    
+    public async Task OnPostComplainAsync()
+    {
+        var g = 3 + 5;
     }
 }
