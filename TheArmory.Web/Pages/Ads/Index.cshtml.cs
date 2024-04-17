@@ -31,7 +31,7 @@ public class Index : PageModel
     public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
     
     [BindProperty]
-    public List<TileAdViewModel> TileAds => (List<TileAdViewModel>)QueryResult.Items; 
+    public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
 
     public Index(
         AdsService adsService,

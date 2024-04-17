@@ -76,10 +76,19 @@
             
             <!-- Плитки с объявлениями -->
             <div class="row">
-                @foreach (var ad in Model.TileAds)
+                @if (Model.TileAds is not null && Model.TileAds.Any())
                 {
-                    ad.BaseUrl = Model.BaseUrl;
-                    @await Html.PartialAsync("AdTile", ad)
+                    @foreach (var ad in Model.TileAds)
+                    {
+                        ad.BaseUrl = Model.BaseUrl;
+                        <div class="col-md-3 mb-3">
+                            @await Html.PartialAsync("AdTile", ad)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h1>Объявлений не найдено</h1>
                 }
             </div>
             <div class="row">
