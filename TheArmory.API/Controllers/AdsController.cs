@@ -48,6 +48,28 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
+    
+    /// <summary>
+    /// Получить все объявления
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("My")]
+    public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetMyAds(
+        [FromQuery]BaseQueryItemsParams queryItemsParams)
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success || userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var result = await _adsRepository.GetMyAds(userResponse.Item.Id);
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
 
     /// <summary>
     /// Получить объявление
