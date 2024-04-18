@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -25,6 +26,9 @@ public class PersonalInfo : PageModel
     
     [BindProperty]
     public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
+    
+    [BindProperty]
+    public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 
@@ -45,5 +49,11 @@ public class PersonalInfo : PageModel
         var userResponce = await _userService.GetMe();
         User = userResponce.Item;
         QueryResult = await _adsService.GetMyAds();
+    }
+    
+    
+    public async Task OnPostChangePhotoAsync()
+    {
+        await _userService.ChangePhoto(ChangeProfilePhotoCommand);
     }
 }

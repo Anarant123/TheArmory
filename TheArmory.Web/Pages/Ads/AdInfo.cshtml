@@ -92,12 +92,12 @@
         <div class="mb-3">
             <textarea asp-for="AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
         </div>
-        <div class="mb-3">
-            <input type="text" asp-for="AdViewModel.Condition" class="form-control" placeholder="Состояние" readonly>
-        </div>
-        <div class="mb-3">
-            <input type="text" asp-for="AdViewModel.Region" class="form-control" placeholder="Регион" readonly>
-        </div>
+        @* <div class="mb-3"> *@
+        @*     <input type="text" asp-for="AdViewModel.Condition" class="form-control" placeholder="Состояние" readonly> *@
+        @* </div> *@
+        @* <div class="mb-3"> *@
+        @*     <input type="text" asp-for="AdViewModel.Region" class="form-control" placeholder="Регион" readonly> *@
+        @* </div> *@
         <div class="row mb-3">
             <div class="col-6">
                 <form asp-page-handler="addToFavorites" method="post">

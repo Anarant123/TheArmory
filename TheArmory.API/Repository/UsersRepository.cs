@@ -14,13 +14,16 @@ namespace TheArmory.Repository;
 public class UsersRepository : BaseRepository
 {
     private readonly PasswordHasher<User> _passwordHasher;
+    private readonly MediasRepository _mediasRepository;
     public UsersRepository(
         ApplicationContext context,
         ILogger<BaseRepository<User>> logger,
-        PasswordHasher<User> passwordHasher)
+        PasswordHasher<User> passwordHasher,
+        MediasRepository mediasRepository)
         : base(context, logger)
     {
         _passwordHasher = passwordHasher;
+        _mediasRepository = mediasRepository;
     }
     
     // todo Авторизация
@@ -129,4 +132,20 @@ public class UsersRepository : BaseRepository
     
     // todo Смена пароля
     
+    
+    public async Task<BaseResult> ChangeProfilePhoto(
+        User user,
+        IFormFile photo)
+    {
+        var changeResult = await _mediasRepository.ChangeProfilePhoto(user.Id, photo);
+        if (!changeResult.Success)
+            return new BaseResult("Сменить фото профиля не удалось");
+
+        user.PhotoName = changeResult.Item;
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult()
+        };
+    }
 }

@@ -62,6 +62,7 @@ public class UserPersonalInfoViewModel
         Name = user.Name;
         PhoneNumber = user.PhoneNumber;
         Email = user.Email;
+        PhotoName = user.PhotoName is not null ? Path.Combine(user.Id.ToString(), "Profileinfo", user.PhotoName) : null;
         RegionId = user.RegionId;
         StatusId = user.StatusId;
         RegistrationDateTime = user.RegistrationDateTime;

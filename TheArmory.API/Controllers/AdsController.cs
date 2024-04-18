@@ -142,7 +142,7 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> AddMedia(
-        [FromBody]AdAddMediaCommand command)
+        [FromForm]AdAddMediaCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
@@ -166,7 +166,7 @@ public class AdsController : BaseController
     [HttpDelete]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> DeleteMedia(
-        [FromBody]AdDeleteMediaCommand command)
+        [FromForm]AdDeleteMediaCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)

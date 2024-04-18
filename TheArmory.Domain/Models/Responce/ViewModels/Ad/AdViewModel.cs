@@ -70,14 +70,14 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         /// <summary>
         /// Состояние
         /// </summary>
-        [JsonPropertyName("condition")]
-        public string Condition { get; set; }
+        [JsonPropertyName("conditionId")]
+        public WeaponCondition ConditionId { get; set; }
         
         /// <summary>
         /// Регион
         /// </summary>
-        [JsonPropertyName("region")]
-        public string Region { get; set; }
+        [JsonPropertyName("regionId")]
+        public Guid RegionId { get; set; }
         
         [JsonPropertyName("images")]
         public List<MediaInfoViewModel> Images { get; set; }
@@ -96,8 +96,8 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             CountOfViewsToday = ad.CountOfViewsToday;
             LastVisitDate = ad.LastVisitDate;
             YouTubeLink = ad.YouTubeLink;
-            Condition = ad.Condition.Name;
-            Region = ad.Region.Name;
+            ConditionId = ad.ConditionId;
+            RegionId = ad.RegionId;
             Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         }
     }

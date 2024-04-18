@@ -40,11 +40,7 @@ public class MediasRepository : BaseRepository<Media>
 
         var adFilePath = Path.Combine(adsFilePath, adId.ToString());
         EnsureDirectoryExists(adFilePath);
-
-        // перенести потом в другое место
-        // var profileInfoFilePath = Path.Combine(userFilePath, "ProfileInfo");
-        // EnsureDirectoryExists(userFilePath);
-
+        
         var medias = new List<Media>();
         foreach (var file in files)
         {
@@ -97,13 +93,12 @@ public class MediasRepository : BaseRepository<Media>
             _ => new BaseResult()
         };
     }
-    
+
     /// <summary>
     /// Добавляет фотографию к объявлению
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="adId"></param>
-    /// <param name="mediaId"></param>
+    /// <param name="command"></param>
     /// <returns></returns>
     public async Task<BaseResult<Media>> AddAdFile(
         Guid userId,
@@ -126,6 +121,34 @@ public class MediasRepository : BaseRepository<Media>
         return new BaseResult<Media>(media);
     }
     
+    /// <summary>
+    /// Добавляет фотографию к объявлению
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<string>> ChangeProfilePhoto(
+        Guid userId,
+        IFormFile photo)
+    {
+        var userFilePath = Path.Combine(FilesPath, userId.ToString());
+        var profileInfoFilePath = Path.Combine(userFilePath, "ProfileInfo");
+        EnsureDirectoryExists(profileInfoFilePath);
+        DeleteAllFilesInProfileInfo(profileInfoFilePath);
+
+        var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
+        var filePath = Path.Combine(profileInfoFilePath, fileName);
+    
+        await using var stream = new FileStream(filePath, FileMode.Create);
+        await photo.CopyToAsync(stream);
+
+        return new BaseResult<string>()
+        {
+            Item = fileName
+        };
+    }
+
+    
     public async Task<List<Media>> GetMediaByAdId(Guid adId)
     {
         var medias = await Context.Medias
@@ -140,6 +163,22 @@ public class MediasRepository : BaseRepository<Media>
     {
         if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
     }
+
+
+    private static void DeleteAllFilesInProfileInfo(string path)
+    {
+        try
+        {
+            var files = Directory.GetFiles(path);
+
+            foreach (var file in files) File.Delete(file);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при удалении файлов из директории: {ex.Message}");
+        }
+    }
+
     
     
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Message.Errors;
+using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -34,5 +36,29 @@ public class UsersController : BaseController
             false => BadRequest(userResponse),
             true => Ok(new BaseResult<UserPersonalInfoViewModel>(new UserPersonalInfoViewModel(userResponse.Item)))
         };
+    }
+
+    /// <summary>
+    /// Смена фотографии профиля
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>w
+    [HttpPost]
+    [Route("ChangeProfilePhoto")]
+    public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(
+        [FromForm]UserChangeProfilePhotoCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse is { Success: false, Item: not null })
+            BadRequest(userResponse);
+
+        var user = userResponse.Item!;
+
+        var result = await _usersRepository.ChangeProfilePhoto(user, command.Photo);
+
+        if (!result.Success)
+            return BadRequest(result);
+        
+        return Ok(result);
     }
 }

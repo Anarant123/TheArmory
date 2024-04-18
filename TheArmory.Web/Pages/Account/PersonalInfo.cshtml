@@ -5,22 +5,58 @@
     ViewData["Title"] = "Персональная информация";
 }
 
+<style>
+    .square-container {
+        position: relative;
+        width: 100%;
+        padding-top: 100%; /* Высота контейнера равна его ширине, создавая квадрат */
+        overflow: hidden;
+    }
+    
+    .square-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
+    }
+
+</style>
+
 <div class="row">
-    @await Html.PartialAsync("SideBar")
-    <div class="col-md-9">
+    <div class="col-md-2">
+        @await Html.PartialAsync("SideBar")
+    </div>
+    <div class="col-md-10">
         <div class="container">
             <div class="row">
                 <!-- Фото профиля -->
-                <div class="col-md-3">
-                    @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
-                    {
-                        <img src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle">
-                    }
-                    else
-                    {
-                        <img src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle">
-                    }
+                <div class="col-3">
+                    <form method="post" enctype="multipart/form-data" id="changePhotoForm" asp-page-handler="ChangePhoto">
+                        <div class="row">
+                            @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
+                            {
+                                <div class="square-container">
+                                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="square-container">
+                                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                                </div>
+                            }
+                        </div>
+                        <div class="row mt-2">
+                            
+                            <input type="file" id="file-input" asp-for="ChangeProfilePhotoCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
+                            <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
+                            <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+                        </div>
+                    </form>
                 </div>
+
                 <!-- Информация о пользователе -->
                 <div class="col-md-9">
                     <h2>Информация о пользователе</h2>
@@ -85,7 +121,7 @@
                         @foreach (var ad in Model.TileAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 @await Html.PartialAsync("Ads/AdTile", ad)
                             </div>
                         }
@@ -104,7 +140,7 @@
                         @foreach (var ad in Model.TileAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 @await Html.PartialAsync("Ads/AdTile", ad)
                             </div>
                         }
@@ -123,7 +159,7 @@
                         @foreach (var ad in Model.TileAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-2 mb-3">
                                 @await Html.PartialAsync("Ads/AdTile", ad)
                             </div>
                         }
@@ -137,3 +173,75 @@
         </div>
     </div>
 </div>
+
+<script> 
+    let images; 
+    let imageUrl = document.getElementById("profile-photo").src;
+    
+    function updateImage() {
+        let image = document.getElementById("profile-photo");
+        let blob = new Blob([new Uint8Array(images)], { type: 'image/jpeg' });
+        image.src = URL.createObjectURL(blob);
+    }
+    
+    // Обработчик события клика на изображении профиля для выбора файла
+    document.getElementById('profile-photo').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+    });
+    
+    // Функция для обновления изображения при выборе файла
+    function handleFileSelect(event) {
+        let files = event.target.files;
+    
+        if (files.length > 0) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let arrayBuffer = e.target.result; 
+    
+                let image = document.getElementById("profile-photo");
+                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                   image.src = URL.createObjectURL(blob);
+            };
+            reader.readAsArrayBuffer(files[0]); // Читаем только первый файл
+        }
+        document.getElementById('save-photo-btn').style.display = 'inline-block';
+        document.getElementById('cancel-photo-btn').style.display = 'inline-block';
+    }
+    
+    // Добавляем обработчик события change на элемент file-input
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
+
+    // Функция для удаления фото и возвращения предыдущего изображения
+    function removeImage() {
+        let image = document.getElementById("profile-photo");
+        image.src = imageUrl;
+        document.getElementById('file-input').value = ""; 
+        document.getElementById('save-photo-btn').style.display = 'none';
+        document.getElementById('cancel-photo-btn').style.display = 'none';
+    }
+    document.getElementById('cancel-photo-btn').addEventListener('click', function () {
+                removeImage();
+    });
+    
+
+    
+    function submitForm(event) {
+        event.preventDefault(); // Отменяем стандартное поведение отправки формы
+        let file = document.getElementById('file-input').files[0]; // Получаем первый выбранный файл
+        let formData = new FormData(); // Создаем объект FormData
+        
+        if (file) {
+            formData.append('ChangeProfilePhotoCommand.Photo', file); // Добавляем файл в FormData
+        }
+            
+        // Выполняем AJAX-запрос
+        $.ajax({
+            url: '/Account/PersonalInfo?handler=ChangePhoto',
+            data: formData,
+            processData: false, // Отключаем автоматическую обработку данных перед отправкой
+            contentType: false, // Отключаем автоматическое определение типа контента
+            type: 'POST'
+        });
+    }
+
+</script>
