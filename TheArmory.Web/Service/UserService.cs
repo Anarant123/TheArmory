@@ -43,8 +43,12 @@ public class UserService : BaseService<User>
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/ChangeProfilePhoto";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
-            var response = await httpClient.PostAsync(uri, content);
+            var stream = command.Photo.OpenReadStream();
+            var multipart = new MultipartFormDataContent
+            {
+                { new StreamContent(stream), "photo", command.Photo.FileName }
+            };
+            var response = await httpClient.PostAsync(uri, multipart);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
@@ -56,4 +60,6 @@ public class UserService : BaseService<User>
             return new BaseResult(exception.Message);
         }
     }
+
+
 }

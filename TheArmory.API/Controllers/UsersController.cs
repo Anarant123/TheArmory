@@ -42,7 +42,7 @@ public class UsersController : BaseController
     /// Смена фотографии профиля
     /// </summary>
     /// <param name="command"></param>
-    /// <returns></returns>w
+    /// <returns></returns>
     [HttpPost]
     [Route("ChangeProfilePhoto")]
     public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(

@@ -96,11 +96,19 @@ public class UsersRepository : BaseRepository
         };
     }
     
-    // todo Получение своего профиля
+    
+    /// <summary>
+    /// Пользователь по Id
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
     public async Task<BaseResult<User>> Get(
         Guid userId)
     {
-        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+        var user = await Context.Users
+            .Include(u => u.Region)
+            .Include(u => u.Status)
+            .FirstOrDefaultAsync(u => u.Id.Equals(userId));
         if (user is null)
             return new BaseResult<User>(ErrorsMessage.UserNotFound);
         user.LastVisitDate = DateTime.Now;

@@ -25,7 +25,7 @@ public class PersonalInfo : PageModel
     public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
     
     [BindProperty]
-    public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
+    public List<TileAdViewModel>? TileActiveAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
     
     [BindProperty]
     public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
@@ -54,6 +54,11 @@ public class PersonalInfo : PageModel
     
     public async Task OnPostChangePhotoAsync()
     {
-        await _userService.ChangePhoto(ChangeProfilePhotoCommand);
+        var result = await _userService.ChangePhoto(ChangeProfilePhotoCommand);
+        if (result.Success)
+        {
+            await OnGetAsync();
+        }
     }
+
 }

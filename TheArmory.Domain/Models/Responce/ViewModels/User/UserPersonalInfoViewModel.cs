@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -39,14 +40,16 @@ public class UserPersonalInfoViewModel
     /// <summary>
     /// Id региона
     /// </summary>
-    [JsonPropertyName("regionId")]
-    public Guid? RegionId { get; set; }
+    [JsonPropertyName("region")]
+    public Database.Region Region { get; set; }
 
     /// <summary>
     /// Id статуса
     /// </summary>
-    [JsonPropertyName("statusId")]
-    public StateStatus StatusId { get; set; }
+    [JsonPropertyName("status")]
+    public Status Status { get; set; }
+    
+    
     
     /// <summary>
     /// Дата создания
@@ -63,8 +66,8 @@ public class UserPersonalInfoViewModel
         PhoneNumber = user.PhoneNumber;
         Email = user.Email;
         PhotoName = user.PhotoName is not null ? Path.Combine(user.Id.ToString(), "Profileinfo", user.PhotoName) : null;
-        RegionId = user.RegionId;
-        StatusId = user.StatusId;
+        Region = user.Region;
+        Status = user.Status;
         RegistrationDateTime = user.RegistrationDateTime;
     }
 }

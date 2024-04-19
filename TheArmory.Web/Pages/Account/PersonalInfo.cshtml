@@ -25,9 +25,6 @@
 </style>
 
 <div class="row">
-    <div class="col-md-2">
-        @await Html.PartialAsync("SideBar")
-    </div>
     <div class="col-md-10">
         <div class="container">
             <div class="row">
@@ -59,18 +56,15 @@
 
                 <!-- Информация о пользователе -->
                 <div class="col-md-9">
-                    <h2>Информация о пользователе</h2>
+                    <h4>Ваши данные</h4>
                     <form>
                         <div class="form-group">
-                            <label for="name">Название:</label>
                             <input type="text" id="name" name="name" value="@Model.User.Name" class="form-control" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="phoneNumber">Номер телефона:</label>
                             <input type="text" id="phoneNumber" name="phoneNumber" value="@Model.User.PhoneNumber" class="form-control" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="email">Электронная почта:</label>
                             <input type="email" id="email" name="email" value="@Model.User.Email" class="form-control" readonly>
                         </div>
                         <div class="form-group">
@@ -78,17 +72,18 @@
                             <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="regionId">Id региона:</label>
-                            <input type="text" id="regionId" name="regionId" value="@Model.User.RegionId" class="form-control" readonly>
+                            <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="statusId">Id статуса:</label>
-                            <input type="text" id="statusId" name="statusId" value="@Model.User.StatusId" class="form-control" readonly>
+                            <input type="text" id="statusId" name="statusId" value="@Model.User.Status.Name" class="form-control" readonly>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-md-2">
+        @await Html.PartialAsync("SideBar")
     </div>
 </div>
 
@@ -116,9 +111,9 @@
             <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
                 <!-- Плитки с активными объявлениями -->
                 <div class="row">
-                    @if (Model.TileAds is not null && Model.TileAds.Any())
+                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
                     {
-                        @foreach (var ad in Model.TileAds)
+                        @foreach (var ad in Model.TileActiveAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">
@@ -135,9 +130,9 @@
             <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="inactive-tab">
                 <!-- Плитки с неактивными объявлениями -->
                 <div class="row">
-                    @if (Model.TileAds is not null && Model.TileAds.Any())
+                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
                     {
-                        @foreach (var ad in Model.TileAds)
+                        @foreach (var ad in Model.TileActiveAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">
@@ -154,9 +149,9 @@
             <div class="tab-pane fade" id="banned" role="tabpanel" aria-labelledby="banned-tab">
                 <!-- Плитки с объявлениями в бане -->
                 <div class="row">
-                    @if (Model.TileAds is not null && Model.TileAds.Any())
+                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
                     {
-                        @foreach (var ad in Model.TileAds)
+                        @foreach (var ad in Model.TileActiveAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">
@@ -222,26 +217,5 @@
     document.getElementById('cancel-photo-btn').addEventListener('click', function () {
                 removeImage();
     });
-    
-
-    
-    function submitForm(event) {
-        event.preventDefault(); // Отменяем стандартное поведение отправки формы
-        let file = document.getElementById('file-input').files[0]; // Получаем первый выбранный файл
-        let formData = new FormData(); // Создаем объект FormData
-        
-        if (file) {
-            formData.append('ChangeProfilePhotoCommand.Photo', file); // Добавляем файл в FormData
-        }
-            
-        // Выполняем AJAX-запрос
-        $.ajax({
-            url: '/Account/PersonalInfo?handler=ChangePhoto',
-            data: formData,
-            processData: false, // Отключаем автоматическую обработку данных перед отправкой
-            contentType: false, // Отключаем автоматическое определение типа контента
-            type: 'POST'
-        });
-    }
 
 </script>
