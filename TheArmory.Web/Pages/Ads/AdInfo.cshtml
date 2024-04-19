@@ -46,38 +46,60 @@
 </style>
 
 <div class="row">
-    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-    </div>
-    <div class="col-md-10 text-center">
-        <div id="image-area" class="position-relative">
-            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+    <div class="col-10">
+        <div class="row">
+            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+            </div>
+            <div class="col-md-10 text-center">
+                <div id="image-area" class="position-relative">
+                    <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+            </div>
+        </div>
+
+        <!-- Контейнер для ячеек с изображениями -->
+        <div id="thumbnails-container" class="row mt-3">
+            @foreach (var image in Model.AdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+            {
+                <div class="col-md text-center image-cell position-relative">
+                    <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid ">
+                </div>
+            }
         </div>
     </div>
-    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+    <div class="col-2">
+        <div class="row">
+            @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
+            {
+                <div class="square-container">
+                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                </div>
+            }
+            else
+            {
+                <div class="square-container">
+                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                </div>
+            }
+        </div>
     </div>
 </div>
 
-<!-- Контейнер для ячеек с изображениями -->
-<div id="thumbnails-container" class="row mt-3">
-    @foreach (var image in Model.AdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
-    {
-        <div class="col-md text-center image-cell position-relative">
-            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid ">
-        </div>
-    }
-</div>
 
 @if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
 {
     <div class="row">
         <div class="mb-3">
-                    <iframe width="560" height="315" src="@Model.AdViewModel.YouTubeLink" 
-                            title="YouTube video player" frameborder="0" 
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                </div>
+            <iframe width="560" height="315" src="@Model.AdViewModel.YouTubeLink"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+            </iframe>
+        </div>
     </div>
 }
 

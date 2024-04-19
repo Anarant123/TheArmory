@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.User;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -20,12 +22,16 @@ public class PersonalInfo : PageModel
     
     [BindProperty]
     public UserPersonalInfoViewModel User { get; set; }
+
+    [BindProperty]
+    public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
     
     [BindProperty]
-    public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
+    public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
     
     [BindProperty]
-    public List<TileAdViewModel>? TileActiveAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
+    public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+     
     
     [BindProperty]
     public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
@@ -48,7 +54,11 @@ public class PersonalInfo : PageModel
     {
         var userResponce = await _userService.GetMe();
         User = userResponce.Item;
-        QueryResult = await _adsService.GetMyAds();
+        
+        
+        ActiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
+        InactiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
+        BannedAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
     }
     
     

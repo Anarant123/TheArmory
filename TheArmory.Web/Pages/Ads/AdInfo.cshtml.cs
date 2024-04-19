@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
 using TheArmory.Web.Service;
 
@@ -10,7 +11,7 @@ public class AdInfo : PageModel
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
     
-    
+    public UserContactsViewModel User { get; set; }
     public AdViewModel AdViewModel { get; set; }
     
     public AdInfo(AdsService adsService, BaseUrlOptions baseUrlOptions)

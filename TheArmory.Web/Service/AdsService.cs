@@ -3,10 +3,12 @@ using System.Text.Json;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.Ad;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
 using TheArmory.Web.Models;
+using TheArmory.Web.Utils;
 
 namespace TheArmory.Web.Service;
 
@@ -19,15 +21,19 @@ public class AdsService : BaseService<Ad>
     {
     }
 
-    public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds()
+    public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(TileAdQueryItemsParams queryItemsParams)
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/My";
-            var response = await httpClient.GetAsync(uri);
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}/My");
+            var queryParams = queryItemsParams.ToDictionary();
+            var queryString = queryParams.ToGetParameters();
+            uriBuilder.Query = queryString;
+
+            var response = await httpClient.GetAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
-            
+        
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdViewModel>>(responseStream);
             return result ?? new BaseQueryResult<TileAdViewModel>(ErrorsMessage.SomethingWentWrong);

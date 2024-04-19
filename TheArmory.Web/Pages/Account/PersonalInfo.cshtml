@@ -61,6 +61,7 @@
                         <div class="form-group">
                             <input type="text" id="name" name="name" value="@Model.User.Name" class="form-control" readonly>
                         </div>
+                        <h6>Контакты для связи</h6>
                         <div class="form-group">
                             <input type="text" id="phoneNumber" name="phoneNumber" value="@Model.User.PhoneNumber" class="form-control" readonly>
                         </div>
@@ -71,9 +72,9 @@
                             <label for="registrationDateTime">Дата регистрации:</label>
                             <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
                         </div>
-                        <div class="form-group">
-                            <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly>
-                        </div>
+                        @* <div class="form-group"> *@
+                        @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
+                        @* </div> *@
                         <div class="form-group">
                             <input type="text" id="statusId" name="statusId" value="@Model.User.Status.Name" class="form-control" readonly>
                         </div>
@@ -90,7 +91,7 @@
 <!-- Типы объявлений -->
 <div class="row mt-3">
     <div class="col-md-12">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">Активные</button>
             </li>
@@ -104,6 +105,7 @@
     </div>
 </div>
 
+
 <!-- Контент для каждого типа объявлений -->
 <div class="row mt-3">
     <div class="col-md-12">
@@ -111,9 +113,9 @@
             <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
                 <!-- Плитки с активными объявлениями -->
                 <div class="row">
-                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
+                    @if (Model.ActiveAdsQueryResult.Items is not null && Model.ActiveAdsQueryResult.Items.Any())
                     {
-                        @foreach (var ad in Model.TileActiveAds)
+                        @foreach (var ad in Model.ActiveAdsQueryResult.Items)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">
@@ -130,9 +132,9 @@
             <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="inactive-tab">
                 <!-- Плитки с неактивными объявлениями -->
                 <div class="row">
-                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
+                    @if (Model.InactiveAdsQueryResult.Items is not null && Model.InactiveAdsQueryResult.Items.Any())
                     {
-                        @foreach (var ad in Model.TileActiveAds)
+                        @foreach (var ad in Model.InactiveAdsQueryResult.Items)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">
@@ -149,9 +151,9 @@
             <div class="tab-pane fade" id="banned" role="tabpanel" aria-labelledby="banned-tab">
                 <!-- Плитки с объявлениями в бане -->
                 <div class="row">
-                    @if (Model.TileActiveAds is not null && Model.TileActiveAds.Any())
+                    @if (Model.BannedAdsQueryResult.Items is not null && Model.BannedAdsQueryResult.Items.Any())
                     {
-                        @foreach (var ad in Model.TileActiveAds)
+                        @foreach (var ad in Model.BannedAdsQueryResult.Items)
                         {
                             ad.BaseUrl = Model.BaseUrl;
                             <div class="col-md-2 mb-3">

@@ -4,6 +4,7 @@ namespace TheArmory.Domain.Models.Request.Queries;
 
 public class TileAdQueryItemsParams : BaseQueryItemsParams
 {
+    public StateStatus StatusId { get; set; } = StateStatus.Actively;
     public Guid? RegionId { get; set; }
     
     public WeaponCondition? ConditionId { get; set; }

@@ -65,22 +65,22 @@
 <div id="thumbnails-container" class="row mt-3"></div>
 
 <form method="post" enctype="multipart/form-data" id="form">
-<div class="row mt-3">
-    <div class="col-md-1 text-center"></div>
-    <div class="col-md-5 text-center">
-        <label class="btn btn-primary btn-block">
-            Добавить
-            <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;">
-        </label>
+    <div class="row mt-3">
+        <div class="col-md-1 text-center"></div>
+        <div class="col-md-5 text-center">
+            <label class="btn btn-primary btn-block">
+                Добавить
+                <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;">
+            </label>
+        </div>
+        <div class="col-md-5 text-center">
+            <button type="button" class="btn btn-danger btn-block">Удалить</button>
+        </div>
+        <div class="col-md-1 text-center"></div>
     </div>
-    <div class="col-md-5 text-center">
-        <button type="button" class="btn btn-danger btn-block">Удалить</button>
-    </div>
-    <div class="col-md-1 text-center"></div>
-</div>
 
-<div class="row mt-3">
-    <div class="col-md-12">
+    <div class="row mt-3">
+        <div class="col-md-12">
             <div class="mb-3">
                 <label asp-for="Command.Name" class="form-label">Наименование:</label>
                 <input type="text" asp-for="Command.Name" class="form-control" placeholder="Введите наименование" maxlength="255">
@@ -115,13 +115,35 @@
                     }
                 </select>
             </div>
-        
+            <div id="map" style="width: 600px; height: 400px"></div>
+
             <button type="button" onclick="submitForm(event)" class="btn btn-primary">Добавить</button>
+        </div>
     </div>
-</div>
 </form>
 
 <script src="https://api-maps.yandex.ru/v3/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU"></script>
+<script>
+    initMap();
+
+        async function initMap() {
+            await ymaps3.ready;
+
+            const {YMap, YMapDefaultSchemeLayer} = ymaps3;
+
+            const map = new YMap(
+                document.getElementById('map'),
+                {
+                    location: {
+                        center: [37.588144, 55.733842],
+                        zoom: 10
+                    }
+                }
+            );
+
+            map.addChild(new YMapDefaultSchemeLayer());
+        }
+</script>
 <script>
     function autoResize(textarea) {
         textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто

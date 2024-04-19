@@ -4,6 +4,7 @@ using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
@@ -77,13 +78,15 @@ public class AdsRepository : BaseRepository
     /// <param name="userId"></param>
     /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(
-        Guid userId)
+        Guid userId,
+        TileAdQueryItemsParams queryItemsParams)
     {
         var ads = await Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.Condition)
             .Include(a => a.Region)
-            .Where(a => a.UserId.Equals(userId))
+            .Where(a => a.UserId.Equals(userId) 
+                        && a.Status.Id.Equals(queryItemsParams.StatusId))
             .Select(s => new TileAdViewModel(s))
             .ToListAsync();
 
