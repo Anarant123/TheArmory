@@ -22,25 +22,6 @@ public class AdsRepository : BaseRepository
     {
         _mediasRepository = mediasRepository;
     }
-
-    /// <summary>
-    /// Возвращает объявление пользователя
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="adId"></param>
-    /// <returns></returns>
-    public async Task<BaseResult<AdViewModel>> GetMyAd(
-        Guid userId,
-        Guid adId)
-    {
-        var ad = await Context.Ads
-            .FirstOrDefaultAsync(a => a.Id.Equals(adId) && a.UserId.Equals(userId));
-
-        if (ad is null)
-            return new BaseResult<AdViewModel>("Объявление не найдено");
-
-        return new BaseResult<AdViewModel>(new AdViewModel(ad));
-    }
     
     /// <summary>
     /// Возвращает объявление
@@ -70,6 +51,28 @@ public class AdsRepository : BaseRepository
         await Context.SaveChangesAsync();
 
         return new BaseResult<AdViewModel>(new AdViewModel(ad));
+    }
+
+    /// <summary>
+    /// Возвращает объявление пользователя
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<MyAdViewModel>> GetMyAd(
+        Guid userId,
+        Guid adId)
+    {
+        var ad = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
+            .FirstOrDefaultAsync(a => a.Id.Equals(adId));
+
+        if (ad is null)
+            return new BaseResult<MyAdViewModel>("Объявление не найдено");
+        
+        return new BaseResult<MyAdViewModel>(new MyAdViewModel(ad));
     }
     
     /// <summary>

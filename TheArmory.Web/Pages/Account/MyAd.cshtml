@@ -1,0 +1,297 @@
+﻿@page
+@using TheArmory.Domain.Models.Responce.ViewModels.Ad
+@model TheArmory.Web.Pages.Account.MyAd
+
+@{
+    ViewData["Title"] = "Настройка";
+}
+
+<style>
+    .btn-block {
+        width: 100%;
+    }
+    
+    #image-area {
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    #image-area img {
+        width: auto;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+    }
+    
+    .image-cell {
+            width: 100px; /* Ширина ячейки */
+            height: 100px; /* Высота ячейки */
+            overflow: hidden; /* Скрытие избыточного контента */
+            display: flex; /* Использование flexbox */
+            align-items: center; /* Выравнивание по вертикали */
+            justify-content: center; /* Выравнивание по горизонтали */
+            margin: 0; /* Убираем отступы между ячейками */
+        }
+    
+    .image-cell img {
+                max-width: 100%; /* Максимальная ширина изображения внутри ячейки */
+                max-height: 100%; /* Максимальная высота изображения внутри ячейки */
+                width: auto; /* Автоматическое вычисление ширины для сохранения пропорций */
+                height: auto; /* Автоматическое вычисление высоты для сохранения пропорций */
+            }
+</style>
+
+<form method="post" enctype="multipart/form-data" id="form">
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <h1>Параметры</h1>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.Name" class="form-label">Наименование:</label>
+                            <input type="text" asp-for="MyAdViewModel.Name" class="form-control" placeholder="Введите наименование" maxlength="255">
+                        </div>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.ConditionId" class="form-label">Состояние:</label>
+                            <select asp-for="MyAdViewModel.ConditionId" class="form-control" id="conditionId" name="Command.ConditionId">
+                                @foreach (var condition in Model.Conditions)
+                                {
+                                    <option value="@condition.Id">@condition.Name</option>
+                                }
+                            </select>
+                        </div>
+            <h1>Подробности</h1>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.Description" class="form-label">Описание:</label>
+                            <textarea asp-for="MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)"></textarea>
+                        </div>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.Price" class="form-label">Цена:</label>
+                            <input type="text" asp-for="MyAdViewModel.Price" class="form-control" placeholder="Введите цену" oninput="validatePrice(this)">
+                        </div>
+            <h1>Фотографии</h1>
+            <div class="row">
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                </div>
+                <div class="col-md-10 text-center">
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                    </div>
+                </div>
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                </div>
+            </div>
+            
+            <!-- Контейнер для ячеек с изображениями -->
+            <div id="thumbnails-container" class="row mt-3">
+                @foreach (var image in Model.MyAdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+                {
+                    <div class="col-md text-center image-cell position-relative">
+                        <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid ">
+                    </div>
+                }
+            </div>
+            <div class="row mt-3">
+                    <div class="col-md-1 text-center"></div>
+                    <div class="col-md-5 text-center">
+                        <label class="btn btn-primary btn-block">
+                            Добавить
+                            <input type="file" id="file-input" asp-for="MyAdViewModel.Images" accept="image/*" multiple="multiple" style="display: none;">
+                        </label>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <button type="button" class="btn btn-danger btn-block">Удалить</button>
+                    </div>
+                    <div class="col-md-1 text-center"></div>
+                </div>
+            
+            <!-- Контейнер для ячеек с изображениями -->
+            <div id="thumbnails-container" class="row mt-3"></div>
+            <h1>Видео</h1>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
+                            <input type="text" asp-for="MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                        </div>
+            
+            <h1>Место сделки</h1>
+            <div class="mb-3">
+                            <label asp-for="MyAdViewModel.RegionId" class="form-label">Регион:</label>
+                            <select asp-for="MyAdViewModel.RegionId" class="form-control" id="regionId" name="Command.RegionId">
+                                @foreach (var region in Model.Regions)
+                                {
+                                    <option value="@region.Id">@region.Code @region.Name</option>
+                                }
+                            </select>
+                        </div>
+            <div id="map" style="width: 600px; height: 400px"></div>
+             <h1>Место сделки</h1>
+
+            <button type="button" onclick="submitForm(event)" class="btn btn-primary">Добавить</button>
+            <button type="button">Отменить и выйти</button>
+        </div>
+    </div>
+</form>
+
+
+<script src="https://api-maps.yandex.ru/v3/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU"></script>
+<script>
+    initMap();
+
+        async function initMap() {
+            await ymaps3.ready;
+
+            const {YMap, YMapDefaultSchemeLayer} = ymaps3;
+
+            const map = new YMap(
+                document.getElementById('map'),
+                {
+                    location: {
+                        center: [37.588144, 55.733842],
+                        zoom: 10
+                    }
+                }
+            );
+
+            map.addChild(new YMapDefaultSchemeLayer());
+        }
+</script>
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто
+        textarea.style.height = (textarea.scrollHeight) + 'px'; // Устанавливаем высоту текстового поля равной его высоте контента
+    }
+    
+    function validatePrice(input) {
+        input.value = input.value.replace(/[^0-9.]/g, ''); // Заменяем все символы, кроме цифр и точки, на пустую строку
+        // Удалить лишние точки
+        let countDots = (input.value.match(/\./g) || []).length; // Подсчитываем количество точек в значении поля ввода
+        if (countDots > 1) { // Если количество точек больше 1
+            input.value = input.value.replace(/\./g, ''); // Удаляем все точки из значения поля ввода, кроме первой
+        }
+    }
+    
+    let images = []; 
+    let currentImageIndex = 0;
+    
+    function prevImage() {
+        if (images.length < 2) 
+            return; 
+        if (currentImageIndex > 0) { 
+            currentImageIndex--; 
+        } else { 
+            currentImageIndex = images.length - 1; 
+        }
+        updateImage(); 
+    }
+    
+    function nextImage() {
+        if (images.length < 2)
+            return;
+        if (currentImageIndex < images.length - 1) { 
+            currentImageIndex++; 
+        } else { 
+            currentImageIndex = 0; 
+        }
+        updateImage(); 
+    }
+    
+    function updateImage() {
+        let image = document.getElementById("current-image");
+        let blob = new Blob([new Uint8Array(images[currentImageIndex])], { type: 'image/jpeg' });
+        image.src = URL.createObjectURL(blob);
+    }
+    
+    function handleFileSelect(event) {
+        if (images.length >= 5) { 
+            alert("Вы уже добавили максимальное количество изображений.");
+            return;
+        }
+    
+        let files = event.target.files;
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        let numberOfImagesToAdd = Math.min(files.length, 5 - images.length); 
+        let numberOfImagesAdded = 0;
+    
+        for (let i = 0; i < files.length && numberOfImagesAdded < numberOfImagesToAdd; i++) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let arrayBuffer = e.target.result; 
+        
+                images.push(arrayBuffer);
+        
+                let thumbnailContainer = document.createElement('div');
+                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
+                let thumbnail = document.createElement('img');
+                thumbnail.className = 'img-thumbnail img-fluid';
+                
+                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                thumbnail.src = URL.createObjectURL(blob);
+        
+                thumbnailContainer.appendChild(thumbnail);
+                thumbnailsContainer.appendChild(thumbnailContainer);
+        
+                numberOfImagesAdded++;
+                currentImageIndex = images.length - 1; 
+                updateImage();
+        
+                if (images.length === 5) { 
+                    document.querySelectorAll('.image-controls').forEach(function (element) {
+                        element.style.display = 'flex';
+                    });
+                }
+            };
+            reader.readAsArrayBuffer(files[i]); 
+        }
+    }
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
+    
+    function removeImage(index) {
+        images.splice(index, 1); // Удаляем изображение из массива по указанному индексу
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]); // Удаляем соответствующий блок с миниатюрой изображения из контейнера
+        if (currentImageIndex === index) {
+            if (currentImageIndex === images.length) {
+                currentImageIndex--; // Переключаемся на предыдущее изображение, если удалено было последнее
+            }
+            updateImage(); // Обновляем отображение после удаления
+        } else if (currentImageIndex > index) {
+            currentImageIndex--; // Корректируем текущий индекс, если он находится после удаленного изображения
+        }
+        if (images.length < 5) { // Если теперь в массиве images меньше 5 изображений, скрываем кнопки управления
+            document.querySelectorAll('.image-controls').forEach(function (element) {
+                element.style.display = 'none';
+            });
+        }
+    }
+    document.querySelector('.btn-danger').addEventListener('click', function () {
+        removeImage(currentImageIndex);
+    });
+
+    
+    function submitForm(event) {
+        event.preventDefault(); // Отменяем стандартное поведение отправки формы
+        let formData = new FormData($('#form')[0]); // Создаем объект FormData из формы с id="form"
+    
+        // Добавляем каждое изображение из массива images в FormData
+        for (let i = 0; i < images.length; i++) {
+            formData.append('Command.Photos', new Blob([new Uint8Array(images[i])], { type: 'image/jpeg' }), 'image_' + i + '.jpg');
+        }
+    
+        // Выполняем AJAX-запрос
+        $.ajax({
+            url: '/Publication',
+            data: formData,
+            processData: false, // Отключаем автоматическую обработку данных перед отправкой
+            contentType: false, // Отключаем автоматическое определение типа контента
+            type: 'POST'
+        });
+    }
+
+    
+</script>
