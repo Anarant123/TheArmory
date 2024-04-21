@@ -113,6 +113,23 @@ public class UsersRepository : BaseRepository
         };
     }
     
+    public async Task<BaseResult> ChangeName(
+        Guid userId,
+        UserChangeNameCommand command)
+    {
+        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+        if (user is null)
+            return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
+
+        user.Name = command.NewName;
+        
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult()
+        };
+    }
+    
     // todo Изменение своего профиля
     public async Task<BaseResult<UserViewModel>> Update(
         Guid userId)

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.User;
@@ -10,6 +11,7 @@ using TheArmory.Repository;
 namespace TheArmory.Controllers;
 
 [Route("Users")]
+[Authorize]
 [ApiController]
 public class UsersController : BaseController
 {
@@ -27,6 +29,7 @@ public class UsersController : BaseController
     /// </summary>
     /// <returns></returns>
     [HttpGet]
+    [Authorize]
     [Route("Me")]
     public async Task<ActionResult<BaseResult<UserPersonalInfoViewModel>>> GetMe()
     {
@@ -44,6 +47,7 @@ public class UsersController : BaseController
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
+    [Authorize]
     [Route("ChangeProfilePhoto")]
     public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(
         [FromForm]UserChangeProfilePhotoCommand command)
@@ -55,6 +59,31 @@ public class UsersController : BaseController
         var user = userResponse.Item!;
 
         var result = await _usersRepository.ChangeProfilePhoto(user, command.Photo);
+
+        if (!result.Success)
+            return BadRequest(result);
+        
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Смена фотографии профиля
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Authorize]
+    [Route("ChangeName")]
+    public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(
+        [FromBody]UserChangeNameCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse is { Success: false, Item: not null })
+            BadRequest(userResponse);
+
+        var user = userResponse.Item!;
+
+        var result = await _usersRepository.ChangeName(user.Id, command);
 
         if (!result.Success)
             return BadRequest(result);
