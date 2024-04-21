@@ -1,4 +1,6 @@
-﻿using TheArmory.Domain.Models.Enums;
+﻿using System;
+using System.Collections.Generic;
+using TheArmory.Domain.Models.Enums;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 

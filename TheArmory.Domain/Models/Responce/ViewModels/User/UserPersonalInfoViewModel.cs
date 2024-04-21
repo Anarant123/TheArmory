@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;

@@ -1,4 +1,6 @@
-﻿using TheArmory.Domain.Models.Request.Queries;
+﻿using System;
+using System.Linq;
+using TheArmory.Domain.Models.Request.Queries;
 
 namespace TheArmory.Domain.Utils;
 

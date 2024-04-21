@@ -1,4 +1,5 @@
-﻿using TheArmory.Domain.Models.Enums;
+﻿using System;
+using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad;
 
