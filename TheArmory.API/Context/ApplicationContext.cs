@@ -115,12 +115,22 @@ public class ApplicationContext : DbContext
             .HasMany<Favorite>(u => u.Favorites)
             .WithOne(f => f.User)
             .HasForeignKey(f => f.UserId);
+        modelBuilder.Entity<User>()
+            .HasMany<Contact>(u => u.Contacts)
+            .WithOne(c => c.User)
+            .HasForeignKey(c => c.UserId);
         
         // связи сущности Condition
         modelBuilder.Entity<Condition>()
             .HasMany<Ad>(c => c.Ads)
             .WithOne(a => a.Condition)
             .HasForeignKey(a => a.ConditionId);
+        
+        // связи сущности Contact
+        modelBuilder.Entity<Contact>()
+            .HasOne<User>(c => c.User)
+            .WithMany(u => u.Contacts)
+            .HasForeignKey(c => c.UserId);
     }
     
     public DbSet<Ad> Ads { get; set; }
