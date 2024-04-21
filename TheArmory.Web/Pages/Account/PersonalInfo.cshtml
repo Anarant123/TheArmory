@@ -46,7 +46,7 @@
                             }
                         </div>
                         <div class="row mt-2">
-                            
+
                             <input type="file" id="file-input" asp-for="ChangeProfilePhotoCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
                             <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
                             <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
@@ -58,22 +58,42 @@
                 <div class="col-md-9">
                     <h4>Ваши данные</h4>
                     <form>
-                        <div class="form-group">
-                            <input type="text" id="name" name="name" value="@Model.User.Name" class="form-control" readonly>
-                        </div>
-                        <h6>Контакты для связи</h6>
-                        
-                        <div class="form-group">
-                            <label for="registrationDateTime">Дата регистрации:</label>
-                            <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
-                        </div>
-                        @* <div class="form-group"> *@
-                        @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
-                        @* </div> *@
-                        <div class="form-group">
-                            <input type="text" id="statusId" name="statusId" value="@Model.User.Status.Name" class="form-control" readonly>
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <h5>Имя</h5>
+                                </div>
+                                <div class="col">
+                                    <span id="nameText">@Model.User.Name</span>
+                                    <input type="text" id="nameInput" name="name" class="form-control d-none">
+                                </div>
+                                <div class="col-auto">
+                                    <button id="editButton" type="button" class="btn btn-secondary" onclick="editName()">
+                                        <img src="/icons/edit_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                    <button id="saveButton" type="button" class="btn btn-success d-none" onclick="saveName()">
+                                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                    <button id="cancelButton" type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
+                                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
+
+                    <h6>Контакты для связи</h6>
+
+                    <div class="form-group">
+                        <label for="registrationDateTime">Дата регистрации:</label>
+                        <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
+                    </div>
+                    @* <div class="form-group"> *@
+                    @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
+                    @* </div> *@
+                    <div class="form-group">
+                        <input type="text" id="statusId" name="statusId" value="@Model.User.Status.Name" class="form-control" readonly>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,5 +234,40 @@
     document.getElementById('cancel-photo-btn').addEventListener('click', function () {
                 removeImage();
     });
+    
+    function editName() {
+        // Скрываем текст и показываем поле ввода
+        document.getElementById("nameText").classList.add("d-none");
+        document.getElementById("nameInput").classList.remove("d-none");
+        document.getElementById("nameInput").value = document.getElementById("nameText").textContent;
+    
+        // Показываем кнопки "Галочка" и "Крестик", скрываем кнопку "Редактировать"
+        document.getElementById("editButton").classList.add("d-none");
+        document.getElementById("saveButton").classList.remove("d-none");
+        document.getElementById("cancelButton").classList.remove("d-none");
+    }
+    
+    function saveName() {
+        // Скрываем поле ввода и показываем текст
+        document.getElementById("nameInput").classList.add("d-none");
+        document.getElementById("nameText").classList.remove("d-none");
+        document.getElementById("nameText").textContent = document.getElementById("nameInput").value
+        
+        // Скрываем кнопки "Галочка" и "Крестик", показываем кнопку "Редактировать"
+        document.getElementById("saveButton").classList.add("d-none");
+        document.getElementById("cancelButton").classList.add("d-none");
+        document.getElementById("editButton").classList.remove("d-none");
+    }
+    
+    function cancelEdit() {
+        // Скрываем поле ввода и показываем текст
+        document.getElementById("nameInput").classList.add("d-none");
+        document.getElementById("nameText").classList.remove("d-none");
+    
+        // Скрываем кнопки "Галочка" и "Крестик", показываем кнопку "Редактировать"
+        document.getElementById("saveButton").classList.add("d-none");
+        document.getElementById("cancelButton").classList.add("d-none");
+        document.getElementById("editButton").classList.remove("d-none");
+    }
 
 </script>
