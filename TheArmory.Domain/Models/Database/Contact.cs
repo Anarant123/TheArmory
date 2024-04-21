@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TheArmory.Domain.Models.Database;
 
@@ -16,5 +17,6 @@ public class Contact : DbEntity
     
     // virtual
     
+    [JsonIgnore]
     public virtual User User { get; set; }
 }

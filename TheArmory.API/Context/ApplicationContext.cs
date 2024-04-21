@@ -142,4 +142,5 @@ public class ApplicationContext : DbContext
     public DbSet<Status> Statuses { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Condition> Conditions { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
 }

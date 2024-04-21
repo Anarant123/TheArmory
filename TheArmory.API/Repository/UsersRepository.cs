@@ -130,21 +130,6 @@ public class UsersRepository : BaseRepository
         };
     }
     
-    // todo Изменение своего профиля
-    public async Task<BaseResult<UserViewModel>> Update(
-        Guid userId)
-    {
-        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        if (user is null)
-            return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
-        user.LastVisitDate = DateTime.Now;
-        
-        return await Context.SaveChangesAsync() switch
-        {
-            0 => new BaseResult<UserViewModel>(ErrorsMessage.ErrorSavingChanges),
-            _ => new BaseResult<UserViewModel>(new UserViewModel(user))
-        };
-    }
     
     // todo Удаление своего профиля
     
