@@ -5,32 +5,37 @@
     ViewData["Title"] = "Регистрация";
 }
 
-<div class="container mt-5">
-    <h1 class="text-center">Регистрация</h1>
-    <form method="post" class="mt-4">
-        <div class="mb-3">
-            <label asp-for="Command.Name" class="form-label">Имя:</label>
-            <input type="text" asp-for="Command.Name" class="form-control" required>
-            <span asp-validation-for="Command.Name" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Command.Login" class="form-label">Email:</label>
-            <input type="email" asp-for="Command.Login" class="form-control" required>
-            <span asp-validation-for="Command.Login" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Command.Password" class="form-label">Пароль:</label>
-            <input type="password" asp-for="Command.Password" class="form-control" required>
-            <span asp-validation-for="Command.Password" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Command.PasswordConfirm" class="form-label">Подтвердите пароль:</label>
-            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" required>
-            <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
-        <div class="mt-3">
-            <a asp-page="/Auth/Index">Отмена</a> |
+<div class="container mt-5 text-center">
+    <h1>Регистрация</h1>
+    <form method="post" class="mt-4 d-inline-block">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+                    <span asp-validation-for="Command.Login" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+                    <span asp-validation-for="Command.Password" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required>
+                    <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-block">Зарегистрироваться</button>
+                </div>
+                <div class="mt-3">
+                    <div class="row text-lg-center">
+                        <a asp-page="/Auth/Index">Отмена</a>
+                    </div>
+                    <div class="mt-3 text-lg-start">
+                        <!-- Выравниваем по левому краю -->
+                        <h7 class="text-muted">При регистрации вы соглашаетесь с правилами сайта <a asp-area="" asp-page="/Privacy">Правила сайта</a></h7>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

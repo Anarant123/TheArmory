@@ -8,9 +8,8 @@ public class UserLoginCommand
     /// <summary>
     /// Логин (может быть электронная почта или номер телефона)
     /// </summary>
-    [Required(ErrorMessage = "Введите логин (электронную почту или номер телефона)")]
+    [Required(ErrorMessage = "Введите логин")]
     [Display(Name = "Login")]
-    [RegularExpression(@"^(?:\+7\d{10})?$|^\S+@\S+\.\S+$", ErrorMessage = "Введите корректный логин (электронную почту или номер телефона)")]
     [StringLength(128)]
     [JsonPropertyName("login")]
     public string? Login { set; get; }

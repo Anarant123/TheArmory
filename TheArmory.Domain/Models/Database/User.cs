@@ -12,7 +12,7 @@ public class User : DbEntity
     /// <summary>
     /// Название
     /// </summary>
-    [JsonPropertyName("name")]
+    [Column("name")]
     public string Name { get; set; } = string.Empty;
     
     /// <summary>

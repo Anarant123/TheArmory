@@ -20,7 +20,7 @@ public class UserViewModel
     /// <summary>
     /// Логин пользователя
     /// </summary>
-    [JsonPropertyName("Login")]
+    [JsonPropertyName("login")]
     public string Login { get; set; }
     
     /// <summary>

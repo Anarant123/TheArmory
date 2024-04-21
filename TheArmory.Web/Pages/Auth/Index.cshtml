@@ -5,27 +5,43 @@
     ViewData["Title"] = "Авторизация";
 }
 
-<div class="container mt-5">
-    <h1 class="text-center">Авторизация</h1>
-    <form method="post" class="mt-4">
-        <div class="mb-3">
-            <label asp-for="Command.Login" class="form-label">Логин:</label>
-            <input type="text" asp-for="Command.Login" class="form-control" required>
-            <span asp-validation-for="Command.Login" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Command.Password" class="form-label">Пароль:</label>
-            <input type="password" asp-for="Command.Password" class="form-control" required>
-            <span asp-validation-for="Command.Password" class="text-danger"></span>
-        </div>
-        <div class="mb-3 form-check">
-            <input type="checkbox" id="RememberMe" asp-for="Command.RememberMe" class="form-check-input">
-            <label for="RememberMe" class="form-check-label">Запомнить меня</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Войти</button>
-        <div class="mt-3">
-            <a asp-page="/Auth/Registration">Регистрация</a> |
-            <a asp-page="/Auth/PasswordRecovery">Забыли пароль?</a>
+<div class="container mt-5 text-center">
+    <h1>Вход</h1>
+    <form method="post" class="mt-4 d-inline-block">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="mb-3">
+                    <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+                    <span asp-validation-for="Command.Login" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+                    <span asp-validation-for="Command.Password" class="text-danger"></span>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <div class="form-check">
+                            <input type="checkbox" id="RememberMe" asp-for="Command.RememberMe" class="form-check-input">
+                            <label for="RememberMe" class="form-check-label">Запомнить меня</label>
+                        </div>
+                    </div>
+                    <div class="col-6 text-end">
+                        <a asp-page="/Auth/PasswordRecovery">Забыли пароль?</a>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary btn-block" style="width: 70%">Войти</button>
+                </div>
+                <div class="mt-3 text-center"> 
+                    <h5>Нет аккаунта в TheArmory?</h5>
+                    <div class="mt-3">
+                        <a class="btn btn-primary" style="width: 70%" asp-page="/Auth/Registration">Регистрация</a>
+                    </div>
+                    <div class="mt-3 text-lg-start">
+                        <h7 class="text-muted">При регистрации вы соглашаетесь с правилами сайта <a asp-area="" asp-page="/Privacy">Правила сайта</a></h7>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

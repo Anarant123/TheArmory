@@ -5,13 +5,6 @@ namespace TheArmory.Domain.Models.Request.Commands.User;
 
 public class UserCreateCommand
 {
-    [Required(ErrorMessage = "Введите имя(ФИО) пользователя")]
-    [Display(Name = "Имя пользователя(ФИО)")]
-    [RegularExpression(@"^([А-ЯЁA-Z][а-яёa-z]+[\-\s]?){1,3}$", ErrorMessage = "Некорректное имя пользователя")]
-    [StringLength(50)]
-    [JsonPropertyName("name")]
-    public string? Name { set; get; }
-
     /// <summary>
     /// Логин пользователя
     /// </summary>
