@@ -17,9 +17,12 @@ public class Registration : PageModel
         _service = service;
     }
     
-    public void OnGet()
+    public async Task<IActionResult> OnGetAsync()
     {
+        if (User.Identity is {IsAuthenticated: true })
+            return RedirectToPage("/Account/PersonalInfo");
         
+        return Page();
     }
     
     public async Task<IActionResult> OnPostAsync()
