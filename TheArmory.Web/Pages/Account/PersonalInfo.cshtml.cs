@@ -35,6 +35,9 @@ public class PersonalInfo : PageModel
     
     [BindProperty]
     public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
+    
+    [BindProperty]
+    public UserChangeNameCommand ChangeNameCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 
@@ -65,6 +68,15 @@ public class PersonalInfo : PageModel
     public async Task OnPostChangePhotoAsync()
     {
         var result = await _userService.ChangePhoto(ChangeProfilePhotoCommand);
+        if (result.Success)
+        {
+            await OnGetAsync();
+        }
+    }
+
+    public async Task OnPostChangeNameAsync()
+    {
+        var result = await _userService.ChangeName(ChangeNameCommand);
         if (result.Success)
         {
             await OnGetAsync();
