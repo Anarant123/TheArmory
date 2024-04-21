@@ -18,8 +18,7 @@ public class AuthUtils
         var claims = new List<Claim>()
         {
             new("Id", user?.Id.ToString() ?? string.Empty),
-            new("Phone", user?.PhoneNumber ?? string.Empty),
-            new("Email", user?.Email ?? string.Empty),
+            new("Login", user?.Login ?? string.Empty),
             new("Role", user?.RoleId.ToString() ?? string.Empty),
             new("Status", user?.StatusId.ToString() ?? string.Empty)
         };

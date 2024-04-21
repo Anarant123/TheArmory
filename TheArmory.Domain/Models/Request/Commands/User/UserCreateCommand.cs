@@ -13,25 +13,15 @@ public class UserCreateCommand
     public string? Name { set; get; }
 
     /// <summary>
-    /// Номер телефона
+    /// Логин пользователя
     /// </summary>
-    [Required(ErrorMessage = "Введите номер телефона")]
-    [Display(Name = "Номер телефона")]
-    [RegularExpression(@"^(?:\+7\d{10})?$", ErrorMessage = "Введите корректный номер телефона или оставьте поле пустым")]
-    [StringLength(12)]
-    [JsonPropertyName("phoneNumber")]
-    public string? PhoneNumber { set; get; }
-
-    /// <summary>
-    /// Электронная почта
-    /// </summary>
-    [Required(ErrorMessage = "Введите электронную почту")]
-    [Display(Name = "Email")]
-    [DataType(DataType.EmailAddress)]
-    [RegularExpression(@"^\S+@\S+\.\S+$", ErrorMessage = "Некорректная почта")]
-    [JsonPropertyName("email")]
-    [StringLength(128)]
-    public string? Email { set; get; }
+    [Required(ErrorMessage = "Введите логин")]
+    [Display(Name = "Логин")]
+    [DataType(DataType.Text)]
+    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Некорректный формат логина")]
+    [StringLength(128, ErrorMessage = "Логин должен быть не более 128 символов")]
+    [JsonPropertyName("login")]
+    public string? Login { set; get; }
 
     /// <summary>
     /// Пароль

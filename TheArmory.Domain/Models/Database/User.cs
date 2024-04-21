@@ -14,16 +14,11 @@ public class User : DbEntity
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Номер телефона
-    /// </summary>
-    public string PhoneNumber { get; set; } = string.Empty;
     
     /// <summary>
-    /// Электронная почта
+    /// Логин пользователя
     /// </summary>
-    public string Email { get; set; }
+    public string Login { get; set; }
     
     /// <summary>
     /// Хэш пароля

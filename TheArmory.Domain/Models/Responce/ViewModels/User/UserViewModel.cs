@@ -14,19 +14,14 @@ public class UserViewModel
     /// <summary>
     /// Название
     /// </summary>
-    [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Номер телефона
-    /// </summary>
-    public string PhoneNumber { get; set; } = string.Empty;
     
     /// <summary>
-    /// Электронная почта
+    /// Логин пользователя
     /// </summary>
-    public string Email { get; set; }
+    [JsonPropertyName("Login")]
+    public string Login { get; set; }
     
     /// <summary>
     /// Id региона
@@ -47,8 +42,6 @@ public class UserViewModel
     {
         Id = user.Id;
         Name = user.Name;
-        PhoneNumber = user.PhoneNumber;
-        Email = user.Email;
         RegionId = user.RegionId;
         RoleId = user.RoleId;
         StatusId = user.StatusId;

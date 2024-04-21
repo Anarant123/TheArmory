@@ -34,7 +34,7 @@ public class UsersRepository : BaseRepository
             return new BaseResult<UserViewModel>(ErrorsMessage.SomethingWentWrong);
 
         var user = await Context.Users
-            .FirstOrDefaultAsync(u => u.Email.Equals(command.Login) || u.PhoneNumber.Equals(command.Login));
+            .FirstOrDefaultAsync(u => u.Login.Equals(command.Login));
 
         if (user is null || user.StatusId.Equals(StateStatus.Deleted))
             return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
@@ -59,8 +59,7 @@ public class UsersRepository : BaseRepository
         UserCreateCommand command)
     {
         if (command is not ({ Name: not null }
-            and { PhoneNumber: not null}
-            and { Email: not null }
+            and { Login: not null }
             and { Password: not null }
             and { PasswordConfirm: not null }))
             return new BaseResult(ErrorsMessage.SomethingWentWrong);
@@ -68,18 +67,14 @@ public class UsersRepository : BaseRepository
         if (!command.Password.Equals(command.PasswordConfirm))
             return new BaseResult(ErrorsMessage.ConfirmPasswordNotMatch);
 
-        if (await Context.Users.AnyAsync(p => p.Email.Equals(command.Email))!)
+        if (await Context.Users.AnyAsync(p => p.Login.Equals(command.Login))!)
             return new BaseResult(ErrorsMessage.InaccessibleEmail);
-        
-        if (await Context.Users.AnyAsync(p => p.PhoneNumber.Equals(command.PhoneNumber))!)
-            return new BaseResult(ErrorsMessage.InaccessiblePhoneNumber);
         
         
         var user = new User()
         {
             Name = command.Name,
-            PhoneNumber = command.PhoneNumber,
-            Email = command.Email,
+            Login = command.Login,
             RoleId = UserRole.Client,
             StatusId = StateStatus.Actively,
             RegistrationDateTime = DateTime.Now,

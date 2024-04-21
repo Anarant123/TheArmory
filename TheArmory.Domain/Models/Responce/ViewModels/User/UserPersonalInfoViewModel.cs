@@ -18,18 +18,6 @@ public class UserPersonalInfoViewModel
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Номер телефона
-    /// </summary>
-    [JsonPropertyName("phoneNumber")]
-    public string PhoneNumber { get; set; } = string.Empty;
-    
-    /// <summary>
-    /// Электронная почта
-    /// </summary>
-    [JsonPropertyName("email")]
-    public string Email { get; set; }
     
     /// <summary>
     /// Фото профиля
@@ -49,8 +37,6 @@ public class UserPersonalInfoViewModel
     [JsonPropertyName("status")]
     public Status Status { get; set; }
     
-    
-    
     /// <summary>
     /// Дата создания
     /// </summary>
@@ -63,8 +49,6 @@ public class UserPersonalInfoViewModel
     {
         Id = user.Id;
         Name = user.Name;
-        PhoneNumber = user.PhoneNumber;
-        Email = user.Email;
         PhotoName = user.PhotoName is not null ? Path.Combine(user.Id.ToString(), "Profileinfo", user.PhotoName) : null;
         Region = user.Region;
         Status = user.Status;
