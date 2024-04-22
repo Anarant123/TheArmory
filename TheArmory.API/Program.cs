@@ -78,6 +78,13 @@ builder.Services.AddSwaggerGen(
         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.API.xml"));
     }
 );
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // сделайте куки-сессии обязательными
+});
+
 
 var app = builder.Build();
 
@@ -99,6 +106,7 @@ app.UseCors(options =>
     options.AllowAnyMethod();
 });
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

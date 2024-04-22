@@ -187,7 +187,7 @@ public class AdsController : BaseController
     /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
-    [Route("ToFavorite")]
+    [Route("Complaint")]
     public async Task<ActionResult<BaseResult>> AdToComplaint(
         [FromBody]AdToComplaintCommand command)
     {
