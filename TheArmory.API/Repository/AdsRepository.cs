@@ -226,13 +226,13 @@ public class AdsRepository : BaseRepository
     /// Добавить объявление в избранное
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="command"></param>
+    /// <param name="adId"></param>
     /// <returns></returns>
     public async Task<BaseResult> AdAddToFavorite(
         Guid userId,
-        AdCommand command)
+        Guid adId)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
 
@@ -240,7 +240,7 @@ public class AdsRepository : BaseRepository
 
         var favorite = new Favorite()
         {
-            AdId = command.Id,
+            AdId = adId,
             UserId = userId,
         };
 
@@ -253,7 +253,6 @@ public class AdsRepository : BaseRepository
         };
     }
     
-    // todo пожаловаться 
     /// <summary>
     /// Оставить жалобу на объявление
     /// </summary>
@@ -264,7 +263,7 @@ public class AdsRepository : BaseRepository
         Guid userId,
         AdToComplaintCommand command)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.AdId));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
     
@@ -272,7 +271,7 @@ public class AdsRepository : BaseRepository
     
         var complaint = new Complaint()
         {
-            AdId = command.AdId,
+            AdId = command.Id,
             UserId = userId,
             Description = command.Description
         };
