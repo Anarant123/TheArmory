@@ -141,6 +141,7 @@ public class AdsRepository : BaseRepository
             Name = command.Name,
             Price = command.Price,
             Description = command.Description ?? "",
+            YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
             RegionId = command.RegionId,
             UserId = userId,

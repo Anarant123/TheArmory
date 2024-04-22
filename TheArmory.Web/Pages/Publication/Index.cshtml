@@ -85,7 +85,7 @@
                         <label asp-for="Command.Description" class="form-label">Описание:</label>
                     </div>
                     <div class="col-9">
-                        <textarea asp-for="Command.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)"></textarea>
+                        <textarea asp-for="Command.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"></textarea>
                         <span asp-validation-for="Command.Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -171,21 +171,9 @@
                 </div>
             </div>
 
-            <div class="row">
-                <h1>Контакты</h1>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label class="form-label">Номер телефона</label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" class="form-control" placeholder="Номер телефона">
-                    </div>
-                </div>
-            </div>
-
             <div class="row mt-3">
                 <div class="col">
-                    <button type="button" onclick="submitForm(event)" class="btn btn-primary btn-block">Добавить</button>
+                    <button type="submit" class="btn btn-primary btn-block">Добавить</button>
                 </div>
                 <div class="col">
                     <button type="button" class="btn btn-danger btn-block">Отменить и выйти</button>
@@ -401,26 +389,5 @@
         }
         return videoId;
     }
-
-    
-    function submitForm(event) {
-        event.preventDefault(); // Отменяем стандартное поведение отправки формы
-        let formData = new FormData($('#form')[0]); // Создаем объект FormData из формы с id="form"
-    
-        // Добавляем каждое изображение из массива images в FormData
-        for (let i = 0; i < images.length; i++) {
-            formData.append('Command.Photos', new Blob([new Uint8Array(images[i])], { type: 'image/jpeg' }), 'image_' + i + '.jpg');
-        }
-    
-        // Выполняем AJAX-запрос
-        $.ajax({
-            url: '/Publication',
-            data: formData,
-            processData: false, // Отключаем автоматическую обработку данных перед отправкой
-            contentType: false, // Отключаем автоматическое определение типа контента
-            type: 'POST'
-        });
-    }
-
     
 </script>

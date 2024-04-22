@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
@@ -33,7 +34,7 @@ public class AdsService : BaseService<Ad>
             var response = await httpClient.GetAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
-        
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdViewModel>>(responseStream);
             return result ?? new BaseQueryResult<TileAdViewModel>(ErrorsMessage.SomethingWentWrong);
@@ -43,7 +44,7 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseQueryResult<TileAdViewModel>> GetAds()
     {
         try
@@ -52,7 +53,7 @@ public class AdsService : BaseService<Ad>
             var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdViewModel>>(responseStream);
             return result ?? new BaseQueryResult<TileAdViewModel>(ErrorsMessage.SomethingWentWrong);
@@ -62,7 +63,7 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<AdViewModel>> GetAd(Guid id)
     {
         try
@@ -71,7 +72,7 @@ public class AdsService : BaseService<Ad>
             var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
             return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
@@ -81,7 +82,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<AdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> GetMyAd(Guid id)
     {
         try
@@ -90,7 +91,7 @@ public class AdsService : BaseService<Ad>
             var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseResult<MyAdViewModel>>(responseStream);
             return result ?? new BaseResult<MyAdViewModel>(ErrorsMessage.SomethingWentWrong);
@@ -100,14 +101,25 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
-            var response = await httpClient.PostAsync(uri, content);
+            var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+            var formData = new MultipartFormDataContent();
+            formData.Add(new StringContent(command.Name), "name");
+            formData.Add(new StringContent(command.Price.ToString(CultureInfo.InvariantCulture)), "price");
+            formData.Add(new StringContent(command.Description ?? ""), "description");
+            formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
+            formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
+            formData.Add(new StringContent(command.RegionId.ToString()), "regionId");
+            foreach (var photo in command.Photos)
+            {
+                var streamContent = new StreamContent(photo.OpenReadStream());
+                formData.Add(streamContent, "photos", photo.FileName);
+            }
+            var response = await httpClient.PostAsync(url, formData);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
