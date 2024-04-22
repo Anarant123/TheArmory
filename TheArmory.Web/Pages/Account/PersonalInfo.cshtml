@@ -81,14 +81,21 @@
                             </div>
                         </div>
                     </form>
-                    
-                    <h6>Контакты для связи</h6>
+
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h4>Контакты для связи</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" onclick="showAddContactForm()">Добавить</button>
+                        </div>
+                    </div>
                     @if (Model.User.Contacts.Any())
                     {
                         <div class="container">
                             @foreach (var contact in Model.User.Contacts)
                             {
-                                <div class="row align-items-center">
+                                <div class="row align-items-center mt-3">
                                     <div class="col-2">
                                         <h5>@contact.Name</h5>
                                     </div>
@@ -110,17 +117,31 @@
                             }
                         </div>
                     }
-                    <div class="container">
-                        <div class="row mt-3">
-                            <div class="col">
-                                <button type="button" class="btn btn-primary" onclick="addContact()">Добавить</button>
+
+                    <form method="post" asp-page-handler="CreateContact">
+                        <div class="container mt-3 d-none" id="addContactForm">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" placeholder="Название сервиса">
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
+                                </div>
+                                <div class="col-auto">
+                                    <button id="saveContactButton" type="submit" class="btn btn-success">
+                                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                    <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
+                                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
+
 
                     <div class="form-group">
-                        <label for="registrationDateTime">Дата регистрации:</label>
-                        <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
+                        <label for="registrationDateTime">На площадке с @Model.User.RegistrationDateTime</label>
                     </div>
                     @* <div class="form-group"> *@
                     @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
@@ -302,6 +323,20 @@
         document.getElementById("saveButton").classList.add("d-none");
         document.getElementById("cancelButton").classList.add("d-none");
         document.getElementById("editButton").classList.remove("d-none");
+    }
+    
+    function showAddContactForm() {
+        document.getElementById('addContactForm').classList.remove("d-none");
+    }
+    
+    function cancelAddContact() {
+        document.getElementById("ContactNameInput").value = "";
+        document.getElementById("ContactDescriptionInput").value = "";
+        document.getElementById('addContactForm').classList.add("d-none");
+    }
+    
+    function saveContact() {
+        cancelAddContact();
     }
 
 </script>

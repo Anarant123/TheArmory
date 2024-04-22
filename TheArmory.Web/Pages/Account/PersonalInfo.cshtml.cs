@@ -18,6 +18,7 @@ public class PersonalInfo : PageModel
     private readonly ConditionsService _conditionsService;
     private readonly RegionsService _regionsService;
     private readonly AdsService _adsService;
+    private readonly ContactsService _contactsService;
     public readonly string BaseUrl;
     
     [BindProperty]
@@ -38,19 +39,24 @@ public class PersonalInfo : PageModel
     
     [BindProperty]
     public UserChangeNameCommand ChangeNameCommand { get; set; }
+    
+    [BindProperty]
+    public ContactCreateCommand ContactCreateCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 
         AdsService adsService,
         ConditionsService conditionsService,
         RegionsService regionsService,
-        BaseUrlOptions baseUrlOptions)
+        BaseUrlOptions baseUrlOptions,
+        ContactsService contactsService)
     {
         _userService = userService;
         _adsService = adsService;
         _conditionsService = conditionsService;
         _regionsService = regionsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
+        _contactsService = contactsService;
     }
     
     public async Task OnGetAsync()
@@ -77,6 +83,15 @@ public class PersonalInfo : PageModel
     public async Task OnPostChangeNameAsync()
     {
         var result = await _userService.ChangeName(ChangeNameCommand);
+        if (result.Success)
+        {
+            await OnGetAsync();
+        }
+    }
+
+    public async Task OnPostCreateContact()
+    {
+        var result = await _contactsService.CreateContact(ContactCreateCommand);
         if (result.Success)
         {
             await OnGetAsync();
