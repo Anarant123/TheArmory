@@ -239,10 +239,6 @@ public class AdsController : BaseController
     public async Task<ActionResult<BaseResult<AdViewModel>>> Select(
         [FromBody]AdSelectCommand command)
     {
-        var userResponse = await GetUser();
-        if (!userResponse.Success)
-            return BadRequest(userResponse);
-
         var result = await _adsRepository.GetAd(command.Id);
 
         if (result.Success)

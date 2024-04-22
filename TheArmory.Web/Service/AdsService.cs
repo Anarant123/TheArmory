@@ -102,6 +102,25 @@ public class AdsService : BaseService<Ad>
         }
     }
 
+    public async Task<BaseResult<AdViewModel>> GetSelected()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Selected";
+            var response = await httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
+            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<AdViewModel>(exception.Message);
+        }
+    }
+    
     public async Task<BaseResult<MyAdViewModel>> GetMyAd(Guid id)
     {
         try
@@ -148,6 +167,45 @@ public class AdsService : BaseService<Ad>
         catch (Exception exception)
         {
             return new BaseResult<AdViewModel>(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> ToFavorites()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/ToFavorite";
+            var response = await httpClient.PostAsync(uri, null);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> Complaint(AdToComplaintCommand command)
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Complaint";
+            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            var response = await httpClient.PostAsync(uri, null);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
         }
     }
 }

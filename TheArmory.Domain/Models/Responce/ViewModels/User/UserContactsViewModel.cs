@@ -23,6 +23,8 @@ public class UserContactsViewModel
     [JsonPropertyName("contacts")]
     public List<Contact> Contacts { get; set; }
     
+    public UserContactsViewModel(){}
+    
     public UserContactsViewModel(Database.User user)
     {
         Name = user.Name;

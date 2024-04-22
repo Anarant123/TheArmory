@@ -21,7 +21,7 @@ public class PersonalInfo : PageModel
     public readonly string BaseUrl;
     
     [BindProperty]
-    public UserPersonalInfoViewModel User { get; set; }
+    public UserPersonalInfoViewModel UserInfo { get; set; }
 
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
@@ -58,15 +58,19 @@ public class PersonalInfo : PageModel
         _contactsService = contactsService;
     }
     
-    public async Task OnGetAsync()
+    public async Task<ActionResult> OnGetAsync()
     {
+        if (User.Identity is {IsAuthenticated: false })
+            return RedirectToPage("/Auth/Index");
+        
         var userResponce = await _userService.GetMe();
-        User = userResponce.Item;
+        UserInfo = userResponce.Item;
         
         
         ActiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
         InactiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
         BannedAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
+        return Page();
     }
     
     

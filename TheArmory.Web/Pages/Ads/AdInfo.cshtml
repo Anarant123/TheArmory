@@ -73,10 +73,10 @@
     </div>
     <div class="col-2">
         <div class="row">
-            @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
+            @if (!string.IsNullOrEmpty(@Model.AdViewModel.User.PhotoName))
             {
                 <div class="square-container">
-                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.AdViewModel.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
                 </div>
             }
             else
