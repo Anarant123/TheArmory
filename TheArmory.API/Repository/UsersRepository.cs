@@ -101,6 +101,7 @@ public class UsersRepository : BaseRepository
         var user = await Context.Users
             .Include(u => u.Region)
             .Include(u => u.Status)
+            .Include(u => u.Contacts)
             .FirstOrDefaultAsync(u => u.Id.Equals(userId));
         if (user is null)
             return new BaseResult<User>(ErrorsMessage.UserNotFound);

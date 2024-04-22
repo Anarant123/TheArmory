@@ -81,8 +81,42 @@
                             </div>
                         </div>
                     </form>
-
+                    
                     <h6>Контакты для связи</h6>
+                    @if (Model.User.Contacts.Any())
+                    {
+                        <div class="container">
+                            @foreach (var contact in Model.User.Contacts)
+                            {
+                                <div class="row align-items-center">
+                                    <div class="col-2">
+                                        <h5>@contact.Name</h5>
+                                    </div>
+                                    <div class="col">
+                                        <span >@contact.Description</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-secondary" onclick="editName()">
+                                            <img src="/icons/edit_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                        <button type="submit" class="btn btn-success d-none" onclick="saveName()">
+                                            <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                        <button type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
+                                            <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    <div class="container">
+                        <div class="row mt-3">
+                            <div class="col">
+                                <button type="button" class="btn btn-primary" onclick="addContact()">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label for="registrationDateTime">Дата регистрации:</label>

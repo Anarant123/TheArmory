@@ -45,6 +45,12 @@ public class UserPersonalInfoViewModel
     [JsonPropertyName("registrationDateTime")]
     public DateTime RegistrationDateTime { get; set; }
     
+    /// <summary>
+    /// Контакты пользователя
+    /// </summary>
+    [JsonPropertyName("contacts")]
+    public List<Contact> Contacts { get; set; } = new List<Contact>();
+    
     public UserPersonalInfoViewModel(){}
 
     public UserPersonalInfoViewModel(Database.User user)
@@ -55,5 +61,6 @@ public class UserPersonalInfoViewModel
         Region = user.Region;
         Status = user.Status;
         RegistrationDateTime = user.RegistrationDateTime;
+        Contacts = user.Contacts;
     }
 }
