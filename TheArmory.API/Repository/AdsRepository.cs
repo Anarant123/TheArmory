@@ -1,12 +1,10 @@
-﻿using System.Threading.Channels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 
 namespace TheArmory.Repository;
@@ -35,6 +33,8 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Medias)
             .Include(a => a.Condition)
             .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId));
 
         if (ad is null)

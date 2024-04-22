@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;

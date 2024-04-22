@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.User;
 

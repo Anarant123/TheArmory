@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;

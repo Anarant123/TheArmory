@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
-using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
@@ -46,7 +43,7 @@ public class AdsController : BaseController
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
 
-        var result = await _adsRepository.GetAd(adIdResponse?.Item ?? System.Guid.Empty);
+        var result = await _adsRepository.GetAd(adIdResponse?.Item ?? Guid.Empty);
 
         if (result.Success) return Ok(result);
         Logger.LogError(result.Error);

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Utils;
 
 namespace TheArmory.Domain.Models.Responce.Result.BaseResult;
 
-public class BaseQueryResult<T> : global::TheArmory.Domain.Models.Responce.Result.BaseResult.BaseResult
+public class BaseQueryResult<T> : BaseResult
 {
     /// <summary>
     /// Номер страницы запроса

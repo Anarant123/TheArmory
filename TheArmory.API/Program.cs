@@ -2,12 +2,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Enums;
 using TheArmory.Repository;
 using TheArmory.Utils.Initializer;
 

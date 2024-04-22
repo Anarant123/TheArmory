@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Request.Queries;

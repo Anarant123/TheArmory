@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Request.Commands.Ad;

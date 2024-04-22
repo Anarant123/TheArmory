@@ -1,5 +1,4 @@
-﻿using System;
-using TheArmory.Domain.Models.Enums;
+﻿using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Queries;
 

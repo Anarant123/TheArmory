@@ -7,7 +7,6 @@ using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
-using TheArmory.Domain.Models.Responce.ViewModels.Region;
 using TheArmory.Web.Models;
 using TheArmory.Web.Utils;
 
@@ -70,6 +69,26 @@ public class AdsService : BaseService<Ad>
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/{id}";
             var response = await httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
+            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<AdViewModel>(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult<AdViewModel>> Select(AdSelectCommand command)
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Select";
+            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
 
