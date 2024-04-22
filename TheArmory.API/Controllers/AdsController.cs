@@ -28,6 +28,30 @@ public class AdsController : BaseController
         Logger = logger;
         _adsRepository = adsRepository;
     }
+    
+    /// <summary>
+    /// Получение выбранного объявления
+    /// </summary>
+    /// <returns></returns>
+    [Authorize]
+    [HttpGet]
+    [Route("Selected")]
+    public async Task<ActionResult<BaseResult<AdViewModel>>> GetSelected()
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success)
+            return BadRequest(userResponse);
+
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+        var result = await _adsRepository.GetAd(adIdResponse?.Item ?? System.Guid.Empty);
+
+        if (result.Success) return Ok(result);
+        Logger.LogError(result.Error);
+        return BadRequest(result);
+    }
 
     /// <summary>
     /// Получить все объявления
@@ -145,8 +169,41 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
 
         var result = await _adsRepository.AdAddToFavorite(
+            userResponse.Item.Id,
+            adIdResponse.Item);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Добавить в избранное
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("ToFavorite")]
+    public async Task<ActionResult<BaseResult>> AdToComplaint(
+        [FromBody]AdToComplaintCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
+
+        var result = await _adsRepository.AdToComplaint(
             userResponse.Item.Id,
             command);
 
@@ -177,6 +234,28 @@ public class AdsController : BaseController
         if (result.Success)
             return Ok(result);
 
+        return BadRequest(result);
+    }
+    
+    [HttpPost]
+    [Route("Select")]
+    public async Task<ActionResult<BaseResult<AdViewModel>>> Select(
+        [FromBody]AdSelectCommand command)
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success)
+            return BadRequest(userResponse);
+
+        var result = await _adsRepository.GetAd(command.Id);
+
+        if (result.Success)
+        {
+            HttpContext.Session.SetString("SelectedAd", command.Id.ToString());
+            return Ok(result);
+        }
+
+        HttpContext.Session.Remove("SelectedAd");
+        Logger.LogError(result.Error);
         return BadRequest(result);
     }
     
