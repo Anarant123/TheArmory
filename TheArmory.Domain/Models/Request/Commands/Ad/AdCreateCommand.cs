@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad
@@ -41,6 +42,18 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         /// </summary>
         [JsonPropertyName("regionId")]
         public Guid RegionId { get; set; }
+
+        /// <summary>
+        /// Широта
+        /// </summary>
+        [JsonPropertyName("latitude")]
+        public string Latitude { get; set; }
+    
+        /// <summary>
+        /// Долгота
+        /// </summary>
+        [JsonPropertyName("longitude")]
+        public string Longitude { get; set; }
 
         /// <summary>
         /// Фотографии
