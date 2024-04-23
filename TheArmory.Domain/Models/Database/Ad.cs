@@ -117,4 +117,6 @@ public class Ad : DbEntity
     public virtual List<Favorite> Favorites { get; set; }
     
     public virtual List<Media> Medias { get; set; }
+    
+    public virtual Location Location { get; set; }
 }

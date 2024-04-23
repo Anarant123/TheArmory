@@ -40,6 +40,10 @@ public class ApplicationContext : DbContext
             .HasMany<Media>(a => a.Medias )
             .WithOne(m => m.Ad)
             .HasForeignKey(m => m.AdId);
+        modelBuilder.Entity<Ad>()
+            .HasOne<Location>(a => a.Location)
+            .WithOne(l => l.Ad)
+            .HasForeignKey<Location>(l => l.AdId);
         
         
         // связи сущности Complaint
@@ -131,6 +135,11 @@ public class ApplicationContext : DbContext
             .HasOne<User>(c => c.User)
             .WithMany(u => u.Contacts)
             .HasForeignKey(c => c.UserId);
+        
+        // связи сущности Location
+        modelBuilder.Entity<Location>()
+            .HasOne<Ad>(l => l.Ad)
+            .WithOne(a => a.Location);
     }
     
     public DbSet<Ad> Ads { get; set; }
@@ -143,4 +152,6 @@ public class ApplicationContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Condition> Conditions { get; set; }
     public DbSet<Contact> Contacts { get; set; }
+    
+    public DbSet<Location> Locations { get; set; }
 }
