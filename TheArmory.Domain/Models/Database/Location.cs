@@ -6,6 +6,13 @@ namespace TheArmory.Domain.Models.Database;
 public class Location : DbEntity
 {
     /// <summary>
+    /// Адресс
+    /// </summary>
+    [Column("address")]
+    [JsonPropertyName("address")]
+    public string Address { get; set; }
+    
+    /// <summary>
     /// Широта
     /// </summary>
     [Column("latitude")]

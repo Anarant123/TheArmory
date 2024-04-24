@@ -76,7 +76,7 @@ public class Ad : DbEntity
     /// Id Региона
     /// </summary>
     [Column("regionId")]
-    public Guid RegionId { get; set; }
+    public Guid? RegionId { get; set; }
     
     /// <summary>
     /// Id пользователя
@@ -100,7 +100,7 @@ public class Ad : DbEntity
     /// <summary>
     /// Регион продажи
     /// </summary>
-    public virtual Region Region { get; set; }
+    public virtual Region? Region { get; set; }
     
     /// <summary>
     /// Пользователь, разместивший объявление

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Responce.ViewModels.Media;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
@@ -67,14 +68,11 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         [JsonPropertyName("conditionId")]
         public WeaponCondition ConditionId { get; set; }
         
-        /// <summary>
-        /// Регион
-        /// </summary>
-        [JsonPropertyName("regionId")]
-        public Guid RegionId { get; set; }
-        
         [JsonPropertyName("images")]
         public List<MediaInfoViewModel> Images { get; set; }
+        
+        [JsonPropertyName("location")]
+        public Location Location { get; set; }
         
         /// <summary>
         /// Контакты пользователя
@@ -96,9 +94,9 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             CountOfViewsToday = ad.CountOfViewsToday;
             YouTubeLink = ad.YouTubeLink;
             ConditionId = ad.ConditionId;
-            RegionId = ad.RegionId;
             Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
             User = new UserContactsViewModel(ad.User);
+            Location = ad.Location;
         }
     }
 }

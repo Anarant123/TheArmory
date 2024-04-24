@@ -35,6 +35,7 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Region)
             .Include(a => a.User)
             .ThenInclude(u => u.Contacts)
+            .Include(a => a.Location)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId));
 
         if (ad is null)
@@ -136,6 +137,7 @@ public class AdsRepository : BaseRepository
         if (command.Photos.Count > 5)
             return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
         
+        // todo сделать ссылку на регион
         var newAd = new Ad()
         {
             Name = command.Name,
@@ -143,14 +145,18 @@ public class AdsRepository : BaseRepository
             Description = command.Description ?? "",
             YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
-            RegionId = command.RegionId,
             UserId = userId
         };
 
+        var region = await Context.Regions.FirstOrDefaultAsync(r => command.Address.ToLower().Contains(r.Name.ToLower()));
+        if (region is not null)
+            newAd.RegionId = region.Id;
+        
         if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
         {
             newAd.Location = new Location()
             {
+                Address = command.Address,
                 Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
                 Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
             };

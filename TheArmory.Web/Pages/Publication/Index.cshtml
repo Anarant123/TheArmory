@@ -169,6 +169,7 @@
             <div class="row">
                 <h1>Место сделки</h1>
                 <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
+                <p id="address" class="text-muted"></p>
                 <div class="row mt-3">
                     <div class="col">
                         <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
@@ -181,6 +182,7 @@
             <div class="collapse" id="mapCollapse">
                 <div class="row mt-3">
                     <div class="col">
+                        <input type="text" id="addressInfo" asp-for="Command.Address" class="form-control" placeholder="Адрес" readonly="">
                         <input type="hidden" id="latitude" asp-for="Command.Latitude" class="d-none">
                         <input type="hidden" id="longitude" asp-for="Command.Longitude" class="d-none">
                         <div class="map-container">
@@ -273,20 +275,16 @@
                     latitudeInfo.value = latitude;
                     let longitudeInfo = document.getElementById('longitude');
                     longitudeInfo.value = longitude;
+                    
+                    ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    let address = document.getElementById('addressInfo');
+                    address.value = firstGeoObject.getAddressLine();
+                    });
+                    
                 });
-
-                // // Добавляем обработчик события перемещения карты
-                // myMap.events.add('actiontick', function (event) {
-                //     // Получаем координаты центра карты
-                //     var newCenter = myMap.getCenter();
-                //     latitude = newCenter[0];
-                //     longitude = newCenter[1];
-                //     // Обновляем координаты метки
-                //     myGeoObject.geometry.setCoordinates([latitude, longitude]);
-                // });
             });
         }
-
     </script>
 
 

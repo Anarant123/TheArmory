@@ -151,7 +151,9 @@ public class AdsService : BaseService<Ad>
             formData.Add(new StringContent(command.Description ?? ""), "description");
             formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
             formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
-            formData.Add(new StringContent(command.RegionId.ToString()), "regionId");
+            formData.Add(new StringContent(command.Address), "address");
+            formData.Add(new StringContent(command.Latitude), "latitude");
+            formData.Add(new StringContent(command.Longitude), "longitude");
             foreach (var photo in command.Photos)
             {
                 var streamContent = new StreamContent(photo.OpenReadStream());

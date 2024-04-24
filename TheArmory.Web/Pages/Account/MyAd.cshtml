@@ -119,15 +119,7 @@
                         </div>
             
             <h1>Место сделки</h1>
-            <div class="mb-3">
-                            <label asp-for="MyAdViewModel.RegionId" class="form-label">Регион:</label>
-                            <select asp-for="MyAdViewModel.RegionId" class="form-control" id="regionId" name="Command.RegionId">
-                                @foreach (var region in Model.Regions)
-                                {
-                                    <option value="@region.Id">@region.Code @region.Name</option>
-                                }
-                            </select>
-                        </div>
+            
             <div id="map" style="width: 600px; height: 400px"></div>
              <h1>Место сделки</h1>
 

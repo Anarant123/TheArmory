@@ -66,12 +66,6 @@ public class MyAdViewModel
     [JsonPropertyName("conditionId")]
     public WeaponCondition ConditionId { get; set; }
 
-    /// <summary>
-    /// Регион
-    /// </summary>
-    [JsonPropertyName("regionId")]
-    public Guid RegionId { get; set; }
-
     [JsonPropertyName("images")] public List<MediaInfoViewModel> Images { get; set; }
 
     public MyAdViewModel()
@@ -90,7 +84,6 @@ public class MyAdViewModel
         LastVisitDate = ad.LastVisitDate;
         YouTubeLink = ad.YouTubeLink;
         ConditionId = ad.ConditionId;
-        RegionId = ad.RegionId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
     }
 }

@@ -38,10 +38,10 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         public WeaponCondition ConditionId { get; set; }
         
         /// <summary>
-        /// Id Региона
+        /// Адрес
         /// </summary>
-        [JsonPropertyName("regionId")]
-        public Guid RegionId { get; set; }
+        [JsonPropertyName("address")]
+        public string Address { get; set; }
 
         /// <summary>
         /// Широта
