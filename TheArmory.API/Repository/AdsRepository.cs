@@ -144,13 +144,17 @@ public class AdsRepository : BaseRepository
             YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
             RegionId = command.RegionId,
-            UserId = userId,
-            Location = new Location()
+            UserId = userId
+        };
+
+        if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
+        {
+            newAd.Location = new Location()
             {
                 Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
                 Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
-            }
-        };
+            };
+        }
         
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
         if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
