@@ -35,6 +35,8 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Region)
             .Include(a => a.User)
             .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
             .Include(a => a.Location)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId));
 

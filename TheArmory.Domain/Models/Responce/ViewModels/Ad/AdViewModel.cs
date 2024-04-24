@@ -65,12 +65,18 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         /// <summary>
         /// Состояние
         /// </summary>
-        [JsonPropertyName("conditionId")]
-        public WeaponCondition ConditionId { get; set; }
+        [JsonPropertyName("condition")]
+        public string Condition { get; set; }
         
+        /// <summary>
+        /// Фотографии
+        /// </summary>
         [JsonPropertyName("images")]
         public List<MediaInfoViewModel> Images { get; set; }
         
+        /// <summary>
+        /// Геолокация
+        /// </summary>
         [JsonPropertyName("location")]
         public Location Location { get; set; }
         
@@ -90,10 +96,12 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             OldPrice = ad.OldPrice;
             Description = ad.Description;
             CreationDateTime = ad.CreationDateTime;
+            
             CountOfViews = ad.CountOfViews;
             CountOfViewsToday = ad.CountOfViewsToday;
+            
             YouTubeLink = ad.YouTubeLink;
-            ConditionId = ad.ConditionId;
+            Condition = ad.Condition.Name;
             Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
             User = new UserContactsViewModel(ad.User);
             Location = ad.Location;
