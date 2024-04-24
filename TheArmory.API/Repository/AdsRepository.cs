@@ -145,6 +145,11 @@ public class AdsRepository : BaseRepository
             ConditionId = command.ConditionId,
             RegionId = command.RegionId,
             UserId = userId,
+            Location = new Location()
+            {
+                Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
+                Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
+            }
         };
         
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
