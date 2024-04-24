@@ -161,8 +161,9 @@
     initializeMap(); 
     function initializeMap() {
         ymaps.ready(function () {
-            let latitudeValue = parseFloat(document.getElementById('latitude').value);
-            let longitudeValue = parseFloat(document.getElementById('longitude').value);
+            let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            alert(latitudeValue + ' ' + longitudeValue)
 
             myMap = new ymaps.Map("map", {
                 center: [latitudeValue, longitudeValue],
