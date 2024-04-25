@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TheArmory.Domain.Models.Request.Commands;
+﻿namespace TheArmory.Domain.Models.Request.Commands;
 
 public class EntityCommand
 {

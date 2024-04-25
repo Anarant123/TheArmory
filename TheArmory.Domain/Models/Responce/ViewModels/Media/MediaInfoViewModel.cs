@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.Media;
 

@@ -1,9 +1,5 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.User;
 
@@ -45,6 +41,12 @@ public class UserPersonalInfoViewModel
     [JsonPropertyName("registrationDateTime")]
     public DateTime RegistrationDateTime { get; set; }
     
+    /// <summary>
+    /// Контакты пользователя
+    /// </summary>
+    [JsonPropertyName("contacts")]
+    public List<Contact> Contacts { get; set; } = new List<Contact>();
+    
     public UserPersonalInfoViewModel(){}
 
     public UserPersonalInfoViewModel(Database.User user)
@@ -55,5 +57,6 @@ public class UserPersonalInfoViewModel
         Region = user.Region;
         Status = user.Status;
         RegistrationDateTime = user.RegistrationDateTime;
+        Contacts = user.Contacts;
     }
 }

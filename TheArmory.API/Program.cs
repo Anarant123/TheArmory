@@ -2,12 +2,10 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Enums;
 using TheArmory.Repository;
 using TheArmory.Utils.Initializer;
 
@@ -80,6 +78,13 @@ builder.Services.AddSwaggerGen(
         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.API.xml"));
     }
 );
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // сделайте куки-сессии обязательными
+});
+
 
 var app = builder.Build();
 
@@ -101,6 +106,7 @@ app.UseCors(options =>
     options.AllowAnyMethod();
 });
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

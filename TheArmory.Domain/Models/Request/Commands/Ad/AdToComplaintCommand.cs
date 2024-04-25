@@ -1,11 +1,7 @@
-﻿using System;
+﻿namespace TheArmory.Domain.Models.Request.Commands.Ad;
 
-namespace TheArmory.Domain.Models.Request.Commands.Ad;
-
-public class AdToComplaintCommand
+public class AdToComplaintCommand : AdCommand
 {
-    public Guid AdId { get; set; }
-    
     /// <summary>
     /// Описание жалобы
     /// </summary>

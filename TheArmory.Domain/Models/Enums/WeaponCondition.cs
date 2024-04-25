@@ -2,8 +2,8 @@
 
 public enum WeaponCondition
 {
-    Perfect = 0, 
-    Fine = 1,
-    Normal = 2,
+    New = 0,
+    Perfect = 1, 
+    Fine = 2,
     NeedsRepair = 3,
 }

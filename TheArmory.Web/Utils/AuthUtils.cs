@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Responce.ViewModels;
 
 namespace TheArmory.Web.Utils;
 

@@ -6,7 +6,6 @@ using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
 
 namespace TheArmory.Repository;
@@ -101,6 +100,7 @@ public class UsersRepository : BaseRepository
         var user = await Context.Users
             .Include(u => u.Region)
             .Include(u => u.Status)
+            .Include(u => u.Contacts)
             .FirstOrDefaultAsync(u => u.Id.Equals(userId));
         if (user is null)
             return new BaseResult<User>(ErrorsMessage.UserNotFound);

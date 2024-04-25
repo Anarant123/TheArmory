@@ -36,4 +36,29 @@ public class BaseController : ControllerBase
             : new BaseResult<User?>(userResponse.Item);
 
     }
+    
+    protected virtual BaseResult<Guid> GetSelectedAdId()
+    {
+        var selectedPhoneIdString = HttpContext.Session.GetString("SelectedAd") ?? string.Empty;
+        var adId = !string.IsNullOrEmpty(selectedPhoneIdString)
+            ? new Guid(selectedPhoneIdString)
+            : Guid.Empty;
+        return adId == Guid.Empty ? 
+            new BaseResult<Guid>("Объявление не выбрано") 
+            : new BaseResult<Guid>(adId);
+    }
+    
+    protected virtual BaseResult<Guid> GetSelectedAdId(Guid adId)
+    {
+        if (adId != Guid.Empty) return new BaseResult<Guid>(adId);
+        
+        var selectedPhoneIdString = HttpContext.Session.GetString("netset") ?? string.Empty;
+        adId = !string.IsNullOrEmpty(selectedPhoneIdString)
+            ? new Guid(selectedPhoneIdString)
+            : Guid.Empty;
+        
+        return adId == Guid.Empty ? 
+            new BaseResult<Guid>("Объявление не выбрано") 
+            : new BaseResult<Guid>(adId);
+    }
 }

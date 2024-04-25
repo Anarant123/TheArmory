@@ -1,6 +1,7 @@
-﻿@model TheArmory.Domain.Models.Responce.ViewModels.Ad.TileAdViewModel
+﻿@using TheArmory.Domain.Models.Request.Commands.Ad
+@model TheArmory.Domain.Models.Responce.ViewModels.Ad.TileAdViewModel
 
-<a href="@Url.Page("/Ads/AdInfo", new { id = Model.Id })" class="card-link" style="text-decoration: none; color: black;">
+<a href="@Url.Page("/Ads/AdInfo", new { handler = "Select", id = Model.Id})" class="card-link" style="text-decoration: none; color: black;">
     <div class="card border">
         <div class="image-container">
             @if (Model.Images.Count > 0)

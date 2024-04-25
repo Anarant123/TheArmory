@@ -1,12 +1,10 @@
-﻿using System.Threading.Channels;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 
 namespace TheArmory.Repository;
@@ -35,6 +33,11 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Medias)
             .Include(a => a.Condition)
             .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
+            .Include(a => a.Location)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId));
 
         if (ad is null)
@@ -136,15 +139,30 @@ public class AdsRepository : BaseRepository
         if (command.Photos.Count > 5)
             return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
         
+        // todo сделать ссылку на регион
         var newAd = new Ad()
         {
             Name = command.Name,
             Price = command.Price,
             Description = command.Description ?? "",
+            YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
-            RegionId = command.RegionId,
-            UserId = userId,
+            UserId = userId
         };
+
+        var region = await Context.Regions.FirstOrDefaultAsync(r => command.Address.ToLower().Contains(r.Name.ToLower()));
+        if (region is not null)
+            newAd.RegionId = region.Id;
+        
+        if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
+        {
+            newAd.Location = new Location()
+            {
+                Address = command.Address,
+                Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
+                Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
+            };
+        }
         
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
         if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
@@ -225,13 +243,13 @@ public class AdsRepository : BaseRepository
     /// Добавить объявление в избранное
     /// </summary>
     /// <param name="userId"></param>
-    /// <param name="command"></param>
+    /// <param name="adId"></param>
     /// <returns></returns>
     public async Task<BaseResult> AdAddToFavorite(
         Guid userId,
-        AdCommand command)
+        Guid adId)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
 
@@ -239,7 +257,7 @@ public class AdsRepository : BaseRepository
 
         var favorite = new Favorite()
         {
-            AdId = command.Id,
+            AdId = adId,
             UserId = userId,
         };
 
@@ -252,7 +270,6 @@ public class AdsRepository : BaseRepository
         };
     }
     
-    // todo пожаловаться 
     /// <summary>
     /// Оставить жалобу на объявление
     /// </summary>
@@ -263,7 +280,7 @@ public class AdsRepository : BaseRepository
         Guid userId,
         AdToComplaintCommand command)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.AdId));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
     
@@ -271,7 +288,7 @@ public class AdsRepository : BaseRepository
     
         var complaint = new Complaint()
         {
-            AdId = command.AdId,
+            AdId = command.Id,
             UserId = userId,
             Description = command.Description
         };

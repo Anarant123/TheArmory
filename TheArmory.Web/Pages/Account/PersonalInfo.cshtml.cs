@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Request.Queries;
@@ -18,10 +17,11 @@ public class PersonalInfo : PageModel
     private readonly ConditionsService _conditionsService;
     private readonly RegionsService _regionsService;
     private readonly AdsService _adsService;
+    private readonly ContactsService _contactsService;
     public readonly string BaseUrl;
     
     [BindProperty]
-    public UserPersonalInfoViewModel User { get; set; }
+    public UserPersonalInfoViewModel UserInfo { get; set; }
 
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
@@ -38,30 +38,39 @@ public class PersonalInfo : PageModel
     
     [BindProperty]
     public UserChangeNameCommand ChangeNameCommand { get; set; }
+    
+    [BindProperty]
+    public ContactCreateCommand ContactCreateCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 
         AdsService adsService,
         ConditionsService conditionsService,
         RegionsService regionsService,
-        BaseUrlOptions baseUrlOptions)
+        BaseUrlOptions baseUrlOptions,
+        ContactsService contactsService)
     {
         _userService = userService;
         _adsService = adsService;
         _conditionsService = conditionsService;
         _regionsService = regionsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
+        _contactsService = contactsService;
     }
     
-    public async Task OnGetAsync()
+    public async Task<ActionResult> OnGetAsync()
     {
+        if (User.Identity is {IsAuthenticated: false })
+            return RedirectToPage("/Auth/Index");
+        
         var userResponce = await _userService.GetMe();
-        User = userResponce.Item;
+        UserInfo = userResponce.Item;
         
         
         ActiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
         InactiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
         BannedAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
+        return Page();
     }
     
     
@@ -77,6 +86,15 @@ public class PersonalInfo : PageModel
     public async Task OnPostChangeNameAsync()
     {
         var result = await _userService.ChangeName(ChangeNameCommand);
+        if (result.Success)
+        {
+            await OnGetAsync();
+        }
+    }
+
+    public async Task OnPostCreateContact()
+    {
+        var result = await _contactsService.CreateContact(ContactCreateCommand);
         if (result.Success)
         {
             await OnGetAsync();

@@ -1,6 +1,5 @@
 ﻿using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Utils.Initializer;
 

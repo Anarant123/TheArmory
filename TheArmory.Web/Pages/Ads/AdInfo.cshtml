@@ -1,21 +1,61 @@
 ﻿@page
-@model TheArmory.Web.Pages.Ads.AdInfo
+@model AdInfo
 @{
     ViewData["Title"] = Model.AdViewModel.Name;
 }
 
+
+<style>
+    .address-arrow {
+        font-size: 0.8em;
+        transition: transform 0.3s ease;
+    }
+    
+    .address-container:hover .address-arrow {
+        transform: rotate(-90deg);
+    }
+    
+    .address-container:hover {
+        cursor: pointer;
+        animation: blink 1s infinite;
+    }
+    
+    @@keyframes blink {
+        0% { opacity: 1; }
+        50% { opacity: 0.8; }
+        100% { opacity: 1; }
+    }
+</style>
+<style>
+    .square-container {
+        position: relative;
+        width: 100%;
+        padding-top: 100%; /* Высота контейнера равна его ширине, создавая квадрат */
+        overflow: hidden;
+    }
+    
+    .square-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
+    }
+
+</style>
 <style>
     .btn-block {
         width: 100%;
     }
-    
+
     #image-area {
         width: 100%;
         height: 500px;
         overflow: hidden;
         position: relative;
     }
-    
+
     #image-area img {
         width: auto;
         height: 100%;
@@ -26,7 +66,7 @@
         bottom: 0;
         margin: auto;
     }
-    
+
     .image-cell {
         width: 100px; /* Ширина ячейки */
         height: 100px; /* Высота ячейки */
@@ -36,7 +76,7 @@
         justify-content: center; /* Выравнивание по горизонтали */
         margin: 0; /* Убираем отступы между ячейками */
     }
-    
+
     .image-cell img {
         max-width: 100%; /* Максимальная ширина изображения внутри ячейки */
         max-height: 100%; /* Максимальная высота изображения внутри ячейки */
@@ -46,7 +86,21 @@
 </style>
 
 <div class="row">
-    <div class="col-10">
+    <div class="col-6 text-left">
+        <h2>@Model.AdViewModel.Name</h2>
+    </div>
+    <div class="col-3 text-end">
+        <h2>@Model.AdViewModel.Price &#x20bd;</h2>
+    </div>
+    <div class="col-1 d-flex align-items-end">
+        <form asp-page-handler="addToFavorites" method="post">
+            <button type="submit" class="btn btn-primary">
+                <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/></button>
+        </form>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-9">
         <div class="row">
             <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
                 <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
@@ -66,38 +120,51 @@
             @foreach (var image in Model.AdViewModel.Images.Skip(1)) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
             {
                 <div class="col-md text-center image-cell position-relative">
-                    <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid ">
+                    <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
                 </div>
             }
         </div>
     </div>
-    <div class="col-2">
+    
+    <!-- Продавец -->
+    <div class="col-3">
         <div class="row">
-            @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
+            @if (!string.IsNullOrEmpty(@Model.AdViewModel.User.PhotoName))
             {
                 <div class="square-container">
-                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.AdViewModel.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
                 </div>
             }
             else
             {
                 <div class="square-container">
-                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
+                </div>
+            }
+        </div>
+        <div class="row">
+            @foreach (var contact in Model.AdViewModel.User.Contacts)
+            {
+                <div class="col-6">
+                    <p>@contact.Name</p>
+                </div>
+                <div class="col-6">
+                    <p>@contact.Description</p>
                 </div>
             }
         </div>
     </div>
-</div>
 
+</div>
 
 @if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
 {
-    <div class="row">
-        <div class="mb-3">
+    <div class="row mt-3">
+        <div class="col">
             <iframe width="560" height="315" src="@Model.AdViewModel.YouTubeLink"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                    allowfullscreen="true" referrerpolicy="strict-origin-when-cross-origin">
             </iframe>
         </div>
     </div>
@@ -105,47 +172,112 @@
 
 <div class="row mt-3">
     <div class="col-md-12">
+        <!-- Блок с характеристиками -->
         <div class="mb-3">
-            <input type="text" asp-for="AdViewModel.Name" class="form-control" placeholder="Наименование" readonly>
-        </div>
-        <div class="mb-3">
-            <input type="text" asp-for="AdViewModel.Price" class="form-control" placeholder="Цена" readonly>
-        </div>
-        <div class="mb-3">
-            <textarea asp-for="AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
-        </div>
-        @* <div class="mb-3"> *@
-        @*     <input type="text" asp-for="AdViewModel.Condition" class="form-control" placeholder="Состояние" readonly> *@
-        @* </div> *@
-        @* <div class="mb-3"> *@
-        @*     <input type="text" asp-for="AdViewModel.Region" class="form-control" placeholder="Регион" readonly> *@
-        @* </div> *@
-        <div class="row mb-3">
-            <div class="col-6">
-                <form asp-page-handler="addToFavorites" method="post">
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary btn-block">Добавить в избранное</button>
-                    </div>
-                </form>
-            </div>
-            <div class="col-6">
-                <form asp-page-handler="complain" method="post">
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
-                    </div>
-                </form>
+            <div class="row">
+                <div class="col-6">
+                    <p>Состояние</p>
+                </div>
+                <div class="col-6">
+                    <p>@Model.AdViewModel.Condition</p>
+                </div>
             </div>
         </div>
+
+        <!-- Блок с описанием -->
+        <div class="mb-3">
+            <textarea value="@Model.AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
+        </div>
+
+        <!-- Блок с геоданными -->
+        <div class="row address-container">
+            <div class="row mt-3">
+                <div class="col-6">
+                    <div class="d-flex align-items-center">
+                        <p id="address" class="mr-2">@Model.AdViewModel.Location.Address</p>
+                        <i class="fas fa-angle-down ml-1 address-arrow"></i>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="row mt-3">
+                <div class="col">
+                    <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
+                    <input type="hidden" id="longitude" value="@Model.AdViewModel.Location.Longitude" class="d-none">
+                    <div class="map-container">
+                        <div id="map" class="square" style="height: 400px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+         <div class="row mt-3">
+                        <div class="col">
+                            <p>Дата публикации: @Model.AdViewModel.CreationDateTime</p>
+                            <p>Просмотров: @Model.AdViewModel.CountOfViews</p>
+                            <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
+                        </div>
+                        <form asp-page-handler="complain" method="post">
+                            <div class="mb-3">
+                                <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
+                            </div>
+                        </form>
+                    </div>
+
     </div>
 </div>
+
+<script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
+<script type="text/javascript">
+    const addressContainer = document.querySelector('.address-container');
+    const address = document.querySelector('#address');
+    const mapContainer = document.querySelector('.map-container');
+    
+    // Скрываем контейнер карты изначально
+    mapContainer.style.display = 'none';
+    
+    addressContainer.addEventListener('click', () => {
+        // Меняем видимость контейнера карты при клике на адрес
+        if (mapContainer.style.display === 'none') {
+            mapContainer.style.display = 'block';
+        } else {
+            mapContainer.style.display = 'none';
+        }
+    });
+
+
+    var myMap;
+
+    initializeMap();
+
+    function initializeMap() {
+        ymaps.ready(function () {
+            let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+
+            myMap = new ymaps.Map("map", {
+                center: [latitudeValue, longitudeValue],
+                zoom: 7
+            });
+
+            var myGeoObject = new ymaps.GeoObject({
+                geometry: {
+                    type: "Point",
+                    coordinates: [latitudeValue, longitudeValue]
+                }
+            });
+            myMap.geoObjects.add(myGeoObject);
+        });
+    }
+</script>
 
 <script>
     let images = [];
     let currentImageIndex = 0;
-    
+
     // Получаем все элементы img с классом img-thumbnail
     let thumbnailImages = document.querySelectorAll('.img-thumbnail');
-    
+
     // Проходимся по каждому элементу и добавляем его src в массив images
     thumbnailImages.forEach(function(image) {
         images.push(image.src);

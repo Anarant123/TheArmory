@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using TheArmory.Domain.Models.Enums;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
+using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad
 {
@@ -39,10 +38,22 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         public WeaponCondition ConditionId { get; set; }
         
         /// <summary>
-        /// Id Региона
+        /// Адрес
         /// </summary>
-        [JsonPropertyName("regionId")]
-        public Guid RegionId { get; set; }
+        [JsonPropertyName("address")]
+        public string Address { get; set; }
+
+        /// <summary>
+        /// Широта
+        /// </summary>
+        [JsonPropertyName("latitude")]
+        public string Latitude { get; set; }
+    
+        /// <summary>
+        /// Долгота
+        /// </summary>
+        [JsonPropertyName("longitude")]
+        public string Longitude { get; set; }
 
         /// <summary>
         /// Фотографии

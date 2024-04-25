@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Responce.ViewModels.Media;
 
@@ -69,12 +66,6 @@ public class MyAdViewModel
     [JsonPropertyName("conditionId")]
     public WeaponCondition ConditionId { get; set; }
 
-    /// <summary>
-    /// Регион
-    /// </summary>
-    [JsonPropertyName("regionId")]
-    public Guid RegionId { get; set; }
-
     [JsonPropertyName("images")] public List<MediaInfoViewModel> Images { get; set; }
 
     public MyAdViewModel()
@@ -93,7 +84,6 @@ public class MyAdViewModel
         LastVisitDate = ad.LastVisitDate;
         YouTubeLink = ad.YouTubeLink;
         ConditionId = ad.ConditionId;
-        RegionId = ad.RegionId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
     }
 }

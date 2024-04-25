@@ -1,5 +1,5 @@
 ﻿@page
-@model TheArmory.Web.Pages.Account.PersonalInfo
+@model PersonalInfo
 
 @{
     ViewData["Title"] = "Персональная информация";
@@ -32,10 +32,10 @@
                 <div class="col-3">
                     <form method="post" enctype="multipart/form-data" id="changePhotoForm" asp-page-handler="ChangePhoto">
                         <div class="row">
-                            @if (!string.IsNullOrEmpty(@Model.User.PhotoName))
+                            @if (!string.IsNullOrEmpty(@Model.UserInfo.PhotoName))
                             {
                                 <div class="square-container">
-                                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.UserInfo.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
                                 </div>
                             }
                             else
@@ -64,7 +64,7 @@
                                     <h5>Имя</h5>
                                 </div>
                                 <div class="col">
-                                    <span id="nameText">@Model.User.Name</span>
+                                    <span id="nameText">@Model.UserInfo.Name</span>
                                     <input type="text" id="nameInput" class="form-control d-none" asp-for="ChangeNameCommand.NewName">
                                 </div>
                                 <div class="col-auto">
@@ -82,11 +82,66 @@
                         </div>
                     </form>
 
-                    <h6>Контакты для связи</h6>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h4>Контакты для связи</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" onclick="showAddContactForm()">Добавить</button>
+                        </div>
+                    </div>
+                    @if (Model.UserInfo.Contacts.Any())
+                    {
+                        <div class="container">
+                            @foreach (var contact in Model.UserInfo.Contacts)
+                            {
+                                <div class="row align-items-center mt-3">
+                                    <div class="col-2">
+                                        <h5>@contact.Name</h5>
+                                    </div>
+                                    <div class="col">
+                                        <span >@contact.Description</span>
+                                    </div>
+                                    <div class="col-auto">
+                                        <button type="button" class="btn btn-secondary" onclick="editName()">
+                                            <img src="/icons/edit_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                        <button type="submit" class="btn btn-success d-none" onclick="saveName()">
+                                            <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                        <button type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
+                                            <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <form method="post" asp-page-handler="CreateContact">
+                        <div class="container mt-3 d-none" id="addContactForm">
+                            <div class="row align-items-center">
+                                <div class="col-2">
+                                    <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" placeholder="Название сервиса">
+                                </div>
+                                <div class="col">
+                                    <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
+                                </div>
+                                <div class="col-auto">
+                                    <button id="saveContactButton" type="submit" class="btn btn-success">
+                                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                    <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
+                                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
 
                     <div class="form-group">
-                        <label for="registrationDateTime">Дата регистрации:</label>
-                        <input type="text" id="registrationDateTime" name="registrationDateTime" value="@Model.User.RegistrationDateTime" class="form-control" readonly>
+                        <label for="registrationDateTime">На площадке с @Model.UserInfo.RegistrationDateTime</label>
                     </div>
                     @* <div class="form-group"> *@
                     @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
@@ -141,6 +196,8 @@
                     else
                     {
                         <h1>Активных объявлений не найдено</h1>
+                        <h1>Написать кнопку для перехода на добавления объяявления</h1>
+                        // todo Написать кнопку для перехода на добавления объявления
                     }
                 </div>
             </div>
@@ -268,6 +325,20 @@
         document.getElementById("saveButton").classList.add("d-none");
         document.getElementById("cancelButton").classList.add("d-none");
         document.getElementById("editButton").classList.remove("d-none");
+    }
+    
+    function showAddContactForm() {
+        document.getElementById('addContactForm').classList.remove("d-none");
+    }
+    
+    function cancelAddContact() {
+        document.getElementById("ContactNameInput").value = "";
+        document.getElementById("ContactDescriptionInput").value = "";
+        document.getElementById('addContactForm').classList.add("d-none");
+    }
+    
+    function saveContact() {
+        cancelAddContact();
     }
 
 </script>

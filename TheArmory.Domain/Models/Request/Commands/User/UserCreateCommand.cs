@@ -11,7 +11,6 @@ public class UserCreateCommand
     [Required(ErrorMessage = "Введите логин")]
     [Display(Name = "Логин")]
     [DataType(DataType.Text)]
-    [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Некорректный формат логина")]
     [StringLength(128, ErrorMessage = "Логин должен быть не более 128 символов")]
     [JsonPropertyName("login")]
     public string? Login { set; get; }

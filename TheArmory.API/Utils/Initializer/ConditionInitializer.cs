@@ -8,9 +8,9 @@ public class ConditionInitializer : Initializer
 {
     private static readonly List<Condition> Conditions = new()
     {
+        new Condition(WeaponCondition.New, "Новый"),
         new Condition(WeaponCondition.Perfect, "Идеальное"),
         new Condition(WeaponCondition.Fine, "Хорошее"),
-        new Condition(WeaponCondition.Normal, "Нормальное"),
         new Condition(WeaponCondition.NeedsRepair, "Требует ремонта"),
     };
 

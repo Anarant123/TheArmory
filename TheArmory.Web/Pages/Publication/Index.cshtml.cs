@@ -69,6 +69,7 @@ public class Index : PageModel
         }
 
         ModelState.AddModelError(string.Empty, result.Error);
+        await OnGetAsync();
         return Page();
     }
 }

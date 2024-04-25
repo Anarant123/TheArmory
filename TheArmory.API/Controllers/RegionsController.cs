@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
-using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;

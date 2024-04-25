@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Responce.ViewModels.Media;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
 {
@@ -56,12 +55,6 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         /// </summary>
         [JsonPropertyName("countOfViewsToday")]
         public int CountOfViewsToday { get; set; }
-
-        /// <summary>
-        /// Дата последнего посещения
-        /// </summary>
-        [JsonPropertyName("lastVisitDate")]
-        public DateTime LastVisitDate { get; set; }
         
         /// <summary>
         /// Ссылка на ютуб видео с обзором
@@ -72,17 +65,26 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         /// <summary>
         /// Состояние
         /// </summary>
-        [JsonPropertyName("conditionId")]
-        public WeaponCondition ConditionId { get; set; }
+        [JsonPropertyName("condition")]
+        public string Condition { get; set; }
         
         /// <summary>
-        /// Регион
+        /// Фотографии
         /// </summary>
-        [JsonPropertyName("regionId")]
-        public Guid RegionId { get; set; }
-        
         [JsonPropertyName("images")]
         public List<MediaInfoViewModel> Images { get; set; }
+        
+        /// <summary>
+        /// Геолокация
+        /// </summary>
+        [JsonPropertyName("location")]
+        public Location Location { get; set; }
+        
+        /// <summary>
+        /// Контакты пользователя
+        /// </summary>
+        [JsonPropertyName("user")]
+        public UserContactsViewModel User { get; set; }
 
         public AdViewModel(){}
         
@@ -94,13 +96,15 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             OldPrice = ad.OldPrice;
             Description = ad.Description;
             CreationDateTime = ad.CreationDateTime;
+            
             CountOfViews = ad.CountOfViews;
             CountOfViewsToday = ad.CountOfViewsToday;
-            LastVisitDate = ad.LastVisitDate;
+            
             YouTubeLink = ad.YouTubeLink;
-            ConditionId = ad.ConditionId;
-            RegionId = ad.RegionId;
+            Condition = ad.Condition.Name;
             Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+            User = new UserContactsViewModel(ad.User);
+            Location = ad.Location;
         }
     }
 }
