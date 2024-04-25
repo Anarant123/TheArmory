@@ -90,26 +90,30 @@ public class Ad : DbEntity
     [Column("statusId")]
     public StateStatus StatusId { get; set; } = StateStatus.Actively;
     
+    /// <summary>
+    /// Id категории
+    /// </summary>
+    [Column("categoryId")]
+    public Guid CategoryId { get; set; }
+    
+    /// <summary>
+    /// Id характеристики
+    /// </summary>
+    [Column("characteristicId")]
+    public Guid? CharacteristicId { get; set; }
+    
     // virtual 
     
-    /// <summary>
-    /// Состояние
-    /// </summary>
     public virtual Condition Condition { get; set; }
     
-    /// <summary>
-    /// Регион продажи
-    /// </summary>
     public virtual Region? Region { get; set; }
     
-    /// <summary>
-    /// Пользователь, разместивший объявление
-    /// </summary>
     public virtual User User { get; set; }
     
-    /// <summary>
-    /// Статус объявления
-    /// </summary>
+    public virtual Category Category { get; set; }
+    
+    public virtual Characteristic? Characteristic { get; set; }
+    
     public virtual Status Status { get; set; }
     
     public virtual List<Complaint> Complaints { get; set; }

@@ -44,6 +44,14 @@ public class ApplicationContext : DbContext
             .HasOne<Location>(a => a.Location)
             .WithOne(l => l.Ad)
             .HasForeignKey<Location>(l => l.AdId);
+        modelBuilder.Entity<Ad>()
+            .HasOne<Characteristic>(a => a.Characteristic)
+            .WithMany(c => c.Ads)
+            .HasForeignKey(l => l.CharacteristicId);
+        modelBuilder.Entity<Ad>()
+            .HasOne<Category>(a => a.Category)
+            .WithMany(c => c.Ads)
+            .HasForeignKey(a => a.CategoryId);
         
         
         // связи сущности Complaint
@@ -140,6 +148,20 @@ public class ApplicationContext : DbContext
         modelBuilder.Entity<Location>()
             .HasOne<Ad>(l => l.Ad)
             .WithOne(a => a.Location);
+        
+        // связи сущности Characteristic
+        modelBuilder.Entity<Characteristic>()
+            .HasOne<BarrelPosition>(с => с.BarrelPosition)
+            .WithMany(b => b.Characteristics)
+            .HasForeignKey(c => c.BarrelPositionId);
+        modelBuilder.Entity<Characteristic>()
+            .HasOne<WeaponType>(с => с.WeaponType)
+            .WithMany(b => b.Characteristics)
+            .HasForeignKey(c => c.WeaponTypeId);
+        modelBuilder.Entity<Characteristic>()
+            .HasOne<Caliber>(с => с.Caliber)
+            .WithMany(b => b.Characteristics)
+            .HasForeignKey(c => c.CaliberId);
     }
     
     public DbSet<Ad> Ads { get; set; }
@@ -152,6 +174,11 @@ public class ApplicationContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Condition> Conditions { get; set; }
     public DbSet<Contact> Contacts { get; set; }
-    
     public DbSet<Location> Locations { get; set; }
+    
+    public DbSet<BarrelPosition> BarrelPositions { get; set; }
+    public DbSet<Caliber> Calibers { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<Characteristic> Characteristics { get; set; }
+    public DbSet<WeaponType> WeaponTypes { get; set; }
 }
