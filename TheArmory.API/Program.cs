@@ -118,6 +118,10 @@ await ConditionInitializer.InitializeAsync(context);
 await RegionInitializer.InitializeAsync(context);
 await RoleInitializer.InitializeAsync(context);
 await StatusInitializer.InitializeAsync(context);
+await CategoryInitializer.InitializeAsync(context);
+await CaliberInitializer.InitializeAsync(context);
+await WeaponTypeInitializer.InitializeAsync(context);
+await BarrelPositionInitializer.InitializeAsync(context);
 
 app.MapControllers();
 

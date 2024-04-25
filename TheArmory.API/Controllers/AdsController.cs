@@ -132,6 +132,24 @@ public class AdsController : BaseController
         return BadRequest(result);
     }
     
+    
+    /// <summary>
+    /// Получить все данные необходимые для публикации объявления
+    /// </summary>
+    /// <param name="adId"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("PublishInformation")]
+    public async Task<ActionResult<BaseQueryResult<AdPublishInfoViewModel>>> GetPublishInformation()
+    {
+        var result = await _adsRepository.GetPublishInformation();
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
     /// <summary>
     /// Разместить объявление
     /// </summary>

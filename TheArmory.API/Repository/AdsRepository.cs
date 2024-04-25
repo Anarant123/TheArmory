@@ -101,6 +101,31 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdViewModel>(ads);
     }
+
+    /// <summary>
+    /// Возвращает все данные необходимые для публикации объявления
+    /// </summary>
+    /// <returns></returns>
+    public async Task<BaseResult<AdPublishInfoViewModel>> GetPublishInformation()
+    {
+        var conditions = await Context.Conditions.ToListAsync();
+        var categories = await Context.Categories.ToListAsync();
+        var calibers = await Context.Calibers.ToListAsync();
+        var weaponTypes = await Context.WeaponTypes.ToListAsync();
+        var barrelPositions = await Context.BarrelPositions.ToListAsync();
+
+        var result = new AdPublishInfoViewModel
+        {
+            Conditions = conditions,
+            Categories = categories,
+            Calibers = calibers,
+            WeaponTypes = weaponTypes,
+            BarrelPositions = barrelPositions
+        };
+
+        return new BaseResult<AdPublishInfoViewModel>(result) { };
+    }
+
     
     /// <summary>
     /// Возвращает все объявления 
@@ -139,7 +164,6 @@ public class AdsRepository : BaseRepository
         if (command.Photos.Count > 5)
             return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
         
-        // todo сделать ссылку на регион
         var newAd = new Ad()
         {
             Name = command.Name,
@@ -147,12 +171,37 @@ public class AdsRepository : BaseRepository
             Description = command.Description ?? "",
             YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
-            UserId = userId
+            UserId = userId,
         };
 
         var region = await Context.Regions.FirstOrDefaultAsync(r => command.Address.ToLower().Contains(r.Name.ToLower()));
         if (region is not null)
             newAd.RegionId = region.Id;
+
+        var category = await Context.Categories.FirstOrDefaultAsync(c => c.Id.Equals(command.CategoryId));
+        if (category is not null)
+        {
+            newAd.CategoryId = category.Id;
+            if (category.Name.Equals("Охотничье оружие") 
+                && command.WeaponTypeId is not null
+                && command.CaliberId is not null
+                && command.BarrelPositionId is not null
+                && command.YearOfProduction is not null)
+            {
+                var characteristic = new Characteristic()
+                {
+                    WeaponTypeId = (Guid)command.WeaponTypeId,
+                    CaliberId = (Guid)command.CaliberId,
+                    BarrelPositionId = (Guid)command.BarrelPositionId,
+                    YearOfProduction = (int)command.YearOfProduction
+                };
+                newAd.Characteristic = characteristic;
+            }
+            else if (category.Name.Equals("Охотничье оружие"))
+            {
+                return new BaseResult<AdViewModel>("Характеристики необходимо заполнить до конца");
+            }
+        }
         
         if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
         {

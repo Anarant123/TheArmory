@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
+using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Condition;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
 using TheArmory.Web.Service;
@@ -14,14 +15,8 @@ public class Index : PageModel
     private readonly ConditionsService _conditionsService;
     private readonly RegionsService _regionsService;
     
-    public BaseQueryResult<ConditionListViewModel> ConditionsQueryResult { get; set; }
-    public BaseQueryResult<RegionListViewModel> RegionsQueryResult { get; set; }
-    
     [BindProperty]
-    public List<ConditionListViewModel> Conditions { get; set; }
-    
-    [BindProperty]
-    public List<RegionListViewModel> Regions { get; set; }
+    public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
     [BindProperty]
     public AdCreateCommand Command { get; set; }
@@ -33,42 +28,23 @@ public class Index : PageModel
         _regionsService = regionsService;
     }
     
-    // public async Task OnGetAsync(AdCreateCommand сommand)
-    // {
-    //     ConditionsQueryResult = await _conditionsService.GetSelectList();
-    //     Conditions = ConditionsQueryResult.Items.ToList();
-    //     
-    //     RegionsQueryResult = await _regionsService.GetSelectList();
-    //     Regions = RegionsQueryResult.Items.ToList();
-    //
-    //     Command = сommand;
-    // }
-    
     public async Task OnGetAsync()
     {
-        ConditionsQueryResult = await _conditionsService.GetSelectList();
-        Conditions = ConditionsQueryResult.Items.ToList();
-        
-        RegionsQueryResult = await _regionsService.GetSelectList();
-        Regions = RegionsQueryResult.Items.ToList();
+        var adPublishInfoResult = await _adsService.GetPublishInformation();
+        if (adPublishInfoResult.Success)
+            PublishInfoViewModel = adPublishInfoResult.Item;
     }
 
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            await OnGetAsync();
-            return Page();
-        }
 
         var result = await _adsService.PostAd(Command);
-        
+
         if (result.Success)
         {
             return RedirectToPage("/Ads/My");
         }
 
-        ModelState.AddModelError(string.Empty, result.Error);
         await OnGetAsync();
         return Page();
     }

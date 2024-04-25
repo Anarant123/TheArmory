@@ -139,38 +139,69 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-
-    public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
+    
+    public async Task<BaseResult<AdPublishInfoViewModel>> GetPublishInformation()
     {
         try
         {
-            var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            var formData = new MultipartFormDataContent();
-            formData.Add(new StringContent(command.Name), "name");
-            formData.Add(new StringContent(command.Price.ToString(CultureInfo.InvariantCulture)), "price");
-            formData.Add(new StringContent(command.Description ?? ""), "description");
-            formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
-            formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
-            formData.Add(new StringContent(command.Address), "address");
-            formData.Add(new StringContent(command.Latitude), "latitude");
-            formData.Add(new StringContent(command.Longitude), "longitude");
-            foreach (var photo in command.Photos)
-            {
-                var streamContent = new StreamContent(photo.OpenReadStream());
-                formData.Add(streamContent, "photos", photo.FileName);
-            }
-            var response = await httpClient.PostAsync(url, formData);
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/PublishInformation";
+            var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
-                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+                return new BaseResult<AdPublishInfoViewModel>(await response.Content.ReadAsStringAsync());
+
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
-            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdPublishInfoViewModel>>(responseStream);
+            return result ?? new BaseResult<AdPublishInfoViewModel>(ErrorsMessage.SomethingWentWrong);
         }
         catch (Exception exception)
         {
-            return new BaseResult<AdViewModel>(exception.Message);
+            return new BaseResult<AdPublishInfoViewModel>(exception.Message);
         }
     }
+
+    public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
+{
+    try
+    {
+        var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+        var formData = new MultipartFormDataContent();
+        formData.Add(new StringContent(command.Name), "name");
+        formData.Add(new StringContent(command.Price.ToString(CultureInfo.InvariantCulture)), "price");
+        formData.Add(new StringContent(command.Description ?? ""), "description");
+        formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
+        formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
+        formData.Add(new StringContent(command.Address), "address");
+        formData.Add(new StringContent(command.Latitude), "latitude");
+        formData.Add(new StringContent(command.Longitude), "longitude");
+        formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
+        if (command.CaliberId.HasValue)
+            formData.Add(new StringContent(command.CaliberId.Value.ToString()), "caliberId");
+        if (command.WeaponTypeId.HasValue)
+            formData.Add(new StringContent(command.WeaponTypeId.Value.ToString()), "weaponTypeId");
+        if (command.BarrelPositionId.HasValue)
+            formData.Add(new StringContent(command.BarrelPositionId.Value.ToString()), "barrelPositionId");
+        if (command.YearOfProduction.HasValue)
+            formData.Add(new StringContent(command.YearOfProduction.Value.ToString()), "yearOfProduction");
+        foreach (var photo in command.Photos)
+        {
+            var streamContent = new StreamContent(photo.OpenReadStream());
+            formData.Add(streamContent, "photos", photo.FileName);
+        }
+
+        var response = await httpClient.PostAsync(url, formData);
+        if (!response.IsSuccessStatusCode)
+            return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+
+        var responseStream = await response.Content.ReadAsStreamAsync();
+        var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
+        return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+    }
+    catch (Exception exception)
+    {
+        return new BaseResult<AdViewModel>(exception.Message);
+    }
+}
+
     
     public async Task<BaseResult> ToFavorites()
     {
