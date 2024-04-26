@@ -95,7 +95,8 @@
     <div class="col-1 d-flex align-items-end">
         <form asp-page-handler="addToFavorites" method="post">
             <button type="submit" class="btn btn-primary">
-                <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/></button>
+                <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/>
+            </button>
         </form>
     </div>
 </div>
@@ -125,10 +126,10 @@
             }
         </div>
     </div>
-    
+
     <!-- Продавец -->
     <div class="col-3">
-        <div class="row">
+        <div class="row mt-3">
             @if (!string.IsNullOrEmpty(@Model.AdViewModel.User.PhotoName))
             {
                 <div class="square-container">
@@ -142,7 +143,7 @@
                 </div>
             }
         </div>
-        <div class="row">
+        <div class="row mt-3">
             @foreach (var contact in Model.AdViewModel.User.Contacts)
             {
                 <div class="col-6">
@@ -173,15 +174,53 @@
 <div class="row mt-3">
     <div class="col-md-12">
         <!-- Блок с характеристиками -->
+
         <div class="mb-3">
+            <h1>Характеристики</h1>
             <div class="row">
-                <div class="col-6">
-                    <p>Состояние</p>
+                <div class="col-3">
+                    <p>Состояние:</p>
                 </div>
-                <div class="col-6">
+                <div class="col-3">
                     <p>@Model.AdViewModel.Condition</p>
                 </div>
             </div>
+            @if (@Model.AdViewModel.CategoryId.ToString().Equals("3666fab5-1175-4e6c-b9ac-ff9b811e7d8a"))
+            {
+                <div class="row">
+                    <div class="col-3">
+                        <p>Тип</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@Model.AdViewModel.WeaponType</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <p>Расположение стволов:</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@Model.AdViewModel.BarrelPosition</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <p>Калибр:</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@Model.AdViewModel.Caliber</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3">
+                        <p>Год производства:</p>
+                    </div>
+                    <div class="col-3">
+                        <p>@Model.AdViewModel.YearOfProduction</p>
+                    </div>
+                </div>
+            }
+
         </div>
 
         <!-- Блок с описанием -->
@@ -192,14 +231,11 @@
         <!-- Блок с геоданными -->
         <div class="row address-container">
             <div class="row mt-3">
-                <div class="col-6">
-                    <div class="d-flex align-items-center">
-                        <p id="address" class="mr-2">@Model.AdViewModel.Location.Address</p>
-                        <i class="fas fa-angle-down ml-1 address-arrow"></i>
-                    </div>
+                <div class="d-flex align-items-start justify-content-start">
+                    <p id="address" class="mr-3">@Model.AdViewModel.Location.Address ▼</p>
                 </div>
             </div>
-        
+
             <div class="row mt-3">
                 <div class="col">
                     <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
@@ -210,19 +246,24 @@
                 </div>
             </div>
         </div>
-        
-         <div class="row mt-3">
-                        <div class="col">
-                            <p>Дата публикации: @Model.AdViewModel.CreationDateTime</p>
-                            <p>Просмотров: @Model.AdViewModel.CountOfViews</p>
-                            <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
-                        </div>
-                        <form asp-page-handler="complain" method="post">
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
-                            </div>
-                        </form>
+
+
+        <div class="row mt-3">
+            <div class="col">
+                <p>Дата публикации: @Model.AdViewModel.CreationDateTime</p>
+                <p>Просмотров: @Model.AdViewModel.CountOfViews</p>
+                <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <form asp-page-handler="complain" method="post">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
                     </div>
+                </form>
+            </div>
+        </div>
 
     </div>
 </div>

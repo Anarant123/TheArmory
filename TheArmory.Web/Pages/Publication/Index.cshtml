@@ -81,13 +81,12 @@
             <label asp-for="Command.ConditionId" class="form-label">Состояние:</label>
         </div>
         <div class="col-9">
-            <input list="categories" asp-for="Command.ConditionId" class="form-control" required="Обязательно к заполнению">
-            <datalist id="categories">
+            <select asp-for="Command.ConditionId" class="form-select" required="Обязательно к заполнению">
                 @foreach (var condition in Model.PublishInfoViewModel.Conditions)
                 {
                     <option value="@condition.Id">@condition.Name</option>
                 }
-            </datalist>
+            </select>
         </div>
     </div>
 </div>
@@ -528,8 +527,8 @@
     const categorySelect = document.getElementById('categorySelect');
     const characteristicsBlock = document.getElementById('characteristics-block');
     const huntingCategoryId = '3666fab5-1175-4e6c-b9ac-ff9b811e7d8a'; // замените на реальный ID
-            
-    if (selectedCategoryId === huntingCategoryId) characteristicsBlock.style.display = 'block';
+    if (categorySelect.value === huntingCategoryId) 
+                characteristicsBlock.style.display = 'block'
     
     categorySelect.addEventListener('change', function() {
         const selectedCategoryId = categorySelect.value;

@@ -85,6 +85,21 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         /// </summary>
         [JsonPropertyName("user")]
         public UserContactsViewModel User { get; set; }
+        
+        [JsonPropertyName("categoryId")]
+        public Guid CategoryId { get; set; }
+        
+        [JsonPropertyName("caliber")]
+        public string Caliber { get; set; } = string.Empty;
+
+        [JsonPropertyName("weaponType")]
+        public string WeaponType { get; set; } = string.Empty;
+
+        [JsonPropertyName("barrelPosition")]
+        public string BarrelPosition { get; set; } = string.Empty;
+
+        [JsonPropertyName("yearOfProduction")] 
+        public int YearOfProduction { get; set; } = 0;
 
         public AdViewModel(){}
         
@@ -105,6 +120,32 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
             User = new UserContactsViewModel(ad.User);
             Location = ad.Location;
+            CategoryId = ad.CategoryId;
+        }
+        
+        public AdViewModel(Database.Ad ad, Characteristic characteristic)
+        {
+            Id = ad.Id;
+            Name = ad.Name;
+            Price = ad.Price;
+            OldPrice = ad.OldPrice;
+            Description = ad.Description;
+            CreationDateTime = ad.CreationDateTime;
+            
+            CountOfViews = ad.CountOfViews;
+            CountOfViewsToday = ad.CountOfViewsToday;
+            
+            YouTubeLink = ad.YouTubeLink;
+            Condition = ad.Condition.Name;
+            Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+            User = new UserContactsViewModel(ad.User);
+            Location = ad.Location;
+            CategoryId = ad.CategoryId;
+
+            Caliber = characteristic.Caliber.Name;
+            WeaponType = characteristic.WeaponType.Name;
+            BarrelPosition = characteristic.BarrelPosition.Name;
+            YearOfProduction = characteristic.YearOfProduction;
         }
     }
 }

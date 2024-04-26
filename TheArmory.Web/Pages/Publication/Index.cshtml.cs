@@ -37,7 +37,17 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
-
+        ModelState.Remove("Categories");
+        
+        if (Command.CategoryId != Guid.Parse("3666fab5-1175-4e6c-b9ac-ff9b811e7d8a"))
+        {
+            ModelState.Remove("WeaponTypes");
+            ModelState.Remove("Calibers");
+            ModelState.Remove("BarrelPositions");
+            ModelState.Remove("YearOfProduction");
+            ModelState.Remove("Conditions");
+        }
+        
         var result = await _adsService.PostAd(Command);
 
         if (result.Success)

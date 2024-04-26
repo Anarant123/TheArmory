@@ -53,7 +53,17 @@ public class AdsRepository : BaseRepository
 
         await Context.SaveChangesAsync();
 
-        return new BaseResult<AdViewModel>(new AdViewModel(ad));
+        if (ad.CharacteristicId is null) return new BaseResult<AdViewModel>(new AdViewModel(ad));
+        
+        var characteristic = await Context.Characteristics
+            .AsNoTracking()
+            .Include(c => c.BarrelPosition)
+            .Include(c => c.WeaponType)
+            .Include(c => c.Caliber)
+            .FirstOrDefaultAsync(c => c.Id.Equals(ad.CharacteristicId));
+            
+        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!));
+
     }
 
     /// <summary>
@@ -174,7 +184,9 @@ public class AdsRepository : BaseRepository
             UserId = userId,
         };
 
-        var region = await Context.Regions.FirstOrDefaultAsync(r => command.Address.ToLower().Contains(r.Name.ToLower()));
+        var address = command.Address ?? string.Empty;
+
+        var region = await Context.Regions.FirstOrDefaultAsync(r => address.ToLower().Contains(r.Name.ToLower()));
         if (region is not null)
             newAd.RegionId = region.Id;
 
@@ -207,7 +219,7 @@ public class AdsRepository : BaseRepository
         {
             newAd.Location = new Location()
             {
-                Address = command.Address,
+                Address = address,
                 Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
                 Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
             };
@@ -220,12 +232,16 @@ public class AdsRepository : BaseRepository
         newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
-        return await Context.SaveChangesAsync() switch
-        {
-            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
-            _ => new BaseResult<AdViewModel>(new AdViewModel(newAd))
-        };
+        if (await Context.SaveChangesAsync() == 0)
+            return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
 
+        var ad = await Context.Ads
+            .Include(a => a.Condition)
+            .Include(a => a.Medias)
+            .Include(a => a.User)
+            .FirstOrDefaultAsync(a => a.Id.Equals(newAd.Id));
+
+        return new BaseResult<AdViewModel>(new AdViewModel(newAd));
     }
     
     
