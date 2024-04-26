@@ -1,17 +1,34 @@
-﻿using TheArmory.Domain.Models.Enums;
+﻿using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Queries;
 
 public class TileAdQueryItemsParams : BaseQueryItemsParams
 {
+    [JsonPropertyName("statusId")]
     public StateStatus StatusId { get; set; } = StateStatus.Actively;
-    public Guid? RegionId { get; set; }
     
-    public WeaponCondition? ConditionId { get; set; }
+    [JsonPropertyName("regionId")]
+    public Guid? RegionId { get; set; } = Guid.Empty;
     
-    public Guid? CategoryId { get; set; }
+    [JsonPropertyName("categoryId")]
+    public Guid CategoryId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("caliberId")]
+    public Guid CaliberId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("weaponTypeId")]
+    public Guid WeaponTypeId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("barrelPositionId")]
+    public Guid BarrelPositionId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("priceFrom")] 
+    public decimal PriceFrom { get; set; } = decimal.MinValue;
     
-    public decimal? PriceFrom { get; set; } 
+    [JsonPropertyName("priceFrom")] 
+    public decimal PriceTo { get; set; }  = decimal.MaxValue;
     
-    public decimal? PriceTo { get; set; } 
+    [JsonPropertyName("filterText")]
+    public string FilterText { get; set; } = string.Empty;
 }

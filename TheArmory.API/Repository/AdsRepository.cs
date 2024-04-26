@@ -87,11 +87,12 @@ public class AdsRepository : BaseRepository
         
         return new BaseResult<MyAdViewModel>(new MyAdViewModel(ad));
     }
-    
+
     /// <summary>
     /// Возвращает все объявления пользователя
     /// </summary>
     /// <param name="userId"></param>
+    /// <param name="queryItemsParams"></param>
     /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(
         Guid userId,
@@ -143,14 +144,38 @@ public class AdsRepository : BaseRepository
     /// <param name="userId"></param>
     /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetAds(
-        Guid? userId)
+        Guid? userId,
+        TileAdQueryItemsParams queryItemsParams)
     {
+        var filter = queryItemsParams.FilterText?.ToLower();
+        
         var ads = await Context.Ads
             .Include(a => a.Medias)
-            .Where(a => userId != null 
-                ? !a.UserId.Equals(userId) 
-                : true 
-                  && a.StatusId.Equals(StateStatus.Actively))
+            .Include(a => a.Characteristic)
+            .ThenInclude(c => c.WeaponType)
+            .Include(a => a.Characteristic)
+            .ThenInclude(c => c.BarrelPosition)
+            .Include(a => a.Characteristic)
+            .ThenInclude(c => c.Caliber)
+            .Include(a => a.Category)
+            .Where(a => !a.UserId.Equals(userId) 
+                        && a.StatusId.Equals(StateStatus.Actively)
+                        && (queryItemsParams.CategoryId.Equals(Guid.Empty) || a.CategoryId.Equals(queryItemsParams.CategoryId))
+                        && (queryItemsParams.PriceFrom < a.Price && queryItemsParams.PriceTo > a.Price)
+                        && (a.Characteristic == null 
+                            || ((queryItemsParams.CaliberId.Equals(Guid.Empty) || a.Characteristic.CaliberId.Equals(queryItemsParams.CaliberId))
+                                && (queryItemsParams.BarrelPositionId.Equals(Guid.Empty) || a.Characteristic.BarrelPositionId.Equals(queryItemsParams.BarrelPositionId))
+                                && (queryItemsParams.WeaponTypeId.Equals(Guid.Empty) || a.Characteristic.WeaponTypeId.Equals(queryItemsParams.WeaponTypeId))))
+                        && (string.IsNullOrEmpty(filter) 
+                            || (a.Name.ToLower().Contains(filter))
+                            || (a.Description != null && a.Description.ToLower().Contains(filter))
+                            || (a.Category.Name.ToLower().Contains(filter))
+                            || (a.Region != null && a.Region.Name.ToLower().Contains(filter))
+                            || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower().Contains(filter))
+                            || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name.ToLower().Contains(filter))
+                            || (a.Characteristic != null && a.Characteristic.Caliber.Name.ToLower().Contains(filter))
+                  
+                        ))
             .Select(s => new TileAdViewModel(s))
             .ToListAsync();
 
