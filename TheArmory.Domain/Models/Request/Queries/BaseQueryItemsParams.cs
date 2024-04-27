@@ -6,7 +6,7 @@ namespace TheArmory.Domain.Models.Request.Queries;
 public class BaseQueryItemsParams : BaseQuery
 {
     [JsonIgnore]
-    public static int DefaultItemsCount => 200;
+    public static int DefaultItemsCount => 2;
     [JsonIgnore]
     public static int DefaultPageNumber => 1;
     [JsonIgnore]

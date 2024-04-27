@@ -140,9 +140,25 @@ public class AdsController : BaseController
     /// <returns></returns>
     [HttpGet]
     [Route("PublishInformation")]
-    public async Task<ActionResult<BaseQueryResult<AdPublishInfoViewModel>>> GetPublishInformation()
+    public async Task<ActionResult<BaseResult<AdPublishInfoViewModel>>> GetPublishInformation()
     {
         var result = await _adsRepository.GetPublishInformation();
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+
+    /// <summary>
+    /// Получить все данные необходимые для публикации объявления
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("FilterViewModel")]
+    public async Task<ActionResult<BaseResult<AdFilterViewModel>>> GetFilterViewModel()
+    {
+        var result = await _adsRepository.GetFilterViewModel();
         
         if (result.Success)
             return Ok(result);

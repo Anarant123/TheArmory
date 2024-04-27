@@ -44,12 +44,15 @@ public class AdsService : BaseService<Ad>
         }
     }
 
-    public async Task<BaseQueryResult<TileAdViewModel>> GetAds()
+    public async Task<BaseQueryResult<TileAdViewModel>> GetAds(TileAdQueryItemsParams queryItemsParams)
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            var response = await httpClient.GetAsync(uri);
+             var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}");
+            var queryParams = queryItemsParams.ToDictionary();
+            var queryString = queryParams.ToGetParameters();
+            uriBuilder.Query = queryString;
+            var response = await httpClient.GetAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
 
@@ -156,6 +159,25 @@ public class AdsService : BaseService<Ad>
         catch (Exception exception)
         {
             return new BaseResult<AdPublishInfoViewModel>(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult<AdFilterViewModel>> GetFilterViewModel()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/FilterViewModel";
+            var response = await httpClient.GetAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<AdFilterViewModel>(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdFilterViewModel>>(responseStream);
+            return result ?? new BaseResult<AdFilterViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<AdFilterViewModel>(exception.Message);
         }
     }
 

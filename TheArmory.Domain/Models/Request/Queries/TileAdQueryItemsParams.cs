@@ -24,10 +24,10 @@ public class TileAdQueryItemsParams : BaseQueryItemsParams
     public Guid BarrelPositionId { get; set; } = Guid.Empty;
 
     [JsonPropertyName("priceFrom")] 
-    public decimal PriceFrom { get; set; } = decimal.MinValue;
+    public decimal PriceFrom { get; set; } = 0;
     
     [JsonPropertyName("priceFrom")] 
-    public decimal PriceTo { get; set; }  = decimal.MaxValue;
+    public decimal PriceTo { get; set; }  = 10000000;
     
     [JsonPropertyName("filterText")]
     public string FilterText { get; set; } = string.Empty;

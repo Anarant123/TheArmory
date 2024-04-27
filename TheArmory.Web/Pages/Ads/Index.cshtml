@@ -5,126 +5,170 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <!-- Фильтры слева -->
-        <div class="col-md-2">
-            <!-- Здесь размещаем настройки фильтров -->
-            <h3>Фильтры</h3>
-            
-            <!-- Фильтр по категории -->
-            <div class="form-group">
-                <label for="category">Категория:</label>
-                <select class="form-control" id="category">
-                    <option>Все</option>
-                    <option>Охотничье</option>
-                    <option>Травматическое</option>
-                </select>
-            </div>
-            
-            <!-- Фильтр по региону -->
-            <div class="form-group">
-                <label for="region">Регион:</label>
-                <select asp-for="QueryParams.RegionId" class="form-control" id="regionId" name="Command.RegionId">
-                    @foreach (var region in Model.Regions)
-                    {
-                        <option value="@region.Id">@region.Code @region.Name</option>
-                    }
-                </select>
-            </div>
-            
-            <!-- Фильтр по диапазону цены -->
-            <div class="form-group">
-                <label for="price-from">Цена от:</label>
-                <input type="text" class="form-control" id="price-from" placeholder="От">
-            </div>
-            <div class="form-group">
-                <label for="price-to">Цена до:</label>
-                <input type="text" class="form-control" id="price-to" placeholder="До">
-            </div>
-            <div class="form-group">
-                <label for="price-range">Диапазон цены:</label>
-                <input type="range" class="form-range" id="price-range">
-            </div>
-            
-            <!-- Другие фильтры -->
-        </div>
+    <form method="get">
+        <div class="row">
 
-        <!-- Плитки с объявлениями -->
-        <div class="col-md-10">
-            <div class="row mb-3">
-                <div class="col-md-10">
-                    <h4>Всего активных объявлений: @Model.QueryResult.TotalCount</h4>
+            <div class="col-md-2">
+                <h5 class="text-muted">Фильтры</h5>
+                <div class="form-group">
+                    <label class="small text-muted" for="price-from">Цена от:</label>
+                    <input type="text" class="form-control form-control-sm" asp-for="QueryParams.PriceFrom" id="price-from" placeholder="От">
                 </div>
-            </div>
-            <div class="row mb-3">
-                <!-- Сортировка -->
-                <div class="col-md-2">
+                <div class="form-group">
+                    <label class="small text-muted" for="price-to">Цена до:</label>
+                    <input type="text" class="form-control form-control-sm" asp-for="QueryParams.PriceTo" id="price-to" placeholder="До">
+                </div>
+                <div class="form-group">
+                    <label class="small text-muted" for="region">Регион:</label>
+                    <select asp-for="QueryParams.RegionId" class="form-select form-select-sm" id="category-select" required="Обязательно к заполнению">
+                        <option value="">Регион</option>
+                        @foreach (var region in Model.AdFilterViewModel.Regions)
+                        {
+                            <option value="@region.Id">@region.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="small text-muted" for="category">Категория:</label>
+                    <select asp-for="QueryParams.CategoryId" class="form-select form-select-sm" required="Обязательно к заполнению">
+                        <option value="">Категория</option>
+                        @foreach (var category in Model.AdFilterViewModel.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+                <!-- Фильтр по харатеристикам -->
+                <div id="characteristics-block" style="display:none;">
+                    <!-- Фильтр по калибру -->
                     <div class="form-group">
-                        <select class="form-control" id="category">
-                            <option>Сначала новые</option>
-                            <option>Сначала старые</option>
-                            <option>Сначала дешевле</option>
-                            <option>Сначала дороже</option>
+                        <label for="category">Калибр:</label>
+                        <select asp-for="QueryParams.CaliberId" class="form-select" required="Обязательно к заполнению">
+                            <option value="">Калибр</option>
+                            @foreach (var caliber in Model.AdFilterViewModel.Calibers)
+                            {
+                                <option value="@caliber.Id">@caliber.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Фильтр по типу -->
+                    <div class="form-group">
+                        <label for="category">Тип:</label>
+                        <select asp-for="QueryParams.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
+                            <option value="">Тип</option>
+                            @foreach (var type in Model.AdFilterViewModel.WeaponTypes)
+                            {
+                                <option value="@type.Id">@type.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <!-- Фильтр по расположению ствола -->
+                    <div class="form-group">
+                        <label for="category">Тип:</label>
+                        <select asp-for="QueryParams.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
+                            <option value="">Тип</option>
+                            @foreach (var position in Model.AdFilterViewModel.BarrelPositions)
+                            {
+                                <option value="@position.Id">@position.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
-                <!-- Строка поиска -->
-                <div class="col-md-10">
-                    <input type="text" class="form-control" placeholder="Поиск...">
-                </div>
             </div>
-            
+
             <!-- Плитки с объявлениями -->
-            <div class="row">
-                @if (Model.TileAds is not null && Model.TileAds.Any())
-                {
-                    @foreach (var ad in Model.TileAds)
-                    {
-                        ad.BaseUrl = Model.BaseUrl;
-                        <div class="col-md-3 mb-3">
-                            @await Html.PartialAsync("AdTile", ad)
+            <div class="col-md-10">
+                <div class="row mb-3">
+                    <div class="col-md-10">
+                        <h4>Всего активных объявлений: @Model.QueryResult.TotalCount</h4>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <!-- Сортировка -->
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <select class="form-control" id="category">
+                                <option>Сначала новые</option>
+                                <option>Сначала старые</option>
+                                <option>Сначала дешевле</option>
+                                <option>Сначала дороже</option>
+                            </select>
                         </div>
+                    </div>
+                    <!-- Строка поиска -->
+                    <div class="col-md-10">
+                        <input type="text" asp-for="QueryParams.FilterText" class="form-control" placeholder="Поиск...">
+                    </div>
+                </div>
+
+                <!-- Плитки с объявлениями -->
+                <div class="row">
+                    @if (Model.TileAds is not null && Model.TileAds.Any())
+                    {
+                        @foreach (var ad in Model.TileAds)
+                        {
+                            ad.BaseUrl = Model.BaseUrl;
+                            <div class="col-md-3 mb-3">
+                                @await Html.PartialAsync("AdTile", ad)
+                            </div>
+                        }
                     }
-                }
-                else
-                {
-                    <h1>Объявлений не найдено</h1>
-                }
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination justify-content-center">
-                            <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "disabled" : "")">
-                                <a class="page-link" href="?pageNumber=1" aria-label="Previous">
-                                    <<</a>
-                            </li>
-                            <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "disabled" : "")">
-                                <a class="page-link" href="?pageNumber=@(Model.QueryResult.PageNumber - 1)" aria-label="Previous">
-                                    <</a>
-                            </li>
-                            @for (var i = 1; i <= Model.QueryResult.TotalPages; i++)
-                            {
-                                <li class="page-item @(i == Model.QueryResult.PageNumber ? "active" : "")">
-                                    <a class="page-link" href="?pageNumber=@i">@i</a>
+                    else
+                    {
+                        <h1>Объявлений не найдено</h1>
+                    }
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "disabled" : "")">
+                                    <a class="page-link" href="?pageNumber=1" aria-label="Previous">
+                                        <<
+                                    </a>
                                 </li>
-                            }
-                            <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "disabled" : "")">
-                                <a class="page-link" href="?pageNumber=@(Model.QueryResult.PageNumber + 1)" aria-label="Next">
-                                    ></a>
-                            </li>
-                            <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "disabled" : "")">
-                                <a class="page-link" href="?pageNumber=@Model.QueryResult.TotalPages" aria-label="Next">
-                                    >>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                                <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "disabled" : "")">
+                                    <a class="page-link" href="?pageNumber=@(Model.QueryResult.PageNumber - 1)" aria-label="Previous">
+                                        <
+                                    </a>
+                                </li>
+                                @for (var i = 1; i <= Model.QueryResult.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == Model.QueryResult.PageNumber ? "active" : "")">
+                                        <a class="page-link" href="?pageNumber=@i">@i</a>
+                                    </li>
+                                }
+                                <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "disabled" : "")">
+                                    <a class="page-link" href="?pageNumber=@(Model.QueryResult.PageNumber + 1)" aria-label="Next">
+                                        >
+                                    </a>
+                                </li>
+                                <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "disabled" : "")">
+                                    <a class="page-link" href="?pageNumber=@Model.QueryResult.TotalPages" aria-label="Next">
+                                        >>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
+<script>
+    document.getElementById("category-select").addEventListener("change", function() {
+        var selectedValue = this.value;
 
+        var characteristicsBlock = document.getElementById("characteristics-block");
 
+        if (selectedValue == "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
+            characteristicsBlock.style.display = "block";
+        } else {
+            characteristicsBlock.style.display = "none";
+        }
+    });
+</script>

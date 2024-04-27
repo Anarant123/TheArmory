@@ -22,9 +22,11 @@ public class Index : PageModel
     
     [BindProperty]
     public List<RegionListViewModel> Regions { get; set; }
+
+    [BindProperty] public TileAdQueryItemsParams QueryParams { get; set; } = new TileAdQueryItemsParams();
     
     [BindProperty]
-    public TileAdQueryItemsParams QueryParams { get; set; }
+    public AdFilterViewModel AdFilterViewModel { get; set; }
     
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
@@ -46,13 +48,16 @@ public class Index : PageModel
     
     public async Task OnGet()
     {
-        // var conditionsQueryResult = await _conditionsService.GetSelectList();
-        // Conditions = conditionsQueryResult.Items.ToList();
+        var adFilterViewModelResult = await _adsService.GetFilterViewModel();
+        if (adFilterViewModelResult.Success)
+            AdFilterViewModel = adFilterViewModelResult.Item;
         
         var regionsQueryResult = await _regionsService.GetSelectList();
         Regions = regionsQueryResult.Items.ToList();
         
-        QueryResult = await _adsService.GetAds();
+        QueryResult = await _adsService.GetAds(QueryParams);
+        if (QueryResult.Success)
+            return;
     }
    
 }

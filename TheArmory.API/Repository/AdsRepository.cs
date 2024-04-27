@@ -136,6 +136,32 @@ public class AdsRepository : BaseRepository
 
         return new BaseResult<AdPublishInfoViewModel>(result) { };
     }
+    
+    /// <summary>
+    /// Возвращает все данные необходимые для публикации объявления
+    /// </summary>
+    /// <returns></returns>
+    public async Task<BaseResult<AdFilterViewModel>> GetFilterViewModel()
+    {
+        var conditions = await Context.Conditions.ToListAsync();
+        var categories = await Context.Categories.ToListAsync();
+        var calibers = await Context.Calibers.ToListAsync();
+        var weaponTypes = await Context.WeaponTypes.ToListAsync();
+        var barrelPositions = await Context.BarrelPositions.ToListAsync();
+        var regions = await Context.Regions.ToListAsync();
+
+        var result = new AdFilterViewModel
+        {
+            Regions = regions,
+            Conditions = conditions,
+            Categories = categories,
+            Calibers = calibers,
+            WeaponTypes = weaponTypes,
+            BarrelPositions = barrelPositions
+        };
+
+        return new BaseResult<AdFilterViewModel>(result) { };
+    }
 
     
     /// <summary>
@@ -183,7 +209,7 @@ public class AdsRepository : BaseRepository
         if (ads.Count == 0)
             return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
 
-        return new BaseQueryResult<TileAdViewModel>(ads);
+        return new BaseQueryResult<TileAdViewModel>(ads, queryItemsParams);
     }
     
     /// <summary>
