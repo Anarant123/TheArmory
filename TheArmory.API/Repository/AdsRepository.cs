@@ -211,6 +211,29 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdViewModel>(ads, queryItemsParams);
     }
+
+    /// <summary>
+    /// Возвращает все объявления 
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    public async Task<BaseQueryResult<TileAdViewModel>> GetBunnedAds(
+        BaseQueryItemsParams queryItemsParams)
+    {
+        
+        var ads = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.User)
+            .Where(a => a.StatusId.Equals(StateStatus.Banned))
+            .Select(s => new TileAdViewModel(s))
+            .ToListAsync();
+
+
+        if (ads.Count == 0)
+            return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
+
+        return new BaseQueryResult<TileAdViewModel>(ads, queryItemsParams);
+    }
     
     /// <summary>
     /// Создание объявления

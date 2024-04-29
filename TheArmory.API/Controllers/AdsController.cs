@@ -76,6 +76,26 @@ public class AdsController : BaseController
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
     [HttpGet]
+    [Route("Banned")]
+    public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetBannedAds(
+        [FromQuery]BaseQueryItemsParams queryItemsParams)
+    {
+        var userResponse = await GetUser();
+        
+        var result = await _adsRepository.GetBunnedAds(queryItemsParams);
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Получить все объявления
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [HttpGet]
     [Route("My")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetMyAds(
         [FromQuery]TileAdQueryItemsParams queryItemsParams)
