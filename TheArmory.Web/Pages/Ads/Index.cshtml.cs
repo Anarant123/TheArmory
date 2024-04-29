@@ -25,7 +25,7 @@ public class Index : PageModel
     [BindProperty]
     public List<RegionListViewModel> Regions { get; set; }
 
-    [BindProperty] public TileAdQueryItemsParams QueryParams { get; set; } = new TileAdQueryItemsParams();
+    [BindProperty] public TileAdQueryItemsParams QueryParams { get; set; }
     
     [BindProperty]
     public AdFilterViewModel AdFilterViewModel { get; set; }
@@ -48,7 +48,7 @@ public class Index : PageModel
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
     
-    public async Task OnGet()
+    public async Task<ActionResult> OnGet()
     {
         var adFilterViewModelResult = await _adsService.GetFilterViewModel();
         if (adFilterViewModelResult.Success)
@@ -57,9 +57,23 @@ public class Index : PageModel
         var regionsQueryResult = await _regionsService.GetSelectList();
         Regions = regionsQueryResult.Items.ToList();
         
-        QueryResult = await _adsService.GetAds(QueryParams);
-        if (QueryResult.Success)
-            return;
+        QueryResult = await _adsService.GetAds(new TileAdQueryItemsParams());
+        if (!QueryResult.Success) Result = QueryResult;
+        return Page();
+    }
+
+    public async Task<ActionResult> OnGetFilterAsync([FromQuery] TileAdQueryItemsParams queryParams)
+    {
+        var adFilterViewModelResult = await _adsService.GetFilterViewModel();
+        if (adFilterViewModelResult.Success)
+            AdFilterViewModel = adFilterViewModelResult.Item;
+        
+        var regionsQueryResult = await _regionsService.GetSelectList();
+        Regions = regionsQueryResult.Items.ToList();
+        
+        QueryResult = await _adsService.GetAds(queryParams);
+        if (!QueryResult.Success) Result = QueryResult;
+        return Page();
     }
    
 }

@@ -4,10 +4,10 @@
     ViewData["Title"] = "Объявления";
 }
 
-@await Html.PartialAsync("ErrorModelWindow", Model.Result);
+@await Html.PartialAsync("ErrorModelWindow", Model.Result)
 
 <div class="container-fluid">
-    <form method="get">
+    <form method="get" asp-page-handler="Filter">
         <div class="row">
 
             <div class="col-md-2">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group">
                     <label class="small text-muted" for="region">Регион:</label>
-                    <select asp-for="QueryParams.RegionId" class="form-select form-select-sm" id="category-select" required="Обязательно к заполнению">
+                    <select asp-for="QueryParams.RegionId" class="form-select form-select-sm" id="category-select">
                         <option value="">Регион</option>
                         @foreach (var region in Model.AdFilterViewModel.Regions)
                         {
@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label class="small text-muted" for="category">Категория:</label>
-                    <select asp-for="QueryParams.CategoryId" class="form-select form-select-sm" required="Обязательно к заполнению">
+                    <select asp-for="QueryParams.CategoryId" class="form-select form-select-sm">
                         <option value="">Категория</option>
                         @foreach (var category in Model.AdFilterViewModel.Categories)
                         {
@@ -45,7 +45,7 @@
                     <!-- Фильтр по калибру -->
                     <div class="form-group">
                         <label for="category">Калибр:</label>
-                        <select asp-for="QueryParams.CaliberId" class="form-select" required="Обязательно к заполнению">
+                        <select asp-for="QueryParams.CaliberId" class="form-select">
                             <option value="">Калибр</option>
                             @foreach (var caliber in Model.AdFilterViewModel.Calibers)
                             {
@@ -57,7 +57,7 @@
                     <!-- Фильтр по типу -->
                     <div class="form-group">
                         <label for="category">Тип:</label>
-                        <select asp-for="QueryParams.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
+                        <select asp-for="QueryParams.WeaponTypeId" class="form-select">
                             <option value="">Тип</option>
                             @foreach (var type in Model.AdFilterViewModel.WeaponTypes)
                             {
@@ -69,7 +69,7 @@
                     <!-- Фильтр по расположению ствола -->
                     <div class="form-group">
                         <label for="category">Тип:</label>
-                        <select asp-for="QueryParams.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
+                        <select asp-for="QueryParams.BarrelPositionId" class="form-select">
                             <option value="">Тип</option>
                             @foreach (var position in Model.AdFilterViewModel.BarrelPositions)
                             {
@@ -100,8 +100,11 @@
                         </div>
                     </div>
                     <!-- Строка поиска -->
-                    <div class="col-md-10">
+                    <div class="col-md-9">
                         <input type="text" asp-for="QueryParams.FilterText" class="form-control" placeholder="Поиск...">
+                    </div>
+                    <div class="col-md-1">
+                        <button type="submit" class="btn btn-success">Поиск</button>
                     </div>
                 </div>
 

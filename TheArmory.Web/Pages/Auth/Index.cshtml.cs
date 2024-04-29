@@ -33,6 +33,10 @@ public class Index : PageModel
     {
         if (!ModelState.IsValid)
         {
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Result.Error += $"\nError: {error.ErrorMessage}";
+            }
             return Page();
         }
 

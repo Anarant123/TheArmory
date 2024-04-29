@@ -28,7 +28,4 @@ public class TileAdQueryItemsParams : BaseQueryItemsParams
     
     [JsonPropertyName("priceFrom")] 
     public decimal PriceTo { get; set; }  = 10000000;
-    
-    [JsonPropertyName("filterText")]
-    public string FilterText { get; set; } = string.Empty;
 }
