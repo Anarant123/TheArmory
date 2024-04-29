@@ -12,7 +12,6 @@ namespace TheArmory.Web.Pages.Ads;
 
 public class Index : PageModel
 {
-    private readonly ConditionsService _conditionsService;
     private readonly RegionsService _regionsService;
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
@@ -20,12 +19,10 @@ public class Index : PageModel
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     
     [BindProperty]
-    public List<ConditionListViewModel> Conditions { get; set; }
-    
-    [BindProperty]
     public List<RegionListViewModel> Regions { get; set; }
 
-    [BindProperty] public TileAdQueryItemsParams QueryParams { get; set; }
+    [BindProperty] 
+    public TileAdQueryItemsParams QueryParams { get; set; }
     
     [BindProperty]
     public AdFilterViewModel AdFilterViewModel { get; set; }
@@ -43,12 +40,11 @@ public class Index : PageModel
         BaseUrlOptions baseUrlOptions)
     {
         _adsService = adsService;
-        _conditionsService = conditionsService;
         _regionsService = regionsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
     
-    public async Task<ActionResult> OnGet()
+    public async Task<ActionResult> OnGetAsync()
     {
         var adFilterViewModelResult = await _adsService.GetFilterViewModel();
         if (adFilterViewModelResult.Success)
@@ -62,7 +58,7 @@ public class Index : PageModel
         return Page();
     }
 
-    public async Task<ActionResult> OnGetFilterAsync([FromQuery] TileAdQueryItemsParams queryParams)
+    public async Task<ActionResult> OnGetFilterAsync()
     {
         var adFilterViewModelResult = await _adsService.GetFilterViewModel();
         if (adFilterViewModelResult.Success)
@@ -71,7 +67,7 @@ public class Index : PageModel
         var regionsQueryResult = await _regionsService.GetSelectList();
         Regions = regionsQueryResult.Items.ToList();
         
-        QueryResult = await _adsService.GetAds(queryParams);
+        QueryResult = await _adsService.GetAds(QueryParams);
         if (!QueryResult.Success) Result = QueryResult;
         return Page();
     }
