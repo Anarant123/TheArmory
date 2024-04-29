@@ -17,6 +17,8 @@ public class Index : PageModel
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
     
+    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
+    
     [BindProperty]
     public List<ConditionListViewModel> Conditions { get; set; }
     

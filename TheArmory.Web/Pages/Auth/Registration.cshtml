@@ -5,6 +5,8 @@
     ViewData["Title"] = "Регистрация";
 }
 
+@await Html.PartialAsync("ErrorModelWindow", Model.Result);
+
 <div class="container mt-5 text-center">
     <h1>Регистрация</h1>
     <form method="post" class="mt-4 d-inline-block">

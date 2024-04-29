@@ -85,6 +85,8 @@
     }
 </style>
 
+@await Html.PartialAsync("ErrorModelWindow", Model.Result);
+
 <div class="row">
     <div class="col-6 text-left">
         <h2>@Model.AdViewModel.Name</h2>

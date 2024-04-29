@@ -4,6 +4,8 @@
     ViewData["Title"] = "Объявления";
 }
 
+@await Html.PartialAsync("ErrorModelWindow", Model.Result);
+
 <div class="container-fluid">
     <form method="get">
         <div class="row">

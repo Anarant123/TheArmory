@@ -1,0 +1,34 @@
+﻿@model TheArmory.Domain.Models.Responce.Result.BaseResult.BaseResult
+
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Возникла ошибка</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">@Model.Error</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.Error))
+{
+    <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var errorWindow = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorWindow.show();
+    });
+    
+    function closeModal() {
+        var errorWindow = bootstrap.Modal.getInstance('#errorModal');
+        errorWindow.hide();
+    }
+    </script>
+}

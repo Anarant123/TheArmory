@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.Ad;
+using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
@@ -12,6 +13,8 @@ public class AdInfo : PageModel
 {
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
+    
+    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     
     [BindProperty]
     public AdToComplaintCommand ToComplaintCommand { get; set; }
