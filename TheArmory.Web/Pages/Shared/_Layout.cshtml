@@ -18,44 +18,50 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <li class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <ul class="navbar-nav flex-grow-1">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-page="/Ads/Index">Объявления</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-page="/Privacy">Правила сайта</a>
+                    </li>
+
+                    @if (User.Identity is {IsAuthenticated: true })
+                    {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Ads/Index">Объявления</a>
+                            <a class="nav-link text-dark" asp-page="/Favorites">Избранное</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Privacy">Правила сайта</a>
+                            <a class="nav-link text-dark" asp-page="/Publication/Index">Разместить объявление</a>
                         </li>
-                        
-                        @if (User.Identity is {IsAuthenticated: true })
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Favorites">Избранное</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Publication/Index">Разместить объявление</a>
-                            </li>
-                        }
-                    </ul>
-                    
-                    <ul class="navbar-nav ml-auto">
-                        @if (User.Identity is {IsAuthenticated: true })
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Account/PersonalInfo">Профиль</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Auth/Index">Войти</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-page="/Auth/Registration">Зарегистрироваться</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
+                    }
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    @if (User.Identity is {IsAuthenticated: true })
+                    {
+                        <li class="nav-item dropdown">
+                            <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Профиль
+                            </button>
+                            <ul class="dropdown-menu">
+                                <a class="dropdown-item" asp-page="/Account/PersonalInfo">Личная информация</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" asp-page="/Account/DeleteAccount">Удалить аккаунт</a>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Auth/Index">Войти</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Auth/Registration">Зарегистрироваться</a>
+                        </li>
+                    }
+                </ul>
             </div>
         </nav>
     </div>

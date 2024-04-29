@@ -24,6 +24,40 @@
 
 </style>
 
+@if (!string.IsNullOrEmpty(Model.Result.Error))
+{
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">Возникла ошибка</h5>
+                </div>
+                <div class="modal-body">
+                    <p id="errorMessage">@Model.Result.Error</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (!string.IsNullOrEmpty(Model.Result.Error))
+{
+    <script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        var errorWindow = new bootstrap.Modal(document.getElementById('errorModal'));
+        errorWindow.show();
+    });
+    
+    function closeModal() {
+        var errorWindow = bootstrap.Modal.getInstance('#errorModal');
+        errorWindow.hide();
+    }
+    </script>
+}
+
+
 <div class="row">
     <div class="col-md-10">
         <div class="container">
@@ -140,21 +174,22 @@
                     </form>
 
 
-                    <div class="form-group">
-                        <label for="registrationDateTime">На площадке с @Model.UserInfo.RegistrationDateTime</label>
+                    <div class="row mt-3">
+                        <div class="row">
+                            <label for="registrationDateTime">На площадке с @Model.UserInfo.RegistrationDateTime</label>
+                        </div>
                     </div>
-                    @* <div class="form-group"> *@
-                    @*     <input type="text" id="regionId" name="regionId" value="@Model.User.Region.Name" class="form-control" readonly> *@
-                    @* </div> *@
-                    @* <div class="form-group"> *@
-                    @*     <input type="text" id="statusId" name="statusId" value="@Model.User.Status.Name" class="form-control" readonly> *@
-                    @* </div> *@
+                    
                 </div>
             </div>
         </div>
     </div>
     <div class="col-md-2">
-        @await Html.PartialAsync("SideBar")
+        <div class="row">
+            <form method="post" asp-page-handler="Exit">
+                <input type="submit" class="btn btn-danger" value="Выйти">
+            </form>
+        </div>
     </div>
 </div>
 

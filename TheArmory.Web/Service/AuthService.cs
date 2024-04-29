@@ -55,7 +55,7 @@ public class AuthService : BaseService<User>
         }
     }
     
-    public async Task<BaseResult?> Logout()
+    public async Task<BaseResult> Logout()
     {
         try
         {

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.User;
@@ -14,48 +15,41 @@ namespace TheArmory.Web.Pages.Account;
 public class PersonalInfo : PageModel
 {
     private readonly UserService _userService;
-    private readonly ConditionsService _conditionsService;
-    private readonly RegionsService _regionsService;
     private readonly AdsService _adsService;
     private readonly ContactsService _contactsService;
+    private readonly AuthService _authService;
+    
     public readonly string BaseUrl;
     
     [BindProperty]
     public UserPersonalInfoViewModel UserInfo { get; set; }
-
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-     
-    
+
+    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty]
     public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
-    
     [BindProperty]
     public UserChangeNameCommand ChangeNameCommand { get; set; }
-    
     [BindProperty]
     public ContactCreateCommand ContactCreateCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 
         AdsService adsService,
-        ConditionsService conditionsService,
-        RegionsService regionsService,
         BaseUrlOptions baseUrlOptions,
-        ContactsService contactsService)
+        ContactsService contactsService,
+        AuthService authService)
     {
         _userService = userService;
         _adsService = adsService;
-        _conditionsService = conditionsService;
-        _regionsService = regionsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
         _contactsService = contactsService;
+        _authService = authService;
     }
     
     public async Task<ActionResult> OnGetAsync()
@@ -74,31 +68,37 @@ public class PersonalInfo : PageModel
     }
     
     
-    public async Task OnPostChangePhotoAsync()
+    public async Task<IActionResult> OnPostChangePhotoAsync()
     {
-        var result = await _userService.ChangePhoto(ChangeProfilePhotoCommand);
-        if (result.Success)
-        {
-            await OnGetAsync();
-        }
+        var BaseResult = await _userService.ChangePhoto(ChangeProfilePhotoCommand);
+        if (!BaseResult.Success) return Page();
+        await OnGetAsync();
+        return Page();
     }
 
-    public async Task OnPostChangeNameAsync()
+    public async Task<IActionResult> OnPostChangeNameAsync()
     {
-        var result = await _userService.ChangeName(ChangeNameCommand);
-        if (result.Success)
-        {
-            await OnGetAsync();
-        }
+        Result = await _userService.ChangeName(ChangeNameCommand);
+        if (!Result.Success) return Page();
+        await OnGetAsync();
+        return Page();
     }
 
-    public async Task OnPostCreateContact()
+    public async Task<IActionResult> OnPostCreateContact()
     {
-        var result = await _contactsService.CreateContact(ContactCreateCommand);
-        if (result.Success)
-        {
-            await OnGetAsync();
-        }
+        Result = await _contactsService.CreateContact(ContactCreateCommand);
+        if (!Result.Success) return Page();
+        await OnGetAsync();
+        return Page();
+    }
+
+    
+    public async Task<IActionResult> OnPostExit()
+    {
+        Result = await _authService.Logout();
+        if (!Result.Success) return await OnGetAsync();
+        await HttpContext.SignOutAsync();
+        return RedirectToPage("/Ads/Index");
     }
 
 }
