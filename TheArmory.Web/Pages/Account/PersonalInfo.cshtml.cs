@@ -30,7 +30,8 @@ public class PersonalInfo : PageModel
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
 
-    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
+    [BindProperty] 
+    public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty]
     public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
     [BindProperty]
@@ -61,9 +62,9 @@ public class PersonalInfo : PageModel
         UserInfo = userResponce.Item;
         
         
-        ActiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
-        InactiveAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
-        BannedAdsQueryResult = await _adsService.GetMyAds(new TileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
+        ActiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
+        InactiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
+        BannedAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
         return Page();
     }
     

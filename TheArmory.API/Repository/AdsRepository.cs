@@ -12,6 +12,7 @@ namespace TheArmory.Repository;
 public class AdsRepository : BaseRepository
 {
     private readonly MediasRepository _mediasRepository;
+
     public AdsRepository(
         ApplicationContext context,
         ILogger<BaseRepository<Ad>> logger,
@@ -20,7 +21,7 @@ public class AdsRepository : BaseRepository
     {
         _mediasRepository = mediasRepository;
     }
-    
+
     /// <summary>
     /// Возвращает объявление
     /// </summary>
@@ -49,21 +50,21 @@ public class AdsRepository : BaseRepository
             ad.LastVisitDate = DateTime.Now;
             ad.CountOfViewsToday = 0;
         }
+
         ad.CountOfViewsToday += 1;
 
         await Context.SaveChangesAsync();
 
         if (ad.CharacteristicId is null) return new BaseResult<AdViewModel>(new AdViewModel(ad));
-        
+
         var characteristic = await Context.Characteristics
             .AsNoTracking()
             .Include(c => c.BarrelPosition)
             .Include(c => c.WeaponType)
             .Include(c => c.Caliber)
             .FirstOrDefaultAsync(c => c.Id.Equals(ad.CharacteristicId));
-            
-        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!));
 
+        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!));
     }
 
     /// <summary>
@@ -84,7 +85,7 @@ public class AdsRepository : BaseRepository
 
         if (ad is null)
             return new BaseResult<MyAdViewModel>("Объявление не найдено");
-        
+
         return new BaseResult<MyAdViewModel>(new MyAdViewModel(ad));
     }
 
@@ -96,13 +97,13 @@ public class AdsRepository : BaseRepository
     /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(
         Guid userId,
-        TileAdQueryItemsParams queryItemsParams)
+        MyTileAdQueryItemsParams queryItemsParams)
     {
         var ads = await Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.Condition)
             .Include(a => a.Region)
-            .Where(a => a.UserId.Equals(userId) 
+            .Where(a => a.UserId.Equals(userId)
                         && a.Status.Id.Equals(queryItemsParams.StatusId))
             .Select(s => new TileAdViewModel(s))
             .ToListAsync();
@@ -136,7 +137,7 @@ public class AdsRepository : BaseRepository
 
         return new BaseResult<AdPublishInfoViewModel>(result) { };
     }
-    
+
     /// <summary>
     /// Возвращает все данные необходимые для публикации объявления
     /// </summary>
@@ -163,7 +164,7 @@ public class AdsRepository : BaseRepository
         return new BaseResult<AdFilterViewModel>(result) { };
     }
 
-    
+
     /// <summary>
     /// Возвращает все объявления 
     /// </summary>
@@ -174,8 +175,8 @@ public class AdsRepository : BaseRepository
         TileAdQueryItemsParams queryItemsParams)
     {
         var filter = queryItemsParams.FilterText?.ToLower();
-        
-        var ads = await Context.Ads
+
+        var adsQuery = Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.Characteristic)
             .ThenInclude(c => c.WeaponType)
@@ -184,33 +185,74 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Characteristic)
             .ThenInclude(c => c.Caliber)
             .Include(a => a.Category)
-            .Where(a => !a.UserId.Equals(userId) 
-                        && a.StatusId.Equals(StateStatus.Actively)
-                        && (queryItemsParams.CategoryId.Equals(Guid.Empty) || a.CategoryId.Equals(queryItemsParams.CategoryId))
-                        && (queryItemsParams.PriceFrom < a.Price && queryItemsParams.PriceTo > a.Price)
-                        && (a.Characteristic == null 
-                            || ((queryItemsParams.CaliberId.Equals(Guid.Empty) || a.Characteristic.CaliberId.Equals(queryItemsParams.CaliberId))
-                                && (queryItemsParams.BarrelPositionId.Equals(Guid.Empty) || a.Characteristic.BarrelPositionId.Equals(queryItemsParams.BarrelPositionId))
-                                && (queryItemsParams.WeaponTypeId.Equals(Guid.Empty) || a.Characteristic.WeaponTypeId.Equals(queryItemsParams.WeaponTypeId))))
-                        && (string.IsNullOrEmpty(filter) 
-                            || (a.Name.ToLower().Contains(filter))
-                            || (a.Description != null && a.Description.ToLower().Contains(filter))
-                            || (a.Category.Name.ToLower().Contains(filter))
-                            || (a.Region != null && a.Region.Name.ToLower().Contains(filter))
-                            || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower().Contains(filter))
-                            || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name.ToLower().Contains(filter))
-                            || (a.Characteristic != null && a.Characteristic.Caliber.Name.ToLower().Contains(filter))
-                  
-                        ))
+            .Where(a => !a.UserId.Equals(userId)
+                        && a.StatusId.Equals(StateStatus.Actively));
+
+        if (queryItemsParams.CategoryId != null)
+        {
+            adsQuery = adsQuery.Where(a => a.CategoryId.Equals(queryItemsParams.CategoryId));
+            Console.WriteLine($"Filter by category: {queryItemsParams.CategoryId}");
+        }
+
+        if (queryItemsParams.RegionId != null)
+        {
+            adsQuery = adsQuery.Where(a => a.RegionId.Equals(queryItemsParams.RegionId));
+            Console.WriteLine($"Filter by region: {queryItemsParams.RegionId}");
+        }
+
+        if (queryItemsParams.CaliberId != null)
+        {
+            adsQuery = adsQuery.Where(a =>
+                a.Characteristic != null && a.Characteristic.CaliberId.Equals(queryItemsParams.CaliberId));
+            Console.WriteLine($"Filter by caliber: {queryItemsParams.CaliberId}");
+        }
+
+        if (queryItemsParams.WeaponTypeId != null)
+        {
+            adsQuery = adsQuery.Where(a =>
+                a.Characteristic != null && a.Characteristic.WeaponTypeId.Equals(queryItemsParams.WeaponTypeId));
+            Console.WriteLine($"Filter by weapon type: {queryItemsParams.WeaponTypeId}");
+        }
+
+        if (queryItemsParams.BarrelPositionId != null)
+        {
+            adsQuery = adsQuery.Where(a =>
+                a.Characteristic != null &&
+                a.Characteristic.BarrelPositionId.Equals(queryItemsParams.BarrelPositionId));
+            Console.WriteLine($"Filter by barrel position: {queryItemsParams.BarrelPositionId}");
+        }
+
+        if (queryItemsParams.PriceFrom > 0 || queryItemsParams.PriceTo < 10000000)
+        {
+            adsQuery = adsQuery.Where(a => queryItemsParams.PriceFrom < a.Price && queryItemsParams.PriceTo > a.Price);
+            Console.WriteLine($"Filter by price: {queryItemsParams.PriceFrom} - {queryItemsParams.PriceTo}");
+        }
+
+        if (!string.IsNullOrEmpty(filter))
+        {
+            adsQuery = adsQuery.Where(a => a.Name.ToLower().Contains(filter)
+                                           || (a.Description != null && a.Description.ToLower().Contains(filter))
+                                           || a.Category.Name.ToLower().Contains(filter)
+                                           || (a.Region != null && a.Region.Name.ToLower().Contains(filter))
+                                           || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower()
+                                               .Contains(filter))
+                                           || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name
+                                               .ToLower().Contains(filter))
+                                           || (a.Characteristic != null &&
+                                               a.Characteristic.Caliber.Name.ToLower().Contains(filter)));
+            Console.WriteLine($"Filter by text: {filter}");
+        }
+
+        var ads = await adsQuery
             .Select(s => new TileAdViewModel(s))
             .ToListAsync();
-
 
         if (ads.Count == 0)
             return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
 
         return new BaseQueryResult<TileAdViewModel>(ads, queryItemsParams);
     }
+
 
     /// <summary>
     /// Возвращает все объявления 
@@ -220,7 +262,6 @@ public class AdsRepository : BaseRepository
     public async Task<BaseQueryResult<TileAdViewModel>> GetBunnedAds(
         BaseQueryItemsParams queryItemsParams)
     {
-        
         var ads = await Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.User)
@@ -234,7 +275,7 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdViewModel>(ads, queryItemsParams);
     }
-    
+
     /// <summary>
     /// Создание объявления
     /// </summary>
@@ -247,7 +288,7 @@ public class AdsRepository : BaseRepository
     {
         if (command.Photos.Count > 5)
             return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
-        
+
         var newAd = new Ad()
         {
             Name = command.Name,
@@ -268,7 +309,7 @@ public class AdsRepository : BaseRepository
         if (category is not null)
         {
             newAd.CategoryId = category.Id;
-            if (category.Name.Equals("Охотничье оружие") 
+            if (category.Name.Equals("Охотничье оружие")
                 && command.WeaponTypeId is not null
                 && command.CaliberId is not null
                 && command.BarrelPositionId is not null
@@ -288,7 +329,7 @@ public class AdsRepository : BaseRepository
                 return new BaseResult<AdViewModel>("Характеристики необходимо заполнить до конца");
             }
         }
-        
+
         if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
         {
             newAd.Location = new Location()
@@ -298,11 +339,11 @@ public class AdsRepository : BaseRepository
                 Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
             };
         }
-        
+
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
         if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
 
-        
+
         newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
@@ -317,8 +358,8 @@ public class AdsRepository : BaseRepository
 
         return new BaseResult<AdViewModel>(new AdViewModel(newAd));
     }
-    
-    
+
+
     /// <summary>
     /// Обновление объявления
     /// </summary>
@@ -340,6 +381,7 @@ public class AdsRepository : BaseRepository
             ad.OldPrice = ad.Price;
             ad.Price = Convert.ToDecimal(command.Price);
         }
+
         if (!string.IsNullOrEmpty(command.Description))
             ad.Description = command.Description;
         if (!string.IsNullOrEmpty(command.YouToubeLink))
@@ -348,7 +390,7 @@ public class AdsRepository : BaseRepository
             ad.ConditionId = (WeaponCondition)command.ConditionId;
         if (command.RegionId is not null)
             ad.RegionId = (Guid)command.RegionId;
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
@@ -401,14 +443,14 @@ public class AdsRepository : BaseRepository
         };
 
         Context.Favorites.Add(favorite);
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
             _ => new BaseResult<AdViewModel>(new AdViewModel(ad))
         };
     }
-    
+
     /// <summary>
     /// Оставить жалобу на объявление
     /// </summary>
@@ -422,26 +464,26 @@ public class AdsRepository : BaseRepository
         var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
         if (ad is null)
             return new BaseResult<AdViewModel>("Объявление не найдено");
-    
+
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
-    
+
         var complaint = new Complaint()
         {
             AdId = command.Id,
             UserId = userId,
             Description = command.Description
         };
-    
+
         Context.Complaints.Add(complaint);
-            
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
             _ => new BaseResult<AdViewModel>()
         };
     }
-    
-    
+
+
     /// <summary>
     /// Удалить фото
     /// </summary>
@@ -458,7 +500,7 @@ public class AdsRepository : BaseRepository
 
         return new BaseResult();
     }
-    
+
     /// <summary>
     /// Добавить фото
     /// </summary>

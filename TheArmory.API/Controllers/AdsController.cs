@@ -98,7 +98,7 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("My")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetMyAds(
-        [FromQuery]TileAdQueryItemsParams queryItemsParams)
+        [FromQuery]MyTileAdQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success || userResponse.Item is null)

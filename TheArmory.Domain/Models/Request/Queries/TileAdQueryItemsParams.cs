@@ -5,27 +5,24 @@ namespace TheArmory.Domain.Models.Request.Queries;
 
 public class TileAdQueryItemsParams : BaseQueryItemsParams
 {
-    [JsonPropertyName("statusId")]
-    public StateStatus StatusId { get; set; } = StateStatus.Actively;
-    
-    [JsonPropertyName("regionId")]
-    public Guid? RegionId { get; set; } = Guid.Empty;
+    [JsonPropertyName("regionId")] 
+    public Guid? RegionId { get; set; } = null;
     
     [JsonPropertyName("categoryId")]
-    public Guid CategoryId { get; set; } = Guid.Empty;
+    public Guid? CategoryId { get; set; } = null;
 
     [JsonPropertyName("caliberId")]
-    public Guid CaliberId { get; set; } = Guid.Empty;
+    public Guid? CaliberId { get; set; } = null;
 
     [JsonPropertyName("weaponTypeId")]
-    public Guid WeaponTypeId { get; set; } = Guid.Empty;
+    public Guid? WeaponTypeId { get; set; } = null;
 
     [JsonPropertyName("barrelPositionId")]
-    public Guid BarrelPositionId { get; set; } = Guid.Empty;
+    public Guid? BarrelPositionId { get; set; } = null;
 
     [JsonPropertyName("priceFrom")] 
     public decimal PriceFrom { get; set; } = 0;
     
     [JsonPropertyName("priceFrom")] 
-    public decimal PriceTo { get; set; }  = 10000000;
+    public decimal PriceTo { get; set; }  = decimal.MaxValue;
 }

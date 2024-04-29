@@ -21,7 +21,7 @@ public class AdsService : BaseService<Ad>
     {
     }
 
-    public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(TileAdQueryItemsParams queryItemsParams)
+    public async Task<BaseQueryResult<TileAdViewModel>> GetMyAds(MyTileAdQueryItemsParams queryItemsParams)
     {
         try
         {
