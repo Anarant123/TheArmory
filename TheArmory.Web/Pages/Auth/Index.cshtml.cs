@@ -31,15 +31,6 @@ public class Index : PageModel
     
     public async Task<IActionResult> OnPostAsync()
     {
-        if (!ModelState.IsValid)
-        {
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Result.Error += $"\nError: {error.ErrorMessage}";
-            }
-            return Page();
-        }
-
         var result = await _service.Login(Command);
         Result = result;
         if (result.Success)
