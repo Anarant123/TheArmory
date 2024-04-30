@@ -10,7 +10,7 @@ public class Registration : PageModel
 {
     private readonly AuthService _service;
     
-    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
+    [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
     
     [BindProperty]
     public UserCreateCommand Command { get; set; }
@@ -30,13 +30,14 @@ public class Registration : PageModel
     
     public async Task<IActionResult> OnPostAsync()
     {
+        ModelState.Remove("Error");
         if (!ModelState.IsValid)
         {
             return Page();
         }
 
         var result = await _service.Registration(Command);
-        Result = result;
+        RequestResult = result;
         if (result.Success)
         {
             return RedirectToPage("/Auth/Index");
