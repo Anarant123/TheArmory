@@ -11,10 +11,8 @@ public class Index : PageModel
 {
     private readonly AuthService _service;
     
-    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
-    
-    [BindProperty]
-    public UserLoginCommand Command { get; set; }
+    [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
+    [BindProperty] public UserLoginCommand Command { get; set; }
 
     public Index(AuthService service)
     {
@@ -31,8 +29,14 @@ public class Index : PageModel
     
     public async Task<IActionResult> OnPostAsync()
     {
+        ModelState.Remove("Error");
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
+
         var result = await _service.Login(Command);
-        Result = result;
+        RequestResult = result;
         if (result.Success)
         {
             await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);

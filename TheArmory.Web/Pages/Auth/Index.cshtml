@@ -5,8 +5,6 @@
     ViewData["Title"] = "Авторизация";
 }
 
-@await Html.PartialAsync("ErrorModelWindow", Model.Result)
-
 <div class="container mt-5 text-center">
     <h1>Вход</h1>
     <form method="post" class="mt-4 d-inline-block">
@@ -47,3 +45,5 @@
         </div>
     </form>
 </div>
+
+@await Html.PartialAsync("ErrorModelWindow", Model.RequestResult)
