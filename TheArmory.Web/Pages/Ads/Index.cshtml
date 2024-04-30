@@ -179,19 +179,16 @@
 
      function sendFilterRequest(pageNumber, event) {
          event.preventDefault();
-     
+         
          var formData = new FormData($('#form')[0]);
          formData.append("QueryParams.PageNumber", pageNumber);
-     
+         
          $.ajax({
-             url: '/Ads/Index?handler=Filter',
-             data: formData,
-             processData: false, 
-             contentType: false,
-             type: 'POST',
-             success: function(response) {
-                 $('#your-element-id').html(response); // обновить элемент DOM
-             }
+            url: '/Ads/Index?handler=Filter',
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
          });
      }
 
