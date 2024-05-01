@@ -227,14 +227,18 @@ public class AdsService : BaseService<Ad>
     
     public async Task<BaseResult> ToFavorites()
     {
+        // todo сделать аналогичное возвращение ошибки для остальных сервисов
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/ToFavorite";
             var response = await httpClient.PostAsync(uri, null);
-            if (!response.IsSuccessStatusCode)
-                return new BaseResult(await response.Content.ReadAsStringAsync());
-
             var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
         }

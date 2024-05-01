@@ -432,9 +432,15 @@ public class AdsRepository : BaseRepository
     {
         var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
         if (ad is null)
-            return new BaseResult<AdViewModel>("Объявление не найдено");
+            return new BaseResult("Объявление не найдено");
 
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+
+        var favoriteChek = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId)
+                                                                            && f.AdId.Equals(adId));
+        
+        if (favoriteChek is not null)
+            return new BaseResult("Объявление уже в избранном");
 
         var favorite = new Favorite()
         {
@@ -447,7 +453,7 @@ public class AdsRepository : BaseRepository
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
-            _ => new BaseResult<AdViewModel>(new AdViewModel(ad))
+            _ => new BaseResult<AdViewModel>()
         };
     }
 

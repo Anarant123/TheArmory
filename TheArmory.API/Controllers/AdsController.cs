@@ -210,12 +210,10 @@ public class AdsController : BaseController
     /// <summary>
     /// Добавить в избранное
     /// </summary>
-    /// <param name="command"></param>
     /// <returns></returns>
     [HttpPost]
     [Route("ToFavorite")]
-    public async Task<ActionResult<BaseResult>> AddToFavorite(
-        [FromBody]AdCommand command)
+    public async Task<ActionResult<BaseResult>> AddToFavorite()
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)

@@ -14,10 +14,9 @@ public class AdInfo : PageModel
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
     
-    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
+    [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
     
-    [BindProperty]
-    public AdToComplaintCommand ToComplaintCommand { get; set; }
+    [BindProperty] public AdToComplaintCommand ToComplaintCommand { get; set; }
     
     [BindProperty]
     public AdViewModel AdViewModel { get; set; }
@@ -28,35 +27,42 @@ public class AdInfo : PageModel
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
 
-    public async Task OnGetSelectAsync(Guid id)
+    public async Task<ActionResult> OnGetSelectAsync(Guid id)
     {
         var result = await _adsService.Select(new AdSelectCommand(){Id = id});
         if (result.Success)
             AdViewModel = result.Item;
         
         //todo написать возвращение страницы ошибки
+
+        return Page();
     }
     
-    public async Task OnGetSelectedAsync()
+    public async Task<ActionResult> OnGetSelectedAsync()
     {
         var result = await _adsService.GetSelected();
         if (result.Success)
             AdViewModel = result.Item;
         
         //todo написать возвращение страницы ошибки
+        return Page();
     }
 
-    public async Task OnPostAddToFavoritesAsync()
+    public async Task<ActionResult> OnPostAddToFavoritesAsync()
     {
         var result = await _adsService.ToFavorites();
-        if (result.Success)
-            return;
+        if (!result.Success)
+            RequestResult = result;
+            
+        return await OnGetSelectedAsync();
     }
     
-    public async Task OnPostComplainAsync()
+    public async Task<ActionResult> OnPostComplainAsync()
     {
         var result = await _adsService.Complaint(ToComplaintCommand);
-        if (result.Success)
-            return;
+        if (!result.Success)
+            RequestResult = result;
+            
+        return await OnGetSelectedAsync();
     }
 }
