@@ -254,11 +254,14 @@ public class AdsService : BaseService<Ad>
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Complaint";
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
-            var response = await httpClient.PostAsync(uri, null);
-            if (!response.IsSuccessStatusCode)
-                return new BaseResult(await response.Content.ReadAsStringAsync());
-
+            var response = await httpClient.PostAsync(uri, content);
             var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
         }

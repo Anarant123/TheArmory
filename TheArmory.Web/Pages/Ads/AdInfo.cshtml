@@ -257,11 +257,9 @@
         </div>
         <div class="row">
             <div class="col">
-                <form asp-page-handler="complain" method="post">
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-danger btn-block">Пожаловаться</button>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <button id="complainButton" type="button" class="btn btn-danger btn-block">Пожаловаться</button>
+                </div>
             </div>
         </div>
 
@@ -353,3 +351,4 @@
 </script>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.RequestResult)
+@await Html.PartialAsync("ComplaintInputModel", Model.ToComplaintCommand)

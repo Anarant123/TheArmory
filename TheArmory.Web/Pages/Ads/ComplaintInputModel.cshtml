@@ -1,0 +1,33 @@
+﻿@model TheArmory.Domain.Models.Request.Commands.Ad.AdToComplaintCommand
+
+<form asp-page-handler="Complain" method="post">
+    <div class="modal fade" id="inputModal" tabindex="-1" role="dialog" aria-labelledby="inputModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputModalLabel">Введите данные</h5>
+                </div>
+                <div class="modal-body">
+                    <label asp-for="@Model.Description">Описание жалобы:</label>
+                    <input type="text" class="form-control" asp-for="@Model.Description">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeInputModal()">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Отправить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    document.getElementById('complainButton').addEventListener('click', function() {
+        let inputWindow = new bootstrap.Modal(document.getElementById('inputModal'));
+        inputWindow.show();
+    });
+    
+    function closeInputModal() {
+        let inputWindow = bootstrap.Modal.getInstance('#inputModal');
+        inputWindow.hide();
+    }
+</script>

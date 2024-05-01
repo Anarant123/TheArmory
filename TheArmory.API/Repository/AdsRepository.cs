@@ -436,9 +436,7 @@ public class AdsRepository : BaseRepository
 
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
-        var favoriteChek = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId)
-                                                                            && f.AdId.Equals(adId));
-        
+        var favoriteChek = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
         if (favoriteChek is not null)
             return new BaseResult("Объявление уже в избранном");
 
@@ -469,9 +467,13 @@ public class AdsRepository : BaseRepository
     {
         var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
         if (ad is null)
-            return new BaseResult<AdViewModel>("Объявление не найдено");
+            return new BaseResult("Объявление не найдено");
 
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+        
+        var complaintChek = await Context.Complaints.FirstOrDefaultAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(command.Id));
+        if (complaintChek is not null)
+            return new BaseResult("Вы уже подали жалобу на данное объявление");
 
         var complaint = new Complaint()
         {
@@ -484,8 +486,8 @@ public class AdsRepository : BaseRepository
 
         return await Context.SaveChangesAsync() switch
         {
-            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
-            _ => new BaseResult<AdViewModel>()
+            0 => new BaseResult("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult()
         };
     }
 
