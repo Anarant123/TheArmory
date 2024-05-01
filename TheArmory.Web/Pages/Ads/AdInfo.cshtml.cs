@@ -50,6 +50,11 @@ public class AdInfo : PageModel
 
     public async Task<ActionResult> OnPostAddToFavoritesAsync()
     {
+        if (User.Identity is { IsAuthenticated: false })
+        {
+            RequestResult = new BaseResult("Чтобы добавить в избранное это объявление вам необходимо авторизоваться");
+            return await OnGetSelectedAsync();
+        }
         var result = await _adsService.ToFavorites();
         if (!result.Success)
             RequestResult = result;
@@ -57,8 +62,23 @@ public class AdInfo : PageModel
         return await OnGetSelectedAsync();
     }
     
+    public async Task<ActionResult> OnPostDeleteFavoritesAsync()
+    {
+        var result = await _adsService.DeleteFavorite();
+        if (!result.Success)
+            RequestResult = result;
+                
+        return await OnGetSelectedAsync();
+    }
+    
     public async Task<ActionResult> OnPostComplainAsync()
     {
+        if (User.Identity is { IsAuthenticated: false })
+        {
+            RequestResult = new BaseResult("Чтобы оставить жалобу на данное объявление вам необходимо авторизоваться");
+            return await OnGetSelectedAsync();
+        }
+        
         var result = await _adsService.Complaint(ToComplaintCommand);
         if (!result.Success)
             RequestResult = result;

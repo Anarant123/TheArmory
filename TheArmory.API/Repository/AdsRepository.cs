@@ -25,9 +25,11 @@ public class AdsRepository : BaseRepository
     /// <summary>
     /// Возвращает объявление
     /// </summary>
+    /// <param name="userId"></param>
     /// <param name="adId"></param>
     /// <returns></returns>
     public async Task<BaseResult<AdViewModel>> GetAd(
+        Guid? userId,
         Guid adId)
     {
         var ad = await Context.Ads
@@ -54,8 +56,11 @@ public class AdsRepository : BaseRepository
         ad.CountOfViewsToday += 1;
 
         await Context.SaveChangesAsync();
+        
+        var isFavorite = await Context.Favorites.AnyAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
+        var isComplaint = await Context.Complaints.AnyAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(adId));
 
-        if (ad.CharacteristicId is null) return new BaseResult<AdViewModel>(new AdViewModel(ad));
+        if (ad.CharacteristicId is null ) return new BaseResult<AdViewModel>(new AdViewModel(ad, isFavorite, isComplaint));
 
         var characteristic = await Context.Characteristics
             .AsNoTracking()
@@ -64,7 +69,7 @@ public class AdsRepository : BaseRepository
             .Include(c => c.Caliber)
             .FirstOrDefaultAsync(c => c.Id.Equals(ad.CharacteristicId));
 
-        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!));
+        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!, isFavorite, isComplaint));
     }
 
     /// <summary>
@@ -447,6 +452,35 @@ public class AdsRepository : BaseRepository
         };
 
         Context.Favorites.Add(favorite);
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<AdViewModel>()
+        };
+    }
+    
+    /// <summary>
+    /// Удалить объявление из избранного
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> DeleteFromFavorite(
+        Guid userId,
+        Guid adId)
+    {
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
+        if (ad is null)
+            return new BaseResult("Объявление не найдено");
+
+        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+
+        var favorite = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
+        if (favorite is null)
+            return new BaseResult("Объявление не добавлено в избранное");
+        
+        Context.Favorites.Remove(favorite);
 
         return await Context.SaveChangesAsync() switch
         {

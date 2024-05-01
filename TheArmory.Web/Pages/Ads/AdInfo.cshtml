@@ -93,11 +93,22 @@
         <h2>@Model.AdViewModel.Price &#x20bd;</h2>
     </div>
     <div class="col-1 d-flex align-items-end">
-        <form asp-page-handler="addToFavorites" method="post">
-            <button type="submit" class="btn btn-primary">
-                <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/>
-            </button>
-        </form>
+        @if (!Model.AdViewModel.IsFavorite)
+        {
+            <form asp-page-handler="AddToFavorites" method="post">
+                <button type="submit" class="btn btn-primary">
+                    <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/>
+                </button>
+            </form>
+        }
+        else
+        {
+            <form asp-page-handler="DeleteFavorites" method="post">
+                <button type="submit" class="btn btn-primary">
+                    <img src="/icons/favorite_icon.png" alt="Удалить из избранного" width="24" height="24"/>
+                </button>
+            </form>
+        }
     </div>
 </div>
 <div class="row mt-3">

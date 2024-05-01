@@ -101,6 +101,12 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         [JsonPropertyName("yearOfProduction")] 
         public int YearOfProduction { get; set; } = 0;
 
+        [JsonPropertyName("isFavorite")] 
+        public bool IsFavorite { get; set; } = false;
+        
+        [JsonPropertyName("isComplaint")] 
+        public bool IsComplaint { get; set; } = false;
+
         public AdViewModel(){}
         
         public AdViewModel(Database.Ad ad)
@@ -123,7 +129,30 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             CategoryId = ad.CategoryId;
         }
         
-        public AdViewModel(Database.Ad ad, Characteristic characteristic)
+        public AdViewModel(Database.Ad ad, bool isFavorite, bool isComplaint)
+        {
+            Id = ad.Id;
+            Name = ad.Name;
+            Price = ad.Price;
+            OldPrice = ad.OldPrice;
+            Description = ad.Description;
+            CreationDateTime = ad.CreationDateTime;
+            
+            CountOfViews = ad.CountOfViews;
+            CountOfViewsToday = ad.CountOfViewsToday;
+            
+            YouTubeLink = ad.YouTubeLink;
+            Condition = ad.Condition.Name;
+            Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+            User = new UserContactsViewModel(ad.User);
+            Location = ad.Location;
+            CategoryId = ad.CategoryId;
+            
+            IsFavorite = isFavorite;
+            IsComplaint = isComplaint;
+        }
+        
+        public AdViewModel(Database.Ad ad, Characteristic characteristic, bool isFavorite, bool isComplaint)
         {
             Id = ad.Id;
             Name = ad.Name;
@@ -146,6 +175,9 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             WeaponType = characteristic.WeaponType.Name;
             BarrelPosition = characteristic.BarrelPosition.Name;
             YearOfProduction = characteristic.YearOfProduction;
+
+            IsFavorite = isFavorite;
+            IsComplaint = isComplaint;
         }
     }
 }

@@ -30,20 +30,19 @@ public class AdsController : BaseController
     /// Получение выбранного объявления
     /// </summary>
     /// <returns></returns>
-    [Authorize]
     [HttpGet]
     [Route("Selected")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> GetSelected()
     {
         var userResponse = await GetUser();
-        if (!userResponse.Success)
-            return BadRequest(userResponse);
+
+        var userId = userResponse.Item?.Id;
 
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
 
-        var result = await _adsRepository.GetAd(adIdResponse?.Item ?? Guid.Empty);
+        var result = await _adsRepository.GetAd(userId, adIdResponse?.Item ?? Guid.Empty);
 
         if (result.Success) return Ok(result);
         Logger.LogError(result.Error);
@@ -134,23 +133,23 @@ public class AdsController : BaseController
         return BadRequest(result);
     }
 
-    /// <summary>
-    /// Получить объявление
-    /// </summary>
-    /// <param name="adId"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("{adId:guid}")]
-    public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetAd(
-        Guid adId)
-    {
-        var result = await _adsRepository.GetAd(adId);
-        
-        if (result.Success)
-            return Ok(result);
-
-        return BadRequest(result);
-    }
+    // /// <summary>
+    // /// Получить объявление
+    // /// </summary>
+    // /// <param name="adId"></param>
+    // /// <returns></returns>
+    // [HttpGet]
+    // [Route("{adId:guid}")]
+    // public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetAd(
+    //     Guid adId)
+    // {
+    //     var result = await _adsRepository.GetAd(adId);
+    //     
+    //     if (result.Success)
+    //         return Ok(result);
+    //
+    //     return BadRequest(result);
+    // }
     
     
     /// <summary>
@@ -286,12 +285,21 @@ public class AdsController : BaseController
         return BadRequest(result);
     }
     
+    /// <summary>
+    /// Выбор объявления и сохранение его в cookie
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
     [HttpPost]
     [Route("Select")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> Select(
         [FromBody]AdSelectCommand command)
     {
-        var result = await _adsRepository.GetAd(command.Id);
+        var userResponse = await GetUser();
+
+        var userId = userResponse.Item?.Id;
+        
+        var result = await _adsRepository.GetAd(userId, command.Id);
 
         if (result.Success)
         {
@@ -328,5 +336,31 @@ public class AdsController : BaseController
         return BadRequest(result);
     }
     
+    /// <summary>
+    /// Удалить объявление из избранного
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("Favorite")]
+    public async Task<ActionResult<BaseResult>> DeleteFromFavorite()
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+
+        var result = await _adsRepository.DeleteFromFavorite(
+            userResponse.Item.Id,
+            adIdResponse.Item);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
     
 }
