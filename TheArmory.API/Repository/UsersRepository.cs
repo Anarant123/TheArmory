@@ -66,7 +66,7 @@ public class UsersRepository : BaseRepository
             return new BaseResult(ErrorsMessage.ConfirmPasswordNotMatch);
 
         if (await Context.Users.AnyAsync(p => p.Login.Equals(command.Login))!)
-            return new BaseResult(ErrorsMessage.InaccessibleEmail);
+            return new BaseResult(ErrorsMessage.InaccessibleLogin);
         
         
         var user = new User()

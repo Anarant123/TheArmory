@@ -16,7 +16,7 @@ public class ErrorsMessage
     
     public static string InvalidEmail => "Неверная почта";
 
-    public static string InaccessibleEmail => "Недоступная почта";
+    public static string InaccessibleLogin => "Недоступный логин";
 
     public static string InaccessiblePhoneNumber => "Недоступный номер телефона";
 
