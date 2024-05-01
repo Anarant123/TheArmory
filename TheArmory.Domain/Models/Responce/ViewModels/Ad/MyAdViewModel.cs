@@ -1,11 +1,19 @@
 ﻿using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Responce.ViewModels.Media;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 
 namespace TheArmory.Domain.Models.Responce.ViewModels.Ad;
 
 public class MyAdViewModel
 {
+    /// <summary>
+    /// Id Сущности
+    /// </summary>
+    [JsonPropertyName("id")]
+    public Guid Id { get; set; }
+
     /// <summary>
     /// Наименование
     /// </summary>
@@ -49,12 +57,6 @@ public class MyAdViewModel
     public int CountOfViewsToday { get; set; }
 
     /// <summary>
-    /// Дата последнего посещения
-    /// </summary>
-    [JsonPropertyName("lastVisitDate")]
-    public DateTime LastVisitDate { get; set; }
-
-    /// <summary>
     /// Ссылка на ютуб видео с обзором
     /// </summary>
     [JsonPropertyName("youTubeLink")]
@@ -63,10 +65,40 @@ public class MyAdViewModel
     /// <summary>
     /// Состояние
     /// </summary>
-    [JsonPropertyName("conditionId")]
-    public WeaponCondition ConditionId { get; set; }
+    [JsonPropertyName("condition")]
+    public string Condition { get; set; }
 
-    [JsonPropertyName("images")] public List<MediaInfoViewModel> Images { get; set; }
+    /// <summary>
+    /// Фотографии
+    /// </summary>
+    [JsonPropertyName("images")]
+    public List<MediaInfoViewModel> Images { get; set; }
+
+    /// <summary>
+    /// Геолокация
+    /// </summary>
+    [JsonPropertyName("location")]
+    public Location Location { get; set; }
+
+    /// <summary>
+    /// Контакты пользователя
+    /// </summary>
+    [JsonPropertyName("user")]
+    public UserContactsViewModel User { get; set; }
+
+    [JsonPropertyName("categoryId")] public Guid CategoryId { get; set; }
+
+    [JsonPropertyName("caliber")] public string Caliber { get; set; } = string.Empty;
+
+    [JsonPropertyName("weaponType")] public string WeaponType { get; set; } = string.Empty;
+
+    [JsonPropertyName("barrelPosition")] public string BarrelPosition { get; set; } = string.Empty;
+
+    [JsonPropertyName("yearOfProduction")] public int YearOfProduction { get; set; } = 0;
+
+    [JsonPropertyName("isFavorite")] public bool IsFavorite { get; set; } = false;
+
+    [JsonPropertyName("isComplaint")] public bool IsComplaint { get; set; } = false;
 
     public MyAdViewModel()
     {
@@ -74,16 +106,72 @@ public class MyAdViewModel
 
     public MyAdViewModel(Database.Ad ad)
     {
+        Id = ad.Id;
         Name = ad.Name;
         Price = ad.Price;
         OldPrice = ad.OldPrice;
         Description = ad.Description;
         CreationDateTime = ad.CreationDateTime;
+
         CountOfViews = ad.CountOfViews;
         CountOfViewsToday = ad.CountOfViewsToday;
-        LastVisitDate = ad.LastVisitDate;
+
         YouTubeLink = ad.YouTubeLink;
-        ConditionId = ad.ConditionId;
+        Condition = ad.Condition.Name;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+        User = new UserContactsViewModel(ad.User);
+        Location = ad.Location;
+        CategoryId = ad.CategoryId;
+    }
+
+    public MyAdViewModel(Database.Ad ad, bool isFavorite, bool isComplaint)
+    {
+        Id = ad.Id;
+        Name = ad.Name;
+        Price = ad.Price;
+        OldPrice = ad.OldPrice;
+        Description = ad.Description;
+        CreationDateTime = ad.CreationDateTime;
+
+        CountOfViews = ad.CountOfViews;
+        CountOfViewsToday = ad.CountOfViewsToday;
+
+        YouTubeLink = ad.YouTubeLink;
+        Condition = ad.Condition.Name;
+        Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+        User = new UserContactsViewModel(ad.User);
+        Location = ad.Location;
+        CategoryId = ad.CategoryId;
+
+        IsFavorite = isFavorite;
+        IsComplaint = isComplaint;
+    }
+
+    public MyAdViewModel(Database.Ad ad, Characteristic characteristic, bool isFavorite, bool isComplaint)
+    {
+        Id = ad.Id;
+        Name = ad.Name;
+        Price = ad.Price;
+        OldPrice = ad.OldPrice;
+        Description = ad.Description;
+        CreationDateTime = ad.CreationDateTime;
+
+        CountOfViews = ad.CountOfViews;
+        CountOfViewsToday = ad.CountOfViewsToday;
+
+        YouTubeLink = ad.YouTubeLink;
+        Condition = ad.Condition.Name;
+        Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
+        User = new UserContactsViewModel(ad.User);
+        Location = ad.Location;
+        CategoryId = ad.CategoryId;
+
+        Caliber = characteristic.Caliber.Name;
+        WeaponType = characteristic.WeaponType.Name;
+        BarrelPosition = characteristic.BarrelPosition.Name;
+        YearOfProduction = characteristic.YearOfProduction;
+
+        IsFavorite = isFavorite;
+        IsComplaint = isComplaint;
     }
 }

@@ -124,11 +124,11 @@ public class AdsService : BaseService<Ad>
         }
     }
     
-    public async Task<BaseResult<MyAdViewModel>> GetMyAd(Guid id)
+    public async Task<BaseResult<MyAdViewModel>> GetSelectedMy()
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/My/{id}";
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/SelectedMy";
             var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());

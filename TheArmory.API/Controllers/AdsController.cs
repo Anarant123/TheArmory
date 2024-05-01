@@ -48,6 +48,29 @@ public class AdsController : BaseController
         Logger.LogError(result.Error);
         return BadRequest(result);
     }
+    
+    /// <summary>
+    /// Получение выбранного объявления
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("SelectedMy")]
+    public async Task<ActionResult<BaseResult<AdViewModel>>> GetSelectedMy()
+    {
+        var userResponse = await GetUser();
+
+        var userId = userResponse.Item?.Id;
+
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+        var result = await _adsRepository.GetAd(userId, adIdResponse?.Item ?? Guid.Empty);
+
+        if (result.Success) return Ok(result);
+        Logger.LogError(result.Error);
+        return BadRequest(result);
+    }
 
     /// <summary>
     /// Получить все объявления
@@ -308,6 +331,33 @@ public class AdsController : BaseController
         }
 
         HttpContext.Session.Remove("SelectedAd");
+        Logger.LogError(result.Error);
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Выбор своего объявления и сохранение его в cookie
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("SelectMy")]
+    public async Task<ActionResult<BaseResult<AdViewModel>>> SelectMy(
+        [FromBody]AdSelectCommand command)
+    {
+        var userResponse = await GetUser();
+
+        var userId = userResponse.Item?.Id;
+        
+        var result = await _adsRepository.GetAd(userId, command.Id);
+
+        if (result.Success)
+        {
+            HttpContext.Session.SetString("SelectedMyAd", command.Id.ToString());
+            return Ok(result);
+        }
+
+        HttpContext.Session.Remove("SelectedMyAd");
         Logger.LogError(result.Error);
         return BadRequest(result);
     }

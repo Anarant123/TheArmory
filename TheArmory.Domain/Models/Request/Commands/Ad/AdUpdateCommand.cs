@@ -1,38 +1,73 @@
-﻿using TheArmory.Domain.Models.Enums;
+﻿using System.Text.Json.Serialization;
+using TheArmory.Domain.Models.Enums;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad;
 
 public class AdUpdateCommand
 {
-    public Guid Id { get; set; }
-
     /// <summary>
     /// Наименование
     /// </summary>
-    public string? Name { get; set; } = string.Empty;
-        
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+
     /// <summary>
     /// Цена
     /// </summary>
-    public decimal? Price { get; set; } 
+    [JsonPropertyName("price")]
+    public decimal Price { get; set; }
 
     /// <summary>
     /// Описание
     /// </summary>
+    [JsonPropertyName("description")]
     public string? Description { get; set; } = string.Empty;
-        
+
     /// <summary>
-    /// Ссылка на ютуб видео с обзором
+    /// Ссылка на YouTube видео с обзором
     /// </summary>
-    public string? YouToubeLink { get; set; } = string.Empty;
-        
+    [JsonPropertyName("youtubeLink")]
+    public string? YouTubeLink { get; set; } = string.Empty;
+
     /// <summary>
     /// Id Состояния
     /// </summary>
-    public WeaponCondition? ConditionId { get; set; }
-        
+    [JsonPropertyName("conditionId")]
+    public WeaponCondition ConditionId { get; set; }
+
     /// <summary>
-    /// Id Региона
+    /// Адрес
     /// </summary>
-    public Guid? RegionId { get; set; }
+    [JsonPropertyName("address")]
+    public string? Address { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Широта
+    /// </summary>
+    [JsonPropertyName("latitude")]
+    public string? Latitude { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Долгота
+    /// </summary>
+    [JsonPropertyName("longitude")]
+    public string? Longitude { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Id Категории
+    /// </summary>
+    [JsonPropertyName("CategoryId")]
+    public Guid CategoryId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("caliberId")] 
+    public Guid? CaliberId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("weaponTypeId")] 
+    public Guid? WeaponTypeId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("barrelPositionId")] 
+    public Guid? BarrelPositionId { get; set; } = Guid.Empty;
+
+    [JsonPropertyName("yearOfProduction")] 
+    public int? YearOfProduction { get; set; } = 0;
 }

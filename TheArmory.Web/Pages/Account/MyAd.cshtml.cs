@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Condition;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
@@ -16,12 +17,12 @@ public class MyAd : PageModel
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
     
-    [BindProperty]
-    public List<ConditionListViewModel> Conditions { get; set; }
+    [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
     [BindProperty]
-    public List<RegionListViewModel> Regions { get; set; }
+    public AdUpdateCommand Command { get; set; }
     
+    [BindProperty]
     public MyAdViewModel MyAdViewModel { get; set; }
     
     public MyAd(UserService userService, 
@@ -39,16 +40,13 @@ public class MyAd : PageModel
     
     public async Task OnGet(Guid id)
     {
-        var adResult = await _adsService.GetMyAd(id);
-        if (adResult.Success)
-            MyAdViewModel = adResult.Item;
+        var adPublishInfoResult = await _adsService.GetPublishInformation();
+        if (adPublishInfoResult.Success)
+            PublishInfoViewModel = adPublishInfoResult.Item;
         
-        var conditionsQueryResult = await _conditionsService.GetSelectList();
-        if (conditionsQueryResult.Success)
-            Conditions = conditionsQueryResult.Items.ToList();
+        // var adResult = await _adsService.GetMyAd(id);
+        // if (adResult.Success)
+        //     MyAdViewModel = adResult.Item;
         
-        var regionsQueryResult = await _regionsService.GetSelectList();
-        if (regionsQueryResult.Success)
-            Regions = regionsQueryResult.Items.ToList();
     }
 }

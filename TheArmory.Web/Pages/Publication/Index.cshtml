@@ -61,228 +61,224 @@
 </style>
 
 <form method="post" enctype="multipart/form-data" id="form">
-<div class="row mt-3">
-<div class="col-md-12">
-
-<div class="row">
-    <h1>Параметры</h1>
-    <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.Name" class="form-label">Наименование:</label>
-        </div>
-        <div class="col-9">
-            <input type="text" asp-for="Command.Name" class="form-control" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
-            <span asp-validation-for="Command.Name" class="text-danger"></span>
-        </div>
-    </div>
 
     <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.ConditionId" class="form-label">Состояние:</label>
-        </div>
-        <div class="col-9">
-            <select asp-for="Command.ConditionId" class="form-select" required="Обязательно к заполнению">
-                @foreach (var condition in Model.PublishInfoViewModel.Conditions)
-                {
-                    <option value="@condition.Id">@condition.Name</option>
-                }
-            </select>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <h1>Подробности</h1>
-    <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.Description" class="form-label">Описание:</label>
-        </div>
-        <div class="col-9">
-            <textarea asp-for="Command.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"></textarea>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.Price" class="form-label">Цена:</label>
-        </div>
-        <div class="col-9">
-            <input type="number" asp-for="Command.Price" class="form-control" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.CategoryId" class="form-label">Категория:</label>
-        </div>
-        <div class="col-9">
-            <select asp-for="Command.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
-                <option value="">Выберите категорию</option>
-                @foreach (var category in Model.PublishInfoViewModel.Categories)
-                {
-                    <option value="@category.Id">@category.Name</option>
-                }
-            </select>
-        </div>
-    </div>
-
-    <div id="characteristics-block" style="display: none">
-        <h1>Характеристики</h1>
-        <div class="row mt-3">
-            <div class="col-3">
-                <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
-            </div>
-            <div class="col-9">
-                <select asp-for="Command.WeaponTypeId" class="form-select">
-                    <option value="">Выберите тип</option>
-                    @foreach (var type in Model.PublishInfoViewModel.WeaponTypes)
-                    {
-                        <option value="@type.Id">@type.Name</option>
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-3">
-                <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
-            </div>
-            <div class="col-9">
-                <select asp-for="Command.CaliberId" class="form-select">
-                    <option value="">Выберите калибр</option>
-                    @foreach (var caliber in Model.PublishInfoViewModel.Calibers)
-                    {
-                        <option value="@caliber.Id">@caliber.Name</option>
-                    }
-                </select>
-            </div>
-        </div>
-
-        <div class="row mt-3">
-            <div class="col-3">
-                <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
-            </div>
-            <div class="col-9">
-                <select asp-for="Command.BarrelPositionId" class="form-select">
-                    <option value="">Выберите расположение ствола</option>
-                    @foreach (var position in Model.PublishInfoViewModel.BarrelPositions)
-                    {
-                        <option value="@position.Id">@position.Name</option>
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-3">
-                <label asp-for="Command.YearOfProduction" class="form-label">Год выпуска:</label>
-            </div>
-            <div class="col-9">
-                <select asp-for="Command.YearOfProduction" class="form-select">
-                    @for (var i = DateTime.Now.Year; i >= 1900; i--)
-                    {
-                        <option value="@i">@i</option>
-                    }
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row">
-    <h1 id="photoCountHeader">Фотографии (0 из 5)</h1>
-    <div class="row mt-3">
-        <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-            <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-        </div>
-        <div class="col-md-10 text-center">
-            <div id="image-area" class="position-relative">
-                <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
-            </div>
-        </div>
-        <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-            <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col-md-1 text-center"></div>
-        <div class="col-md-5 text-center">
-            <label class="btn btn-primary btn-block">
-                Добавить
-                <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;">
-                <span asp-validation-for="Command.Photos" class="text-danger"></span>
-            </label>
-        </div>
-        <div class="col-md-5 text-center">
-            <button type="button" class="btn btn-danger btn-block">Удалить</button>
-        </div>
-        <div class="col-md-1 text-center"></div>
-    </div>
-
-    <!-- Контейнер для ячеек с изображениями -->
-    <div id="thumbnails-container" class="row mt-3 justify-content-center"></div>
-
-</div>
-
-<div class="row">
-    <h1>Видео</h1>
-    <div class="row mt-3">
-        <div class="col-3">
-            <label asp-for="Command.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
-        </div>
-        <div class="col-9">
+        <div class="col-md-12">
             <div class="row">
-                <input type="text" asp-for="Command.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                <span asp-validation-for="Command.YouTubeLink" class="text-danger"></span>
+
+                <h1>Параметры</h1>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.Name" class="form-label">Наименование:</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="text" asp-for="Command.Name" class="form-control" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
+                        <span asp-validation-for="Command.Name" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.ConditionId" class="form-label">Состояние:</label>
+                    </div>
+                    <div class="col-9">
+                        <select asp-for="Command.ConditionId" class="form-select" required="Обязательно к заполнению">
+                            @foreach (var condition in Model.PublishInfoViewModel.Conditions)
+                            {
+                                <option value="@condition.Id">@condition.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div id="youtubeVideo" class="row mt-3" style="display: none;">
-                <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+
+            <div class="row">
+                <h1>Подробности</h1>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.Description" class="form-label">Описание:</label>
+                    </div>
+                    <div class="col-9">
+                        <textarea asp-for="Command.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"></textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.Price" class="form-label">Цена:</label>
+                    </div>
+                    <div class="col-9">
+                        <input type="number" asp-for="Command.Price" class="form-control" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.CategoryId" class="form-label">Категория:</label>
+                    </div>
+                    <div class="col-9">
+                        <select asp-for="Command.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                            <option value="">Выберите категорию</option>
+                            @foreach (var category in Model.PublishInfoViewModel.Categories)
+                            {
+                                <option value="@category.Id">@category.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div id="characteristics-block" style="display: none">
+                    <h1>Характеристики</h1>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
+                        </div>
+                        <div class="col-9">
+                            <select asp-for="Command.WeaponTypeId" class="form-select">
+                                <option value="">Выберите тип</option>
+                                @foreach (var type in Model.PublishInfoViewModel.WeaponTypes)
+                                {
+                                    <option value="@type.Id">@type.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
+                        </div>
+                        <div class="col-9">
+                            <select asp-for="Command.CaliberId" class="form-select">
+                                <option value="">Выберите калибр</option>
+                                @foreach (var caliber in Model.PublishInfoViewModel.Calibers)
+                                {
+                                    <option value="@caliber.Id">@caliber.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
+                        </div>
+                        <div class="col-9">
+                            <select asp-for="Command.BarrelPositionId" class="form-select">
+                                <option value="">Выберите расположение ствола</option>
+                                @foreach (var position in Model.PublishInfoViewModel.BarrelPositions)
+                                {
+                                    <option value="@position.Id">@position.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-3">
+                            <label asp-for="Command.YearOfProduction" class="form-label">Год выпуска:</label>
+                        </div>
+                        <div class="col-9">
+                            <select asp-for="Command.YearOfProduction" class="form-select">
+                                @for (var i = DateTime.Now.Year; i >= 1900; i--)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
-</div>
+            <div class="row">
+                <h1 id="photoCountHeader">Фотографии (0 из 5)</h1>
+                <div class="row mt-3">
+                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                    </div>
+                    <div class="col-md-10 text-center">
+                        <div id="image-area" class="position-relative">
+                            <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                        </div>
+                    </div>
+                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-1 text-center"></div>
+                    <div class="col-md-5 text-center">
+                        <label class="btn btn-primary btn-block">
+                            Добавить
+                            <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;">
+                            <span asp-validation-for="Command.Photos" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <button type="button" class="btn btn-danger btn-block">Удалить</button>
+                    </div>
+                    <div class="col-md-1 text-center"></div>
+                </div>
 
-<div class="row">
-    <h1>Место сделки</h1>
-    <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
-    <p id="address" class="text-muted"></p>
-    <div class="row mt-3">
-        <div class="col">
-            <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
-                Показать карту
-            </button>
-        </div>
-    </div>
-</div>
+                <!-- Контейнер для ячеек с изображениями -->
+                <div id="thumbnails-container" class="row mt-3 justify-content-center"></div>
 
-<div class="collapse" id="mapCollapse">
-    <div class="row mt-3">
-        <div class="col">
-            <input type="text" id="addressInfo" asp-for="Command.Address" class="form-control" placeholder="Адрес" readonly="">
-            <input type="hidden" id="latitude" asp-for="Command.Latitude" class="d-none">
-            <input type="hidden" id="longitude" asp-for="Command.Longitude" class="d-none">
-            <div class="map-container">
-                <div id="map" class="square" style="height: 400px"></div>
-                <div class="marker-container">
-                    <img src="/icons/map_marker.png" class="marker" alt=""/>
+            </div>
+
+            <div class="row">
+                <h1>Видео</h1>
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label asp-for="Command.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
+                    </div>
+                    <div class="col-9">
+                        <div class="row">
+                            <input type="text" asp-for="Command.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                            <span asp-validation-for="Command.YouTubeLink" class="text-danger"></span>
+                        </div>
+                        <div id="youtubeVideo" class="row mt-3" style="display: none;">
+                            <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <h1>Место сделки</h1>
+                <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
+                <p id="address" class="text-muted"></p>
+                <div class="row mt-3">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
+                            Показать карту
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapse" id="mapCollapse">
+                <div class="row mt-3">
+                    <div class="col">
+                        <input type="text" id="addressInfo" asp-for="Command.Address" class="form-control" placeholder="Адрес" readonly="">
+                        <input type="hidden" id="latitude" asp-for="Command.Latitude" class="d-none">
+                        <input type="hidden" id="longitude" asp-for="Command.Longitude" class="d-none">
+                        <div class="map-container">
+                            <div id="map" class="square" style="height: 400px"></div>
+                            <div class="marker-container">
+                                <img src="/icons/map_marker.png" class="marker" alt=""/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mt-3">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger btn-block">Отменить и выйти</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-
-<div class="row mt-3">
-    <div class="col">
-        <button type="submit" class="btn btn-primary btn-block">Добавить</button>
-    </div>
-    <div class="col">
-        <button type="button" class="btn btn-danger btn-block">Отменить и выйти</button>
-    </div>
-</div>
-
-<div asp-validation-summary="All" class="text-danger"></div>
-
-
-</div>
-</div>
 </form>
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
