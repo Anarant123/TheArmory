@@ -38,15 +38,29 @@ public class MyAd : PageModel
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
     
-    public async Task OnGet(Guid id)
+    public async Task<ActionResult> OnGetSelectedAsync()
     {
         var adPublishInfoResult = await _adsService.GetPublishInformation();
         if (adPublishInfoResult.Success)
             PublishInfoViewModel = adPublishInfoResult.Item;
         
-        // var adResult = await _adsService.GetMyAd(id);
-        // if (adResult.Success)
-        //     MyAdViewModel = adResult.Item;
+        var adResult = await _adsService.GetSelectedMy();
+        if (adResult.Success)
+            MyAdViewModel = adResult.Item;
         
+        return Page();
+    }
+    
+    public async Task<ActionResult> OnGetSelectAsync(Guid id)
+    {
+        var adPublishInfoResult = await _adsService.GetPublishInformation();
+        if (adPublishInfoResult.Success)
+            PublishInfoViewModel = adPublishInfoResult.Item;
+        
+        var adResult = await _adsService.SelectMy(new AdSelectCommand(){Id = id});
+        if (adResult.Success)
+            MyAdViewModel = adResult.Item;
+        
+        return Page();
     }
 }

@@ -65,8 +65,8 @@ public class MyAdViewModel
     /// <summary>
     /// Состояние
     /// </summary>
-    [JsonPropertyName("condition")]
-    public string Condition { get; set; }
+    [JsonPropertyName("conditionId")]
+    public WeaponCondition ConditionId { get; set; }
 
     /// <summary>
     /// Фотографии
@@ -88,11 +88,11 @@ public class MyAdViewModel
 
     [JsonPropertyName("categoryId")] public Guid CategoryId { get; set; }
 
-    [JsonPropertyName("caliber")] public string Caliber { get; set; } = string.Empty;
+    [JsonPropertyName("caliberId")] public Guid CaliberId { get; set; }
 
-    [JsonPropertyName("weaponType")] public string WeaponType { get; set; } = string.Empty;
+    [JsonPropertyName("weaponTypeId")] public Guid WeaponTypeId { get; set; }
 
-    [JsonPropertyName("barrelPosition")] public string BarrelPosition { get; set; } = string.Empty;
+    [JsonPropertyName("barrelPositionId")] public Guid BarrelPositionId { get; set; }
 
     [JsonPropertyName("yearOfProduction")] public int YearOfProduction { get; set; } = 0;
 
@@ -117,7 +117,7 @@ public class MyAdViewModel
         CountOfViewsToday = ad.CountOfViewsToday;
 
         YouTubeLink = ad.YouTubeLink;
-        Condition = ad.Condition.Name;
+        ConditionId = ad.ConditionId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
@@ -137,7 +137,7 @@ public class MyAdViewModel
         CountOfViewsToday = ad.CountOfViewsToday;
 
         YouTubeLink = ad.YouTubeLink;
-        Condition = ad.Condition.Name;
+        ConditionId = ad.ConditionId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
@@ -160,15 +160,15 @@ public class MyAdViewModel
         CountOfViewsToday = ad.CountOfViewsToday;
 
         YouTubeLink = ad.YouTubeLink;
-        Condition = ad.Condition.Name;
+        ConditionId = ad.ConditionId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
         CategoryId = ad.CategoryId;
 
-        Caliber = characteristic.Caliber.Name;
-        WeaponType = characteristic.WeaponType.Name;
-        BarrelPosition = characteristic.BarrelPosition.Name;
+        CaliberId = characteristic.CaliberId;
+        WeaponTypeId = characteristic.WeaponTypeId;
+        BarrelPositionId = characteristic.BarrelPositionId;
         YearOfProduction = characteristic.YearOfProduction;
 
         IsFavorite = isFavorite;

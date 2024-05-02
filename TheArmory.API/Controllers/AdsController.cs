@@ -155,25 +155,6 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-
-    // /// <summary>
-    // /// Получить объявление
-    // /// </summary>
-    // /// <param name="adId"></param>
-    // /// <returns></returns>
-    // [HttpGet]
-    // [Route("{adId:guid}")]
-    // public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetAd(
-    //     Guid adId)
-    // {
-    //     var result = await _adsRepository.GetAd(adId);
-    //     
-    //     if (result.Success)
-    //         return Ok(result);
-    //
-    //     return BadRequest(result);
-    // }
-    
     
     /// <summary>
     /// Получить все данные необходимые для публикации объявления
@@ -193,7 +174,7 @@ public class AdsController : BaseController
     }
 
     /// <summary>
-    /// Получить все данные необходимые для публикации объявления
+    /// Получить все данные необходимые для фильтрации объявлений
     /// </summary>
     /// <returns></returns>
     [HttpGet]
