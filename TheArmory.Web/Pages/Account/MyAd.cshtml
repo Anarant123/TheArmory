@@ -83,7 +83,8 @@
                     </div>
                     <div class="col-9">
                         <select asp-for="Command.ConditionId" class="form-select" required="Обязательно к заполнению">
-                            @foreach (var condition in Model.PublishInfoViewModel.Conditions)
+                            <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
+                            @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
                             {
                                 <option value="@condition.Id">@condition.Name</option>
                             }
@@ -99,7 +100,7 @@
                         <label asp-for="Command.Description" class="form-label">Описание:</label>
                     </div>
                     <div class="col-9">
-                        <textarea asp-for="Command.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"></textarea>
+                        <input type="text" asp-for="Command.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"/>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -116,8 +117,8 @@
                     </div>
                     <div class="col-9">
                         <select asp-for="Command.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
-                            <option value="">Выберите категорию</option>
-                            @foreach (var category in Model.PublishInfoViewModel.Categories)
+                            <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
+                            @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
                             {
                                 <option value="@category.Id">@category.Name</option>
                             }
@@ -132,9 +133,12 @@
                             <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.WeaponTypeId" class="form-select">
-                                <option value="">Выберите тип</option>
-                                @foreach (var type in Model.PublishInfoViewModel.WeaponTypes)
+                            <select asp-for="Command.WeaponTypeId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                                @if (Model.MyAdViewModel.WeaponTypeId != Guid.Empty)
+                                {
+                                    <option value="@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Id">@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Name</option>
+                                }
+                                @foreach (var type in Model.PublishInfoViewModel.WeaponTypes.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.WeaponTypeId)))
                                 {
                                     <option value="@type.Id">@type.Name</option>
                                 }
@@ -146,9 +150,12 @@
                             <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.CaliberId" class="form-select">
-                                <option value="">Выберите калибр</option>
-                                @foreach (var caliber in Model.PublishInfoViewModel.Calibers)
+                            <select asp-for="Command.CaliberId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                                @if (Model.MyAdViewModel.CaliberId != Guid.Empty)
+                                {
+                                    <option value="@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Id">@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Name</option>
+                                }
+                                @foreach (var caliber in Model.PublishInfoViewModel.Calibers.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CaliberId)))
                                 {
                                     <option value="@caliber.Id">@caliber.Name</option>
                                 }
@@ -161,9 +168,12 @@
                             <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.BarrelPositionId" class="form-select">
-                                <option value="">Выберите расположение ствола</option>
-                                @foreach (var position in Model.PublishInfoViewModel.BarrelPositions)
+                            <select asp-for="Command.BarrelPositionId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                                @if (Model.MyAdViewModel.BarrelPositionId != Guid.Empty)
+                                {
+                                    <option value="@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Id">@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Name</option>
+                                }
+                                @foreach (var position in Model.PublishInfoViewModel.BarrelPositions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.BarrelPositionId)))
                                 {
                                     <option value="@position.Id">@position.Name</option>
                                 }
@@ -176,9 +186,16 @@
                         </div>
                         <div class="col-9">
                             <select asp-for="Command.YearOfProduction" class="form-select">
+                                @if (Model.MyAdViewModel.YearOfProduction != 0)
+                                {
+                                    <option value="@Model.MyAdViewModel.YearOfProduction">@Model.MyAdViewModel.YearOfProduction</option>
+                                }
                                 @for (var i = DateTime.Now.Year; i >= 1900; i--)
                                 {
-                                    <option value="@i">@i</option>
+                                    if (!i.Equals(@Model.MyAdViewModel.YearOfProduction))
+                                    {
+                                        <option value="@i">@i</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -187,38 +204,29 @@
             </div>
 
             <div class="row">
-                <h1 id="photoCountHeader">Фотографии (0 из 5)</h1>
                 <div class="row mt-3">
                     <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
                         <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
                     </div>
                     <div class="col-md-10 text-center">
                         <div id="image-area" class="position-relative">
-                            <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
                         </div>
                     </div>
                     <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
                         <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col-md-1 text-center"></div>
-                    <div class="col-md-5 text-center">
-                        <label class="btn btn-primary btn-block">
-                            Добавить
-                            @* <input type="file" id="file-input" asp-for="Command.Photos" accept="image/*" multiple="multiple" style="display: none;"> *@
-                            @* <span asp-validation-for="Command.Photos" class="text-danger"></span> *@
-                        </label>
-                    </div>
-                    <div class="col-md-5 text-center">
-                        <button type="button" class="btn btn-danger btn-block">Удалить</button>
-                    </div>
-                    <div class="col-md-1 text-center"></div>
-                </div>
 
                 <!-- Контейнер для ячеек с изображениями -->
-                <div id="thumbnails-container" class="row mt-3 justify-content-center"></div>
-
+                <div id="thumbnails-container" class="row mt-3">
+                    @foreach (var image in Model.MyAdViewModel.Images) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+                    {
+                        <div class="col-md text-center image-cell position-relative">
+                            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="row">
@@ -239,25 +247,17 @@
                 </div>
             </div>
 
-            <div class="row">
-                <h1>Место сделки</h1>
-                <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
-                <p id="address" class="text-muted"></p>
+            <div class="row address-container">
                 <div class="row mt-3">
-                    <div class="col">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
-                            Показать карту
-                        </button>
+                    <div class="d-flex align-items-start justify-content-start">
+                        <input type="text" id="addressInfo" asp-for="Command.Address" value="@Model.MyAdViewModel.Location.Address" class="form-control" placeholder="Адрес" readonly="">
                     </div>
                 </div>
-            </div>
 
-            <div class="collapse" id="mapCollapse">
                 <div class="row mt-3">
                     <div class="col">
-                        <input type="text" id="addressInfo" asp-for="Command.Address" value="@Model.MyAdViewModel.Location.Address" class="form-control" placeholder="Адрес" readonly="">
-                        <input type="hidden" id="latitude" asp-for="Command.Latitude" value="@Model.MyAdViewModel.Location.Latitude" class="d-none">
-                        <input type="hidden" id="longitude" asp-for="Command.Longitude" value="@Model.MyAdViewModel.Location.Longitude" class="d-none">
+                        <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location.Latitude" class="d-none">
+                        <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location.Longitude" class="d-none">
                         <div class="map-container">
                             <div id="map" class="square" style="height: 400px"></div>
                             <div class="marker-container">
@@ -271,7 +271,7 @@
 
             <div class="row mt-3">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary btn-block">Добавить</button>
+                    <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
                 </div>
                 <div class="col">
                     <button type="button" class="btn btn-danger btn-block">Отменить и выйти</button>
@@ -281,28 +281,50 @@
     </div>
 </form>
 
-<script src="https://api-maps.yandex.ru/v3/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU"></script>
-<script>
-    initMap();
-
-        async function initMap() {
-            await ymaps3.ready;
-
-            const {YMap, YMapDefaultSchemeLayer} = ymaps3;
-
-            const map = new YMap(
-                document.getElementById('map'),
-                {
-                    location: {
-                        center: [37.588144, 55.733842],
-                        zoom: 10
-                    }
-                }
-            );
-
-            map.addChild(new YMapDefaultSchemeLayer());
-        }
-</script>
+<script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
+<script type="text/javascript">
+var myMap;
+        
+            initializeMap();
+        
+            function initializeMap() {
+                ymaps.ready(function () {
+                    let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+                    let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+        
+                    myMap = new ymaps.Map("map", {
+                        center: [latitudeValue, longitudeValue],
+                        zoom: 7
+                    });
+        
+                    var myGeoObject = new ymaps.GeoObject({
+                        geometry: {
+                            type: "Point",
+                            coordinates: [latitudeValue, longitudeValue]
+                        }
+                    });
+                    myMap.geoObjects.add(myGeoObject);
+                    
+                    myMap.events.add('boundschange', function (event) {
+                        var newCenter = event.get('newCenter');
+                        latitude = newCenter[0];
+                        longitude = newCenter[1];
+                                        
+                        let latitudeInfo = document.getElementById('latitude');
+                        latitudeInfo.value = latitude;
+                        let longitudeInfo = document.getElementById('longitude');
+                        longitudeInfo.value = longitude;
+                                        
+                        ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
+                        var firstGeoObject = res.geoObjects.get(0);
+                        let address = document.getElementById('addressInfo');
+                        address.value = firstGeoObject.getAddressLine();
+                        });
+                                        
+                    });
+                });
+            }
+    </script>
 <script>
     function autoResize(textarea) {
         textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто
@@ -318,36 +340,44 @@
         }
     }
     
-    let images = []; 
-    let currentImageIndex = 0;
-    
-    function prevImage() {
-        if (images.length < 2) 
-            return; 
-        if (currentImageIndex > 0) { 
-            currentImageIndex--; 
-        } else { 
-            currentImageIndex = images.length - 1; 
-        }
-        updateImage(); 
-    }
-    
-    function nextImage() {
-        if (images.length < 2)
-            return;
-        if (currentImageIndex < images.length - 1) { 
-            currentImageIndex++; 
-        } else { 
-            currentImageIndex = 0; 
-        }
-        updateImage(); 
-    }
-    
-    function updateImage() {
-        let image = document.getElementById("current-image");
-        let blob = new Blob([new Uint8Array(images[currentImageIndex])], { type: 'image/jpeg' });
-        image.src = URL.createObjectURL(blob);
-    }
+     let images = [];
+     let currentImageIndex = 0;
+     
+     // Получаем все элементы img с классом img-thumbnail
+     let thumbnailImages = document.querySelectorAll('.img-thumbnail');
+     
+     // Проходимся по каждому элементу и добавляем его src в массив images
+     thumbnailImages.forEach(function(image) {
+         images.push(image.src);
+     });
+     
+     function prevImage() {
+         if (images.length < 2)
+             return;
+         if (currentImageIndex > 0) {
+             currentImageIndex--;
+         } else {
+            currentImageIndex = images.length - 1;
+         }
+         updateImage();
+     }
+     
+     function nextImage() {
+         if (images.length < 2)
+             return;
+         if (currentImageIndex < images.length - 1) {
+             currentImageIndex++;
+         } else {
+             currentImageIndex = 0;
+         }
+         updateImage();
+     }
+     
+     function updateImage() {
+         let image = document.getElementById("current-image");
+         image.src = images[currentImageIndex];
+     }
+
     
     function handleFileSelect(event) {
         if (images.length >= 5) { 
@@ -391,21 +421,21 @@
             reader.readAsArrayBuffer(files[i]); 
         }
     }
-    document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
     
     function removeImage(index) {
-        images.splice(index, 1); // Удаляем изображение из массива по указанному индексу
+        images.splice(index, 1);
         let thumbnailsContainer = document.getElementById('thumbnails-container');
-        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]); // Удаляем соответствующий блок с миниатюрой изображения из контейнера
+        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]);
         if (currentImageIndex === index) {
             if (currentImageIndex === images.length) {
-                currentImageIndex--; // Переключаемся на предыдущее изображение, если удалено было последнее
+                currentImageIndex--;
             }
-            updateImage(); // Обновляем отображение после удаления
+            updateImage();
         } else if (currentImageIndex > index) {
-            currentImageIndex--; // Корректируем текущий индекс, если он находится после удаленного изображения
+            currentImageIndex--;
         }
-        if (images.length < 5) { // Если теперь в массиве images меньше 5 изображений, скрываем кнопки управления
+        if (images.length < 5) {
             document.querySelectorAll('.image-controls').forEach(function (element) {
                 element.style.display = 'none';
             });
@@ -415,25 +445,20 @@
         removeImage(currentImageIndex);
     });
 
-    
-    function submitForm(event) {
-        event.preventDefault(); // Отменяем стандартное поведение отправки формы
-        let formData = new FormData($('#form')[0]); // Создаем объект FormData из формы с id="form"
-    
-        // Добавляем каждое изображение из массива images в FormData
-        for (let i = 0; i < images.length; i++) {
-            formData.append('Command.Photos', new Blob([new Uint8Array(images[i])], { type: 'image/jpeg' }), 'image_' + i + '.jpg');
+    const categorySelect = document.getElementById('categorySelect');
+    const characteristicsBlock = document.getElementById('characteristics-block');
+    const huntingCategoryId = '3666fab5-1175-4e6c-b9ac-ff9b811e7d8a'; // замените на реальный ID
+    if (categorySelect.value === huntingCategoryId) 
+        characteristicsBlock.style.display = 'block'
+        
+    categorySelect.addEventListener('change', function() {
+        const selectedCategoryId = categorySelect.value;
+            
+        if (selectedCategoryId === huntingCategoryId) {
+            characteristicsBlock.style.display = 'block';
+        } else {
+            characteristicsBlock.style.display = 'none';
         }
-    
-        // Выполняем AJAX-запрос
-        $.ajax({
-            url: '/Publication',
-            data: formData,
-            processData: false, // Отключаем автоматическую обработку данных перед отправкой
-            contentType: false, // Отключаем автоматическое определение типа контента
-            type: 'POST'
-        });
-    }
-
+    });
     
 </script>

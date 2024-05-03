@@ -157,6 +157,28 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Избранные объявления
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [HttpGet]
+    [Route("Favorites")]
+    public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetFavoritesAds(
+        [FromQuery]BaseQueryItemsParams queryItemsParams)
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success || userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var result = await _adsRepository.GetFavoritesAds(userResponse.Item.Id, queryItemsParams);
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Получить все данные необходимые для публикации объявления
     /// </summary>
     /// <param name="adId"></param>
@@ -327,10 +349,10 @@ public class AdsController : BaseController
         [FromBody]AdSelectCommand command)
     {
         var userResponse = await GetUser();
-
-        var userId = userResponse.Item?.Id;
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
         
-        var result = await _adsRepository.GetAd(userId, command.Id);
+        var result = await _adsRepository.GetMyAd(userResponse.Item.Id, command.Id);
 
         if (result.Success)
         {

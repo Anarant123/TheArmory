@@ -65,6 +65,28 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
+    
+    public async Task<BaseQueryResult<TileAdViewModel>> GetFavoritesAds(BaseQueryItemsParams queryItemsParams)
+    {
+        try
+        {
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Favorites");
+            var queryParams = queryItemsParams.ToDictionary();
+            var queryString = queryParams.ToGetParameters();
+            uriBuilder.Query = queryString;
+            var response = await httpClient.GetAsync(uriBuilder.Uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseQueryResult<TileAdViewModel>(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdViewModel>>(responseStream);
+            return result ?? new BaseQueryResult<TileAdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseQueryResult<TileAdViewModel>(exception.Message);
+        }
+    }
 
     public async Task<BaseResult<AdViewModel>> GetAd(Guid id)
     {

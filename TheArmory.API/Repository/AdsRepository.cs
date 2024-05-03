@@ -2,6 +2,7 @@
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
+using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
@@ -86,7 +87,9 @@ public class AdsRepository : BaseRepository
             .Include(a => a.Medias)
             .Include(a => a.Condition)
             .Include(a => a.Region)
-            .FirstOrDefaultAsync(a => a.Id.Equals(adId));
+            .Include(a => a.Location)
+            .FirstOrDefaultAsync(a => a.Id.Equals(adId) 
+                                      && a.UserId.Equals(userId));
 
         if (ad is null)
             return new BaseResult<MyAdViewModel>("Объявление не найдено");
@@ -118,6 +121,30 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdViewModel>(ads);
     }
+    
+    /// <summary>
+    /// Возвращает все объявления пользователя
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    public async Task<BaseQueryResult<TileAdViewModel>> GetFavoritesAds(
+        Guid userId,
+        BaseQueryItemsParams queryItemsParams)
+    {
+        var ads = Context.Favorites
+            .Include(f => f.Ad)
+            .ThenInclude(a => a.Medias)
+            .Where(f => f.UserId.Equals(userId))
+            .Select(f => new TileAdViewModel(f.Ad))
+            .ToList();
+        
+        if (ads.Count == 0)
+            return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
+
+        return new BaseQueryResult<TileAdViewModel>(ads);
+    }
+
 
     /// <summary>
     /// Возвращает все данные необходимые для публикации объявления
