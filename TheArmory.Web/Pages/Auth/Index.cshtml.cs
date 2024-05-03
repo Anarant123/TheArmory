@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Web.Service;
@@ -40,7 +41,26 @@ public class Index : PageModel
         if (result.Success)
         {
             await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);
-            return RedirectToPage("/Account/PersonalInfo");
+            
+            // var roleClaim = User.Claims.FirstOrDefault(c => c.Type == "Role");
+            // if (roleClaim == null) return Page();
+            // var role = roleClaim.Value;
+            //
+            // return role switch
+            // {
+            //     "0" => RedirectToPage("/SuperAdmin/Index"),
+            //     "1" => RedirectToPage("/Admin/Index"),
+            //     "2" => RedirectToPage("/Account/PersonalInfo"),
+            //     _ => Page()
+            // };
+            
+            return result.Item.RoleId switch
+            {
+                UserRole.SuperAdmin => RedirectToPage("/SuperAdmin/Index"),
+                UserRole.Admin => RedirectToPage("/Admin/Index"),
+                UserRole.Client => RedirectToPage("/Account/PersonalInfo"),
+                _ => Page()
+            };
         }
 
         ModelState.AddModelError(string.Empty, result.Error);
