@@ -8,12 +8,12 @@ namespace TheArmory.Controllers;
 
 public class AdminsController : ControllerBase
 {
-    private readonly UsersRepository _usersRepository;
+    private readonly AdminsRepository _adminsRepository;
     private readonly ILogger<AdminsController> _logger;
     
-    public AdminsController(UsersRepository usersRepository, ILogger<AdminsController> logger)
+    public AdminsController(AdminsRepository adminsRepository, ILogger<AdminsController> logger)
     {
-        _usersRepository = usersRepository;
+        _adminsRepository = adminsRepository;
         _logger = logger;
     }
     
@@ -26,9 +26,9 @@ public class AdminsController : ControllerBase
     [HttpPost]
     [Route("Registration")]
     public async Task<ActionResult<BaseResult>> Register(
-        [FromBody]UserCreateCommand command)
+        [FromForm]UserAdminCreateCommand command)
     {
-        var userResponse = await _usersRepository.Create(command);
+        var userResponse = await _adminsRepository.Create(command);
 
         if (!userResponse.Success)
             return BadRequest(userResponse);
