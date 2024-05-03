@@ -6,6 +6,9 @@ using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
 
+[AllowAnonymous]
+[Route("Admins")]
+[ApiController]
 public class AdminsController : ControllerBase
 {
     private readonly AdminsRepository _adminsRepository;

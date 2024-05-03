@@ -8,23 +8,20 @@ namespace TheArmory.Web.Pages.SuperAdmin;
 
 public class Registration : PageModel
 {
-    private readonly AuthService _service;
+    private readonly AdminsService _service;
     
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
     
     [BindProperty]
-    public UserCreateCommand Command { get; set; }
+    public UserAdminCreateCommand Command { get; set; }
     
-    public Registration(AuthService service)
+    public Registration(AdminsService service)
     {
         _service = service;
     }
     
     public async Task<IActionResult> OnGetAsync()
     {
-        if (User.Identity is {IsAuthenticated: true })
-            return RedirectToPage("/Account/PersonalInfo");
-        
         return Page();
     }
     
@@ -40,7 +37,7 @@ public class Registration : PageModel
         RequestResult = result;
         if (result.Success)
         {
-            return RedirectToPage("/Auth/Index");
+            return RedirectToPage("/SuperAdmin/Index");
         }
 
         ModelState.AddModelError(string.Empty, result.Error);

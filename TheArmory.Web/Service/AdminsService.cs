@@ -23,12 +23,13 @@ public class AdminsService : BaseService<User>
     {
         try
         {
-            var url = $"{baseUrlOptions.GetFullApiUrl("Auth")}/Registration";
+            var url = $"{baseUrlOptions.GetFullApiUrl("Admins")}/Registration";
             var formData = new MultipartFormDataContent();
             formData.Add(new StringContent(command.Login ?? ""), "login");
             formData.Add(new StringContent(command.Password ?? ""), "password");
+            formData.Add(new StringContent(command.PasswordConfirm ?? ""), "passwordConfirm");
             var streamContent = new StreamContent(command.Photo.OpenReadStream());
-            formData.Add(streamContent, "photos", (command.Photo.FileName));
+            formData.Add(streamContent, "photo", (command.Photo.FileName));
 
             var response = await httpClient.PostAsync(url, formData);
             if (!response.IsSuccessStatusCode)

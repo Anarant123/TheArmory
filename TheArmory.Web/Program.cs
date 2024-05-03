@@ -13,6 +13,7 @@ builder.Services.AddTransient<ConditionsService>();
 builder.Services.AddTransient<RegionsService>();
 builder.Services.AddTransient<AdsService>();
 builder.Services.AddTransient<ContactsService>();
+builder.Services.AddTransient<AdminsService>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
