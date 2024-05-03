@@ -8,6 +8,7 @@ public class UserViewModel
     /// <summary>
     /// Идентификатор сущности
     /// </summary>
+    [JsonPropertyName("id")]
     public Guid Id { get; set; }
     
     /// <summary>
@@ -25,18 +26,23 @@ public class UserViewModel
     /// <summary>
     /// Id региона
     /// </summary>
+    [JsonPropertyName("regionId")]
     public Guid? RegionId { get; set; }
     
     /// <summary>
     /// Id Роли
     /// </summary>
+    [JsonPropertyName("roleId")]
     public UserRole RoleId { get; set; }
 
     /// <summary>
     /// Id статуса
     /// </summary>
+    [JsonPropertyName("statusId")]
     public StateStatus StatusId { get; set; }
 
+    public UserViewModel(){}
+    
     public UserViewModel(Database.User user)
     {
         Id = user.Id;

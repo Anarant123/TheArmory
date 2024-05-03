@@ -1,6 +1,6 @@
 ﻿namespace TheArmory.Repository;
 
-public class AuthorizationsRepository
+public class AdminsRepository
 {
     
 }

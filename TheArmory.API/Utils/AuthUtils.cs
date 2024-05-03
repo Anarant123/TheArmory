@@ -18,7 +18,7 @@ public class AuthUtils
         {
             new("Id", user?.Id.ToString() ?? string.Empty),
             new("Login", user?.Login ?? string.Empty),
-            new("Role", user?.RoleId.ToString() ?? string.Empty),
+            new(ClaimTypes.Role, user?.RoleId.ToString() ?? string.Empty),
             new("Status", user?.StatusId.ToString() ?? string.Empty)
         };
 

@@ -4,6 +4,7 @@ using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
 
 namespace TheArmory.Web.Service;
@@ -17,7 +18,7 @@ public class AuthService : BaseService<User>
     {
     }
     
-    public async Task<BaseResult<User>> Login(UserLoginCommand command)
+    public async Task<BaseResult<UserViewModel>> Login(UserLoginCommand command)
     {
         try
         {
@@ -25,14 +26,14 @@ public class AuthService : BaseService<User>
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
-                return new BaseResult<User>(await response.Content.ReadAsStringAsync());
+                return new BaseResult<UserViewModel>(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<BaseResult<User>>(responseStream);
-            return result ?? new BaseResult<User>(ErrorsMessage.SomethingWentWrong);
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<UserViewModel>>(responseStream);
+            return result ?? new BaseResult<UserViewModel>(ErrorsMessage.SomethingWentWrong);
         }
         catch (Exception exception)
         {
-            return new BaseResult<User>(exception.Message);
+            return new BaseResult<UserViewModel>(exception.Message);
         }
     }
     
