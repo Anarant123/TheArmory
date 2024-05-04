@@ -156,7 +156,8 @@ public class AdsRepository : BaseRepository
         var ads = await Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.Complaints)
-            .Where(a => a.Complaints.Any())
+            .Where(a => a.Complaints.Any() 
+                        && a.StatusId == StateStatus.Actively)
             .ToListAsync();
 
         if (ads.Count == 0)
@@ -225,6 +226,7 @@ public class AdsRepository : BaseRepository
     /// Возвращает все объявления 
     /// </summary>
     /// <param name="userId"></param>
+    /// <param name="queryItemsParams"></param>
     /// <returns></returns>
     public async Task<BaseQueryResult<TileAdViewModel>> GetAds(
         Guid? userId,
