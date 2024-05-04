@@ -575,6 +575,31 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult()
         };
     }
+    
+    /// <summary>
+    /// Оставить жалобу на объявление
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> AdBan(
+        AdBanCommand command)
+    {
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
+        if (ad is null)
+            return new BaseResult("Объявление не найдено");
+
+        if (ad.StatusId.Equals(StateStatus.Banned))
+            return new BaseResult("Объявление уже в бане");
+
+        ad.StatusId = StateStatus.Banned;
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult()
+        };
+    }
 
 
     /// <summary>

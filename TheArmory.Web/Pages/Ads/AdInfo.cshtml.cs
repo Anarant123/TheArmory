@@ -18,6 +18,8 @@ public class AdInfo : PageModel
     
     [BindProperty] public AdToComplaintCommand ToComplaintCommand { get; set; }
     
+    [BindProperty] public AdBanCommand BanCommand { get; set; }
+    
     [BindProperty]
     public AdViewModel AdViewModel { get; set; }
     
@@ -84,5 +86,17 @@ public class AdInfo : PageModel
             RequestResult = result;
             
         return await OnGetSelectedAsync();
+    }
+    
+    public async Task<ActionResult> OnPostBanAsync()
+    {
+        var result = await _adsService.Ban(BanCommand);
+        if (!result.Success)
+        {
+            RequestResult = result;
+            return await OnGetSelectedAsync();
+        }
+            
+        return RedirectToPage("/Ads/Index");
     }
 }

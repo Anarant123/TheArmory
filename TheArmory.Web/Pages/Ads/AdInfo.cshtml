@@ -1,9 +1,9 @@
 ﻿@page
+@using System.Security.Claims
 @model AdInfo
 @{
     ViewData["Title"] = Model.AdViewModel.Name;
 }
-
 
 <style>
     .address-arrow {
@@ -93,22 +93,25 @@
         <h2>@Model.AdViewModel.Price &#x20bd;</h2>
     </div>
     <div class="col-1 d-flex align-items-end">
-        @if (!Model.AdViewModel.IsFavorite)
-        {
-            <form asp-page-handler="AddToFavorites" method="post">
-                <button type="submit" class="btn btn-primary">
-                    <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/>
-                </button>
-            </form>
-        }
-        else
-        {
-            <form asp-page-handler="DeleteFavorites" method="post">
-                <button type="submit" class="btn btn-primary">
-                    <img src="/icons/favorite_icon.png" alt="Удалить из избранного" width="24" height="24"/>
-                </button>
-            </form>
-        }
+         @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
+         {
+             @if (!Model.AdViewModel.IsFavorite)
+             {
+                 <form asp-page-handler="AddToFavorites" method="post">
+                     <button type="submit" class="btn btn-primary">
+                         <img src="/icons/non_favorite_icon.png" alt="Добавить в избранное" width="24" height="24"/>
+                     </button>
+                 </form>
+             }
+             else
+             {
+                 <form asp-page-handler="DeleteFavorites" method="post">
+                     <button type="submit" class="btn btn-primary">
+                         <img src="/icons/favorite_icon.png" alt="Удалить из избранного" width="24" height="24"/>
+                     </button>
+                 </form>
+             }
+         }
     </div>
 </div>
 <div class="row mt-3">
@@ -266,14 +269,29 @@
                 <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <div class="mb-3">
-                    <button id="complainButton" type="button" class="btn btn-danger btn-block">Пожаловаться</button>
+        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
+        {
+            <div class="row">
+                <div class="col">
+                    <div class="mb-3">
+                        <button id="complainButton" type="button" class="btn btn-danger btn-block">Пожаловаться</button>
+                    </div>
                 </div>
             </div>
-        </div>
-
+        }
+        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+        {
+            <form method="post" asp-page-handler="Ban">
+                <input type="hidden" asp-for="BanCommand.Id" value="@Model.AdViewModel.Id">
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-danger btn-block">Заблокировать</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        }
     </div>
 </div>
 

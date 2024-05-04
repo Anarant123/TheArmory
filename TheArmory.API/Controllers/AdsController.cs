@@ -311,6 +311,33 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Добавить в избранное
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPost]
+    [Route("Ban")]
+    public async Task<ActionResult<BaseResult>> AdBan(
+        [FromBody]AdBanCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
+
+        var result = await _adsRepository.AdBan(command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Удалить фото объявления
     /// </summary>
     /// <param name="command"></param>

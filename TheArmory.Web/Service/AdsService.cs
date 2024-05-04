@@ -87,23 +87,26 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
-
-    public async Task<BaseResult<AdViewModel>> GetAd(Guid id)
+    
+    public async Task<BaseQueryResult<TileAdComplaintViewModel>> GetComplaintsAds(BaseQueryItemsParams queryItemsParams)
     {
         try
         {
-            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/{id}";
-            var response = await httpClient.GetAsync(uri);
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Complaints");
+            var queryParams = queryItemsParams.ToDictionary();
+            var queryString = queryParams.ToGetParameters();
+            uriBuilder.Query = queryString;
+            var response = await httpClient.GetAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
-                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+                return new BaseQueryResult<TileAdComplaintViewModel>(await response.Content.ReadAsStringAsync());
 
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
-            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
+            var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdComplaintViewModel>>(responseStream);
+            return result ?? new BaseQueryResult<TileAdComplaintViewModel>(ErrorsMessage.SomethingWentWrong);
         }
         catch (Exception exception)
         {
-            return new BaseResult<AdViewModel>(exception.Message);
+            return new BaseQueryResult<TileAdComplaintViewModel>(exception.Message);
         }
     }
     
@@ -265,7 +268,6 @@ public class AdsService : BaseService<Ad>
         return new BaseResult<AdViewModel>(exception.Message);
     }
 }
-
     
     public async Task<BaseResult> ToFavorites()
     {
@@ -317,6 +319,29 @@ public class AdsService : BaseService<Ad>
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Complaint";
+            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            var response = await httpClient.PostAsync(uri, content);
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> Ban(AdBanCommand command)
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Ban";
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             var responseStream = await response.Content.ReadAsStreamAsync();
