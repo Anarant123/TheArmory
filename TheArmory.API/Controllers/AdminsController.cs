@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Request.Commands.User;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
+using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
@@ -18,6 +20,25 @@ public class AdminsController : ControllerBase
     {
         _adminsRepository = adminsRepository;
         _logger = logger;
+    }
+
+    /// <summary>
+    /// Администраторы
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "SuperAdmin")]
+    [HttpGet]
+    [Route("Registration")]
+    public async Task<ActionResult<BaseQueryResult<UserViewModel>>> Get(
+        [FromQuery]BaseQueryItemsParams queryItemsParams )
+    {
+        var userResponse = await _adminsRepository.Get(queryItemsParams);
+
+        if (!userResponse.Success)
+            return BadRequest(userResponse);
+        
+        return Ok(userResponse);
     }
     
     /// <summary>
@@ -38,5 +59,4 @@ public class AdminsController : ControllerBase
         
         return Ok(userResponse);
     }
-    
 }

@@ -5,6 +5,7 @@ using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.User;
+using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
 
@@ -23,6 +24,17 @@ public class AdminsRepository : BaseRepository<User>
     {
         _passwordHasher = passwordHasher;
         _mediasRepository = mediasRepository;
+    }
+
+    public async Task<BaseQueryResult<UserViewModel>> Get(
+        BaseQueryItemsParams queryItemsParams)
+    {
+        var admins = await Context.Users
+            .Where(u => u.RoleId.Equals(UserRole.Admin))
+            .Select(s => new UserViewModel(s))
+            .ToListAsync();
+
+        return new BaseQueryResult<UserViewModel>(admins);
     }
     
     /// <summary>
@@ -67,20 +79,4 @@ public class AdminsRepository : BaseRepository<User>
             _ => new BaseResult()
         };
     }
-    public async Task<BaseResult> ChangeProfilePhoto(
-        User user,
-        IFormFile photo)
-    {
-        var changeResult = await _mediasRepository.ChangeProfilePhoto(user.Id, photo);
-        if (!changeResult.Success)
-            return new BaseResult("Сменить фото профиля не удалось");
-
-        user.PhotoName = changeResult.Item;
-        return await Context.SaveChangesAsync() switch
-        {
-            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
-            _ => new BaseResult()
-        };
-    }
-    
 }

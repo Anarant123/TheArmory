@@ -133,28 +133,6 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-
-    /// <summary>
-    /// Получить все объявления
-    /// </summary>
-    /// <param name="adId"></param>
-    /// <returns></returns>
-    [HttpGet]
-    [Route("My/{adId:guid}")]
-    public async Task<ActionResult<BaseResult<MyAdViewModel>>> GetMyAd(
-        Guid adId)
-    {
-        var userResponse = await GetUser();
-        if (!userResponse.Success || userResponse.Item is null)
-            return BadRequest(userResponse);
-        
-        var result = await _adsRepository.GetMyAd(userResponse.Item.Id, adId);
-        
-        if (result.Success)
-            return Ok(result);
-
-        return BadRequest(result);
-    }
     
     /// <summary>
     /// Избранные объявления
