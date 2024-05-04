@@ -1,0 +1,37 @@
+﻿@using TheArmory.Domain.Models.Request.Commands.Ad
+@model TheArmory.Domain.Models.Responce.ViewModels.Ad.TileAdComplaintViewModel
+
+<a href="@Url.Page("/Ads/AdInfo", new { handler = "Select", id = Model.Id })" class="card-link" style="text-decoration: none; color: black;">
+    <div class="card border">
+        <div class="row">
+            <div class="col-2">
+                <div class="image-container">
+                    @if (Model.Images.Count > 0)
+                    {
+                        <img src="@(Model.BaseUrl + '/' + Model.Images.First().LocalPath)" class="card-img-top current-image" alt="Фотография объявления">
+                    }
+                    else
+                    {
+                        <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top current-image" alt="Фотография объявления">
+                    }
+                </div>
+            </div>
+            <div class="col-10">
+                <div class="card-body p-1">
+                    <h5 class="card-title fw-bold mb-0">@Model.Name</h5>
+                    <p class="card-text mb-0"><small class="text-muted">Цена:</small> @Model.Price</p>
+                    <p class="card-text mb-0"><small class="text-muted">Опубликовано:</small>@Model.CreationDateTime.Date.ToString("dd.MM.yyyy")</p>
+                    <p class="card-text mb-0"><small class="text-muted">Жалобы:</small>@Model.CountOfComplaint</p>
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex align-items-center">
+                            <img src="/Default/Images/Ad/Eye.png" alt="Глаз" class="me-2"/>
+                            <p class="card-text mb-0">@Model.CountOfViews</p>
+                        </div>
+                        <p class="card-text mb-0 text-success ms-2">@Model.CountOfViewsToday ↑</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>
+

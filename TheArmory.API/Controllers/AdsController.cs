@@ -179,6 +179,29 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Избранные объявления
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Admin")]
+    [HttpGet]
+    [Route("Complaints")]
+    public async Task<ActionResult<BaseQueryResult<TileAdComplaintViewModel>>> GetComplaintsAds(
+        [FromQuery]BaseQueryItemsParams queryItemsParams)
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success || userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var result = await _adsRepository.GetComplaintsAds(queryItemsParams);
+        
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Получить все данные необходимые для публикации объявления
     /// </summary>
     /// <param name="adId"></param>

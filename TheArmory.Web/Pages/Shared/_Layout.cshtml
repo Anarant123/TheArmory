@@ -28,10 +28,16 @@
                         <a class="nav-link text-dark" asp-page="/Privacy">Правила сайта</a>
                     </li>
 
-                    @if (User.Identity is {IsAuthenticated: true })
+                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-page="/Publication/Index">Разместить объявление</a>
+                        </li>
+                    }
+                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/Admin/Index">Жалобы</a>
                         </li>
                     }
                     @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "SuperAdmin")

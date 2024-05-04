@@ -123,7 +123,7 @@ public class AdsRepository : BaseRepository
     }
     
     /// <summary>
-    /// Возвращает все объявления пользователя
+    /// Возвращает избранные объявления пользователя
     /// </summary>
     /// <param name="userId"></param>
     /// <param name="queryItemsParams"></param>
@@ -145,7 +145,31 @@ public class AdsRepository : BaseRepository
         return new BaseQueryResult<TileAdViewModel>(ads);
     }
 
+    /// <summary>
+    /// Возвращает все объявления с жалобами
+    /// </summary>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
+    public async Task<BaseQueryResult<TileAdComplaintViewModel>> GetComplaintsAds(
+        BaseQueryItemsParams queryItemsParams)
+    {
+        var ads = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Complaints)
+            .Where(a => a.Complaints.Any())
+            .ToListAsync();
 
+        if (ads.Count == 0)
+            return new BaseQueryResult<TileAdComplaintViewModel>("Объявлений не найдено");
+
+        var viewModels = ads
+            .Select(a => new TileAdComplaintViewModel(a))
+            .OrderByDescending(a => a.CountOfComplaint)
+            .ToList();
+
+        return new BaseQueryResult<TileAdComplaintViewModel>(viewModels);
+    }
+    
     /// <summary>
     /// Возвращает все данные необходимые для публикации объявления
     /// </summary>
