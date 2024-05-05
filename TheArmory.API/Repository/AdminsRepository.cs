@@ -45,7 +45,8 @@ public class AdminsRepository : BaseRepository<User>
     public async Task<BaseResult> Create(
         UserAdminCreateCommand command)
     {
-        if (command is not ({ Login: not null }
+        if (command is not ({ Name: not null }
+            and { Login: not null }
             and { Password: not null }
             and { PasswordConfirm: not null }))
             return new BaseResult(ErrorsMessage.SomethingWentWrong);
@@ -60,6 +61,7 @@ public class AdminsRepository : BaseRepository<User>
         var user = new User()
         {
             Login = command.Login,
+            Name = command.Name,
             RoleId = UserRole.Admin,
             StatusId = StateStatus.Actively,
             RegistrationDateTime = DateTime.Now,

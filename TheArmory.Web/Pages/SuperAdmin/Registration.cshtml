@@ -45,6 +45,10 @@
                     <span asp-validation-for="Command.Login" class="text-danger"></span>
                 </div>
                 <div class="row mt-3">
+                    <input type="text" asp-for="Command.Name" class="form-control" placeholder="Имя" required>
+                    <span asp-validation-for="Command.Name" class="text-danger"></span>
+                </div>
+                <div class="row mt-3">
                     <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
                     <span asp-validation-for="Command.Password" class="text-danger"></span>
                 </div>

@@ -48,7 +48,7 @@ public class AdsService : BaseService<Ad>
     {
         try
         {
-             var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}");
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}");
             var queryParams = queryItemsParams.ToDictionary();
             var queryString = queryParams.ToGetParameters();
             uriBuilder.Query = queryString;

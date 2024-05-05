@@ -15,6 +15,16 @@ public class UserAdminCreateCommand
     [StringLength(128, ErrorMessage = "Логин должен быть не более 128 символов")]
     [JsonPropertyName("login")]
     public string? Login { set; get; }
+    
+    /// <summary>
+    /// Логин пользователя
+    /// </summary>
+    [Required(ErrorMessage = "Введите имя")]
+    [Display(Name = "Имя")]
+    [DataType(DataType.Text)]
+    [StringLength(128, ErrorMessage = "Имя должено быть не более 128 символов")]
+    [JsonPropertyName("login")]
+    public string? Name { set; get; }
 
     /// <summary>
     /// Пароль

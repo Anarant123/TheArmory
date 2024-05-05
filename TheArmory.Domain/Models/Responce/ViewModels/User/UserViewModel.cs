@@ -24,12 +24,6 @@ public class UserViewModel
     public string Login { get; set; }
     
     /// <summary>
-    /// Id региона
-    /// </summary>
-    [JsonPropertyName("regionId")]
-    public Guid? RegionId { get; set; }
-    
-    /// <summary>
     /// Id Роли
     /// </summary>
     [JsonPropertyName("roleId")]
@@ -40,6 +34,27 @@ public class UserViewModel
     /// </summary>
     [JsonPropertyName("statusId")]
     public StateStatus StatusId { get; set; }
+    
+    /// <summary>
+    /// Дата создания
+    /// </summary>
+    [JsonPropertyName("registrationDateTime")]
+    public DateTime RegistrationDateTime { get; set; }
+    
+    /// <summary>
+    /// Дата последнего посещения
+    /// </summary>
+    [JsonPropertyName("lastVisitDate")]
+    public DateTime LastVisitDate { get; set; }
+    
+    /// <summary>
+    /// Фото профиля
+    /// </summary>
+    [JsonPropertyName("photoName")]
+    public string? PhotoName { get; set; }
+    
+    [JsonIgnore]
+    public string BaseUrl { get; set; } = "";
 
     public UserViewModel(){}
     
@@ -47,9 +62,11 @@ public class UserViewModel
     {
         Id = user.Id;
         Name = user.Name;
-        RegionId = user.RegionId;
         RoleId = user.RoleId;
         StatusId = user.StatusId;
+        RegistrationDateTime = user.RegistrationDateTime;
+        LastVisitDate = user.LastVisitDate;
+        PhotoName = user.PhotoName is not null ? Path.Combine(user.Id.ToString(), "Profileinfo", user.PhotoName) : null;
     }
     
 }

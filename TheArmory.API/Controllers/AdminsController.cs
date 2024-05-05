@@ -29,7 +29,7 @@ public class AdminsController : ControllerBase
     /// <returns></returns>
     [Authorize(Roles = "SuperAdmin")]
     [HttpGet]
-    [Route("Registration")]
+    [Route("Admins")]
     public async Task<ActionResult<BaseQueryResult<UserViewModel>>> Get(
         [FromQuery]BaseQueryItemsParams queryItemsParams )
     {

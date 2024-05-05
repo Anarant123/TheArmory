@@ -71,7 +71,7 @@ public class UsersController : BaseController
     [HttpPut]
     [Authorize]
     [Route("ChangeName")]
-    public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(
+    public async Task<ActionResult<BaseResult>> ChangeProfileName(
         [FromBody]UserChangeNameCommand command)
     {
         var userResponse = await GetUser();

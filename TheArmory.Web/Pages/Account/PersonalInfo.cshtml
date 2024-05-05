@@ -9,7 +9,7 @@
     .square-container {
         position: relative;
         width: 100%;
-        padding-top: 100%; /* Высота контейнера равна его ширине, создавая квадрат */
+        padding-top: 100%; 
         overflow: hidden;
     }
     
@@ -19,9 +19,8 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
+        object-fit: cover;
     }
-
 </style>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.Result)
