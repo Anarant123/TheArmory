@@ -157,7 +157,7 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Избранные объявления
+    /// Объявления с жалобами
     /// </summary>
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
