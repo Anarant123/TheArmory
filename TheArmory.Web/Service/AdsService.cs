@@ -237,18 +237,14 @@ public class AdsService : BaseService<Ad>
         formData.Add(new StringContent(command.Description ?? ""), "description");
         formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
         formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
-        formData.Add(new StringContent(command.Address), "address");
-        formData.Add(new StringContent(command.Latitude), "latitude");
-        formData.Add(new StringContent(command.Longitude), "longitude");
+        if (command.Address != null) formData.Add(new StringContent(command.Address), "address");
+        if (command.Latitude != null) formData.Add(new StringContent(command.Latitude), "latitude");
+        if (command.Longitude != null) formData.Add(new StringContent(command.Longitude), "longitude");
         formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
-        if (command.CaliberId.HasValue)
-            formData.Add(new StringContent(command.CaliberId.Value.ToString()), "caliberId");
-        if (command.WeaponTypeId.HasValue)
-            formData.Add(new StringContent(command.WeaponTypeId.Value.ToString()), "weaponTypeId");
-        if (command.BarrelPositionId.HasValue)
-            formData.Add(new StringContent(command.BarrelPositionId.Value.ToString()), "barrelPositionId");
-        if (command.YearOfProduction.HasValue)
-            formData.Add(new StringContent(command.YearOfProduction.Value.ToString()), "yearOfProduction");
+        if (command.CaliberId.HasValue) formData.Add(new StringContent(command.CaliberId.Value.ToString()), "caliberId");
+        if (command.WeaponTypeId.HasValue) formData.Add(new StringContent(command.WeaponTypeId.Value.ToString()), "weaponTypeId");
+        if (command.BarrelPositionId.HasValue) formData.Add(new StringContent(command.BarrelPositionId.Value.ToString()), "barrelPositionId");
+        if (command.YearOfProduction.HasValue) formData.Add(new StringContent(command.YearOfProduction.Value.ToString()), "yearOfProduction");
         foreach (var photo in command.Photos)
         {
             var streamContent = new StreamContent(photo.OpenReadStream());
