@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
+using TheArmory.Domain.Models.Responce.ViewModels.Complaint;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
 using TheArmory.Web.Service;
@@ -12,6 +14,7 @@ namespace TheArmory.Web.Pages.Ads;
 public class AdInfo : PageModel
 {
     private readonly AdsService _adsService;
+    private readonly ComplaintsService _complaintsService;
     public readonly string BaseUrl;
     
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
@@ -20,12 +23,16 @@ public class AdInfo : PageModel
     
     [BindProperty] public AdBanCommand BanCommand { get; set; }
     
-    [BindProperty]
-    public AdViewModel AdViewModel { get; set; }
+    [BindProperty] public BaseQueryResult<ComplaintViewModel> Complaints { get; set; }
     
-    public AdInfo(AdsService adsService, BaseUrlOptions baseUrlOptions)
+    [BindProperty] public AdViewModel AdViewModel { get; set; }
+    
+    public AdInfo(AdsService adsService,
+        ComplaintsService complaintsService,
+        BaseUrlOptions baseUrlOptions)
     {
         _adsService = adsService;
+        _complaintsService = complaintsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
 
@@ -34,8 +41,9 @@ public class AdInfo : PageModel
         var result = await _adsService.Select(new AdSelectCommand(){Id = id});
         if (result.Success)
             AdViewModel = result.Item;
-        
-        //todo написать возвращение страницы ошибки
+
+        if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+            Complaints = await _complaintsService.GetComplaints();
 
         return Page();
     }
@@ -46,7 +54,9 @@ public class AdInfo : PageModel
         if (result.Success)
             AdViewModel = result.Item;
         
-        //todo написать возвращение страницы ошибки
+        if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+            Complaints = await _complaintsService.GetComplaints();
+        
         return Page();
     }
 

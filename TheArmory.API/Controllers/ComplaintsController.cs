@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
+using TheArmory.Domain.Models.Responce.ViewModels.Complaint;
 using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
@@ -26,13 +27,13 @@ public class ComplaintsController : BaseController
     }
     
     /// <summary>
-    /// Получение выбранного объявления
+    /// Получение жалоб выбранного объявления 
     /// </summary>
     /// <returns></returns>
     [Authorize]
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<BaseQueryResult<Complaint>>> Get(
+    public async Task<ActionResult<BaseQueryResult<ComplaintViewModel>>> Get(
         [FromQuery]BaseQueryItemsParams queryItemsParams) 
     {
         var adIdResponse = GetSelectedAdId();
