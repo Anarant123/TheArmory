@@ -241,26 +241,22 @@
         <div class="mb-3">
             <textarea value="@Model.AdViewModel.Description" class="form-control" placeholder="Описание" readonly></textarea>
         </div>
-
+        
         <!-- Блок с геоданными -->
-        <div class="row address-container">
-            <div class="row mt-3">
-                <div class="d-flex align-items-start justify-content-start">
-                    <p id="address" class="mr-3">@Model.AdViewModel.Location.Address ▼</p>
+        <div class="row address-container mt-3">
+            <div class="col-12">
+                <p id="address" class="font-weight-bold">@Model.AdViewModel.Location.Address ▼</p>
+            </div>
+            <div class="col-12">
+                <div class="map-container">
+                    <div id="map" class="square" style="height: 400px"></div>
                 </div>
             </div>
-
-            <div class="row mt-3">
-                <div class="col">
-                    <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
-                    <input type="hidden" id="longitude" value="@Model.AdViewModel.Location.Longitude" class="d-none">
-                    <div class="map-container">
-                        <div id="map" class="square" style="height: 400px"></div>
-                    </div>
-                </div>
+            <div class="col-12">
+                <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
+                <input type="hidden" id="longitude" value="@Model.AdViewModel.Location.Longitude" class="d-none">
             </div>
         </div>
-
 
         <div class="row mt-3">
             <div class="col">
@@ -301,11 +297,13 @@
     const address = document.querySelector('#address');
     const mapContainer = document.querySelector('.map-container');
     
-    // Скрываем контейнер карты изначально
     mapContainer.style.display = 'none';
     
-    addressContainer.addEventListener('click', () => {
-        // Меняем видимость контейнера карты при клике на адрес
+    addressContainer.addEventListener('click', (event) => {
+        if (event.target.closest('.map-container')) {
+            return;
+        }
+        
         if (mapContainer.style.display === 'none') {
             mapContainer.style.display = 'block';
         } else {
@@ -313,9 +311,7 @@
         }
     });
 
-
-    var myMap;
-
+    let myMap;
     initializeMap();
 
     function initializeMap() {
@@ -328,7 +324,7 @@
                 zoom: 7
             });
 
-            var myGeoObject = new ymaps.GeoObject({
+            let myGeoObject = new ymaps.GeoObject({
                 geometry: {
                     type: "Point",
                     coordinates: [latitudeValue, longitudeValue]

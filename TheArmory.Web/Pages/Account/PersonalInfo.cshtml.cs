@@ -85,7 +85,7 @@ public class PersonalInfo : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostCreateContact()
+    public async Task<IActionResult> OnPostCreateContactAsync()
     {
         Result = await _contactsService.CreateContact(ContactCreateCommand);
         if (!Result.Success) return Page();
@@ -94,7 +94,7 @@ public class PersonalInfo : PageModel
     }
 
     
-    public async Task<IActionResult> OnPostExit()
+    public async Task<IActionResult> OnPostExitAsync()
     {
         Result = await _authService.Logout();
         if (!Result.Success) return await OnGetAsync();
