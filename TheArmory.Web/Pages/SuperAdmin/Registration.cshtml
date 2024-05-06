@@ -19,18 +19,18 @@
         left: 0;
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Сохраняет пропорции и обрезает изображение */
+        object-fit: cover;
     }
 
 </style>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.RequestResult)
 
-<div class="container mt-5 text-center">
-    <h1>Регистрация</h1>
+<div class="container mt-2 text-center">
+    <h3>Регистрация администратора</h3>
     <form method="post" enctype="multipart/form-data" class="mt-4 d-inline-block">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-12">
                 <input type="file" id="file-input" asp-for="Command.Photo" accept="image/*" style="display: none;">
                 <div class="row mt-3">
                     <div class="square-container">
