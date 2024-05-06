@@ -43,7 +43,7 @@
                     @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "SuperAdmin")
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/SuperAdmin/Registration">Добавить администратора</a>
+                            <a class="nav-link text-dark" asp-page="/SuperAdmin/Index">Администраторы</a>
                         </li>
                     }
                 </ul>

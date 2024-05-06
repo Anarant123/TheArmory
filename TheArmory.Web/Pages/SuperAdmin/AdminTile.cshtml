@@ -3,8 +3,8 @@
 <style>
     .square-container {
         position: relative;
-        width: 100%;
-        padding-top: 100%;
+        width: 90%;
+        padding-top: 90%;
         overflow: hidden;
     }
 
@@ -19,33 +19,27 @@
     }
 </style>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col">
-                            @if (!string.IsNullOrEmpty(@Model.PhotoName))
-                            {
-                                <div class="square-container">
-                                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.PhotoName)" alt="Фото профиля" class="img-fluid square-image">
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="square-container">
-                                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid square-image">
-                                </div>
-                            }
-                        </div>
-                        <div class="col">
-                            <h5 class="card-title mt-3">@Model.Name</h5>
-                            <p class="card-text">Зарегистрирован: @Model.RegistrationDateTime</p>
-                            <p class="card-text">Последнее посещение: @Model.LastVisitDate</p>
-                        </div>
+<div class="card mb-2">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-3">
+                @if (!string.IsNullOrEmpty(@Model.PhotoName))
+                {
+                    <div class="square-container">
+                        <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.PhotoName)" alt="Фото профиля" class="img-fluid square-image">
                     </div>
-                </div>
+                }
+                else
+                {
+                    <div class="square-container">
+                        <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid square-image">
+                    </div>
+                }
+            </div>
+            <div class="col-9">
+                <h4 class="card-title">@Model.Name</h4>
+                <p class="card-text">Зарегистрирован: @Model.RegistrationDateTime</p>
+                <p class="card-text">Последнее посещение: @Model.LastVisitDate</p>
             </div>
         </div>
     </div>

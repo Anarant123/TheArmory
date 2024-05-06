@@ -1,13 +1,20 @@
 ﻿@page
 @model TheArmory.Web.Pages.SuperAdmin.Index
 
+<div class="container">
+    
 <div class="row">
+    <div class="col-2">
+        <a class="btn btn-primary" asp-page="/SuperAdmin/Registration">+ Зарегистрировать</a>
+    </div>
+</div>
+<div class="row mt-3">
     @if (Model.Admins is not null && Model.Admins.Any())
     {
         @foreach (var admin in Model.Admins)
         {
             admin.BaseUrl = Model.BaseUrl;
-            <div class="row">
+            <div class="col-6">
                 @await Html.PartialAsync("AdminTile", admin)
             </div>
         }
@@ -41,3 +48,4 @@
         </div>
     </div>
 </form>
+</div>
