@@ -118,7 +118,6 @@
                             }
                         </div>
                     }
-
                     <form method="post" asp-page-handler="CreateContact">
                         <div class="container mt-3 d-none" id="addContactForm">
                             <div class="row align-items-center">
@@ -139,14 +138,11 @@
                             </div>
                         </div>
                     </form>
-
-
-                    <div class="row mt-3">
-                        <div class="row">
-                            <label for="registrationDateTime">На площадке с @Model.UserInfo.RegistrationDateTime</label>
-                        </div>
-                    </div>
-                    
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="row">
+                    <label>На площадке с @Model.UserInfo.RegistrationDateTime</label>
                 </div>
             </div>
         </div>
@@ -191,8 +187,11 @@
                     else
                     {
                         <h1>Активных объявлений не найдено</h1>
-                        <h1>Написать кнопку для перехода на добавления объяявления</h1>
-                        // todo Написать кнопку для перехода на добавления объявления
+                        <div class="row">
+                            <div class="col-2">
+                                <a class="btn btn-primary" asp-page="/Publication/Index">Добавить объявление</a>
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
