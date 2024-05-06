@@ -7,6 +7,7 @@ using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
+using TheArmory.Domain.Utils;
 
 namespace TheArmory.Repository;
 
@@ -299,6 +300,18 @@ public class AdsRepository : BaseRepository
                                            || (a.Characteristic != null &&
                                                a.Characteristic.Caliber.Name.ToLower().Contains(filter)));
             Console.WriteLine($"Filter by text: {filter}");
+        }
+
+        if (!string.IsNullOrEmpty(queryItemsParams.OrderBy))
+        {
+            adsQuery = queryItemsParams.OrderBy switch
+            {
+                "Сначала новые" => adsQuery.OrderByDescending(a => a.CreationDateTime),
+                "Сначала старые" => adsQuery.OrderBy(a => a.CreationDateTime),
+                "Сначала дешевле" => adsQuery.OrderBy(a => a.Price),
+                "Сначала дороже" => adsQuery.OrderByDescending(a => a.Price),
+                _ => adsQuery
+            };
         }
 
         var ads = await adsQuery
