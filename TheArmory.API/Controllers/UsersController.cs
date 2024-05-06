@@ -87,4 +87,28 @@ public class UsersController : BaseController
         
         return Ok(result);
     }
+    
+    /// <summary>
+    /// Получить себя
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]
+    [Authorize]
+    [Route("Me")]
+    public async Task<ActionResult<BaseResult<UserPersonalInfoViewModel>>> DeleteMe()
+    {
+        var userResponse = await GetUser();
+        if (userResponse is { Success: false, Item: not null })
+            BadRequest(userResponse);
+
+        var user = userResponse.Item!;
+
+        var result = await _usersRepository.DeleteMe(user.Id);
+
+        if (!result.Success)
+            return BadRequest(result);
+        
+        return Ok(result);
+    }
+    
 }

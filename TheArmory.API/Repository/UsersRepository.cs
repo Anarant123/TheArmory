@@ -130,8 +130,31 @@ public class UsersRepository : BaseRepository
         };
     }
     
-    
-    // todo Удаление своего профиля
+    public async Task<BaseResult> DeleteMe(
+        Guid userId)
+    {
+        var user = await Context.Users
+            .FirstOrDefaultAsync(u => u.Id.Equals(userId));
+
+        if (user is null) return new BaseResult(ErrorsMessage.UserNotFound);
+
+        user.StatusId = StateStatus.Deleted;
+
+        var ads = await Context.Ads
+            .Where(a => a.UserId.Equals(userId))
+            .ToListAsync();
+        
+        foreach (var ad in ads)
+        {
+            ad.StatusId = StateStatus.Deleted;
+        }
+        
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult()
+        };
+    }
     
     // todo Смена пароля
     

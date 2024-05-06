@@ -80,5 +80,24 @@ public class UserService : BaseService<User>
             return new BaseResult<UserPersonalInfoViewModel>(exception.Message);
         }
     }
+    
+    public async Task<BaseResult> DeleteMe()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Me";
+            var response = await httpClient.DeleteAsync(uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult(await response.Content.ReadAsStringAsync());
+            
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
 
 }
