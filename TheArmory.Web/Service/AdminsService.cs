@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
@@ -61,6 +62,29 @@ public class AdminsService : BaseService<User>
                 return new BaseResult(await response.Content.ReadAsStringAsync());
 
             var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> Delete(UserCommand command)
+    {
+        try
+        {
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl("Admins")}");
+            uriBuilder.Query = $"id={command.Id}";;
+            var response = await httpClient.DeleteAsync(uriBuilder.Uri);
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
         }

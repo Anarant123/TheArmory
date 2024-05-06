@@ -59,4 +59,23 @@ public class AdminsController : ControllerBase
         
         return Ok(userResponse);
     }
+    
+    /// <summary>
+    /// Удалить
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "SuperAdmin")]
+    [HttpDelete]
+    [Route("")]
+    public async Task<ActionResult<BaseResult>> Register(
+        [FromQuery]UserCommand command)
+    {
+        var userResponse = await _adminsRepository.Delete(command);
+
+        if (!userResponse.Success)
+            return BadRequest(userResponse);
+        
+        return Ok(userResponse);
+    }
 }

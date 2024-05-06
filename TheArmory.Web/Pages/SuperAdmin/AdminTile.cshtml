@@ -1,4 +1,8 @@
-﻿@model TheArmory.Domain.Models.Responce.ViewModels.User.UserViewModel
+﻿@using TheArmory.Domain.Models.Request.Commands.User
+@model TheArmory.Domain.Models.Responce.ViewModels.User.UserViewModel
+@{
+    var command = new UserCommand();
+}
 
 <style>
     .square-container {
@@ -40,6 +44,10 @@
                 <h4 class="card-title">@Model.Name</h4>
                 <p class="card-text">Зарегистрирован: @Model.RegistrationDateTime</p>
                 <p class="card-text">Последнее посещение: @Model.LastVisitDate</p>
+                <form method="post" asp-page-handler="Delete">
+                    <input type="hidden" asp-for="@command.Id" value="@Model.Id"/>
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
             </div>
         </div>
     </div>

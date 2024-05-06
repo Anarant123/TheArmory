@@ -30,14 +30,10 @@ public class PersonalInfo : PageModel
     [BindProperty]
     public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
 
-    [BindProperty] 
-    public BaseResult Result { get; set; } = new BaseResult();
-    [BindProperty]
-    public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
-    [BindProperty]
-    public UserChangeNameCommand ChangeNameCommand { get; set; }
-    [BindProperty]
-    public ContactCreateCommand ContactCreateCommand { get; set; }
+    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
+    [BindProperty] public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
+    [BindProperty] public UserChangeNameCommand ChangeNameCommand { get; set; }
+    [BindProperty] public ContactCreateCommand ContactCreateCommand { get; set; }
 
 
     public PersonalInfo(UserService userService, 

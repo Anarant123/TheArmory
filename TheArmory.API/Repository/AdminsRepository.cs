@@ -30,7 +30,8 @@ public class AdminsRepository : BaseRepository<User>
         BaseQueryItemsParams queryItemsParams)
     {
         var admins = await Context.Users
-            .Where(u => u.RoleId.Equals(UserRole.Admin))
+            .Where(u => u.RoleId.Equals(UserRole.Admin) 
+                        && u.StatusId.Equals(StateStatus.Actively))
             .Select(s => new UserViewModel(s))
             .ToListAsync();
 
@@ -75,6 +76,24 @@ public class AdminsRepository : BaseRepository<User>
         user.PhotoName = changeResult.Item;
         await Context.Users.AddAsync(user);
 
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult()
+        };
+    }
+
+    public async Task<BaseResult> Delete(
+        UserCommand command)
+    {
+        var admin = await Context.Users
+            .FirstOrDefaultAsync(u => u.Id.Equals(command.Id)
+                                      && u.RoleId.Equals(UserRole.Admin));
+
+        if (admin is null) return new BaseResult("Админ не найден");
+
+        admin.StatusId = StateStatus.Deleted;
+        
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),

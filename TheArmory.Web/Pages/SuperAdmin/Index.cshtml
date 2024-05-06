@@ -3,49 +3,51 @@
 
 <div class="container">
     
-<div class="row">
-    <div class="col-2">
-        <a class="btn btn-primary" asp-page="/SuperAdmin/Registration">+ Зарегистрировать</a>
-    </div>
-</div>
-<div class="row mt-3">
-    @if (Model.Admins is not null && Model.Admins.Any())
-    {
-        @foreach (var admin in Model.Admins)
-        {
-            admin.BaseUrl = Model.BaseUrl;
-            <div class="col-6">
-                @await Html.PartialAsync("AdminTile", admin)
-            </div>
-        }
-    }
-    else
-    {
-        <h1>Объявлений не найдено</h1>
-    }
-</div>
-
-<form method="post">
     <div class="row">
-        <input type="hidden" id="pageNumber" asp-for="@Model.QueryParams.PageNumber"/>
-        <div class="col-md-12">
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center" id="pagination">
-                    <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "d-none" : "")">
-                        <button type="submit" class="page-link" tabindex="-1" aria-disabled="true" onclick="paginate(this)"><</button>
-                    </li>
-                    @for (var i = 1; i <= Model.QueryResult.TotalPages; i++)
-                    {
-                        <li class="page-item @((Model.QueryResult.PageNumber == i) ? "active" : "")">
-                            <button type="submit" class="page-link" onclick="paginate(this)">@i</button>
-                        </li>
-                    }
-                    <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "d-none" : "")">
-                        <button type="submit" class="page-link" onclick="paginate(this)">></button>
-                    </li>
-                </ul>
-            </nav>
+        <div class="col-2">
+            <a class="btn btn-primary" asp-page="/SuperAdmin/Registration">+ Зарегистрировать</a>
         </div>
     </div>
-</form>
+    <div class="row mt-3">
+        @if (Model.Admins is not null && Model.Admins.Any())
+        {
+            @foreach (var admin in Model.Admins)
+            {
+                admin.BaseUrl = Model.BaseUrl;
+                <div class="col-6">
+                    @await Html.PartialAsync("AdminTile", admin)
+                </div>
+            }
+        }
+        else
+        {
+            <h1>Объявлений не найдено</h1>
+        }
+    </div>
+
+    <form method="post">
+        <div class="row">
+            <input type="hidden" id="pageNumber" asp-for="@Model.QueryParams.PageNumber"/>
+            <div class="col-md-12">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center" id="pagination">
+                        <li class="page-item @((Model.QueryResult.PageNumber == 1) ? "d-none" : "")">
+                            <button type="submit" class="page-link" tabindex="-1" aria-disabled="true" onclick="paginate(this)"><</button>
+                        </li>
+                        @for (var i = 1; i <= Model.QueryResult.TotalPages; i++)
+                        {
+                            <li class="page-item @((Model.QueryResult.PageNumber == i) ? "active" : "")">
+                                <button type="submit" class="page-link" onclick="paginate(this)">@i</button>
+                            </li>
+                        }
+                        <li class="page-item @((Model.QueryResult.PageNumber == Model.QueryResult.TotalPages) ? "d-none" : "")">
+                            <button type="submit" class="page-link" onclick="paginate(this)">></button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </form>
 </div>
+
+@await Html.PartialAsync("ErrorModelWindow", Model.Result)
