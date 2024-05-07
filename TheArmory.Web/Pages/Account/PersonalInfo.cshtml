@@ -6,6 +6,16 @@
 }
 
 <style>
+    .hide-button {
+        visibility: hidden;
+    }
+
+    .contact-row:hover .hide-button {
+        visibility: visible;
+    }
+</style>
+
+<style>
     .square-container {
         position: relative;
         width: 100%;
@@ -93,47 +103,49 @@
                     </div>
                     @if (Model.UserInfo.Contacts.Any())
                     {
-                        <div class="container">
+                        <div class="container mt-2">
                             @foreach (var contact in Model.UserInfo.Contacts)
                             {
-                                <div class="row align-items-center mt-3">
-                                    <div class="col-2">
-                                        <h5>@contact.Name</h5>
-                                    </div>
-                                    <div class="col">
-                                        <span >@contact.Description</span>
-                                    </div>
-                                    <div class="col-auto">
-                                        <button type="button" class="btn btn-secondary" onclick="editName()">
-                                            <img src="/icons/edit_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                        </button>
-                                        <button type="submit" class="btn btn-success d-none" onclick="saveName()">
-                                            <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                        </button>
-                                        <button type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
-                                            <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                        </button>
+                                <div class="rounded bg-light p-2 mb-2">
+                                    <div class="row align-items-center contact-row">
+                                        <div class="col-md-3">
+                                            <h6 class="mb-0">@contact.Name</h6>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span>@contact.Description</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="button" class="btn btn-secondary btn-sm d-none d-md-block d-lg-none hide-button">
+                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                            </button>
+                                            <button type="button" class="btn btn-secondary btn-sm d-none d-lg-block hide-button">
+                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             }
                         </div>
                     }
                     <form method="post" asp-page-handler="CreateContact">
-                        <div class="container mt-3 d-none" id="addContactForm">
-                            <div class="row align-items-center">
-                                <div class="col-2">
-                                    <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" placeholder="Название сервиса">
-                                </div>
-                                <div class="col">
-                                    <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
-                                </div>
-                                <div class="col-auto">
-                                    <button id="saveContactButton" type="submit" class="btn btn-success">
-                                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                    </button>
-                                    <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
-                                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                    </button>
+                        <div class="container mt-2 d-none" id="addContactForm">
+                            <div class="rounded bg-light p-2 mb-2">
+                                <div class="row align-items-center contact-row">
+                                    <div class="col-md-3">
+                                        <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" placeholder="Название сервиса">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
+                                    </div>
+                                    <div class="col-auto">
+                                            
+                                        <button id="saveContactButton" type="submit" class="btn btn-success">
+                                            <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                        <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
+                                            <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
