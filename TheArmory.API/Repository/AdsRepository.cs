@@ -293,12 +293,9 @@ public class AdsRepository : BaseRepository
                                            || (a.Description != null && a.Description.ToLower().Contains(filter))
                                            || a.Category.Name.ToLower().Contains(filter)
                                            || (a.Region != null && a.Region.Name.ToLower().Contains(filter))
-                                           || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower()
-                                               .Contains(filter))
-                                           || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name
-                                               .ToLower().Contains(filter))
-                                           || (a.Characteristic != null &&
-                                               a.Characteristic.Caliber.Name.ToLower().Contains(filter)));
+                                           || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower().Contains(filter))
+                                           || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name.ToLower().Contains(filter))
+                                           || (a.Characteristic != null && a.Characteristic.Caliber.Name.ToLower().Contains(filter)));
             Console.WriteLine($"Filter by text: {filter}");
         }
 
