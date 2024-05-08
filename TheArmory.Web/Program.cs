@@ -58,7 +58,10 @@ builder.Services.TryAddSingleton(s => new BaseUrlOptions
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddHttpClient();
+builder.Services.AddHttpClient("MyNamedClient", client =>
+{
+    client.Timeout = TimeSpan.FromHours(12);
+});
 
 var app = builder.Build();
 
