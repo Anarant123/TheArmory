@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Domain.Models.Request.Commands.Contact;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Repository;
 
@@ -22,7 +23,6 @@ public class ContactsController : BaseController
         _contactsRepository = contactsRepository;
     }
     
-    
     /// <summary>
     /// Разместить объявление
     /// </summary>
@@ -35,6 +35,30 @@ public class ContactsController : BaseController
         var userResponse = await GetUser();
 
         var result = await _contactsRepository.Create(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    
+    /// <summary>
+    /// Разместить объявление
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("")]
+    public async Task<ActionResult<BaseResult>> DeleteContact(
+        [FromQuery]ContactCommand command)
+    {
+        var userResponse = await GetUser();
+        if (!userResponse.Success)
+            return userResponse;
+
+        var result = await _contactsRepository.Delete(
             userResponse.Item.Id,
             command);
 

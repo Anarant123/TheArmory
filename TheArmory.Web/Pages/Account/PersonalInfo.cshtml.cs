@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Enums;
+using TheArmory.Domain.Models.Request.Commands.Contact;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
@@ -35,6 +36,7 @@ public class PersonalInfo : PageModel
     [BindProperty] public UserChangeNameCommand ChangeNameCommand { get; set; }
     [BindProperty] public ContactCreateCommand ContactCreateCommand { get; set; }
 
+    [BindProperty] public ContactCommand DeleteContactCommand { get; set; }
 
     public PersonalInfo(UserService userService, 
         AdsService adsService,
@@ -98,4 +100,11 @@ public class PersonalInfo : PageModel
         return RedirectToPage("/Ads/Index");
     }
 
+    public async Task<IActionResult> OnPostDeleteContactAsync()
+    {
+        Result = await _contactsService.DeleteContact(DeleteContactCommand);
+        if (!Result.Success) return Page();
+        await OnGetAsync();
+        return Page();
+    }
 }

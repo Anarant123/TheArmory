@@ -2,6 +2,7 @@
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
+using TheArmory.Domain.Models.Request.Commands.Contact;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 
 namespace TheArmory.Repository;
@@ -35,6 +36,24 @@ public class ContactsRepository : BaseRepository
         };
 
         Context.Contacts.Add(contact);
+        
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<Contact>(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult<Contact>(contact)
+        };
+    }
+    
+    public async Task<BaseResult> Delete(
+        Guid userId,
+        ContactCommand command)
+    {
+        var contact = await Context.Contacts.FirstOrDefaultAsync(c => c.Id.Equals(command.Id));
+
+        if (contact is null)
+            return new BaseResult("Контакт не найден");
+
+        Context.Contacts.Remove(contact);
         
         return await Context.SaveChangesAsync() switch
         {

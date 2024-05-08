@@ -103,29 +103,32 @@
                     </div>
                     @if (Model.UserInfo.Contacts.Any())
                     {
-                        <div class="container mt-2">
-                            @foreach (var contact in Model.UserInfo.Contacts)
-                            {
-                                <div class="rounded bg-light p-2 mb-2">
-                                    <div class="row align-items-center contact-row">
-                                        <div class="col-md-3">
-                                            <h6 class="mb-0">@contact.Name</h6>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span>@contact.Description</span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="button" class="btn btn-secondary btn-sm d-none d-md-block d-lg-none hide-button">
-                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                            </button>
-                                            <button type="button" class="btn btn-secondary btn-sm d-none d-lg-block hide-button">
-                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                            </button>
+                        <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
+                            <input type="hidden" asp-for="DeleteContactCommand.Id" id="contactDeletedInput"/>
+                            <div class="container mt-2">
+                                @foreach (var contact in Model.UserInfo.Contacts)
+                                {
+                                    <div class="rounded bg-light p-2 mb-2">
+                                        <div class="row align-items-center contact-row">
+                                            <div class="col-md-3">
+                                                <h6 class="mb-0">@contact.Name</h6>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <span>@contact.Description</span>
+                                            </div>
+                                            <div class="col-auto">
+                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-md-block d-lg-none hide-button">
+                                                    <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                                </button>
+                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-lg-block hide-button">
+                                                    <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            }
-                        </div>
+                                }
+                            </div>
+                        </form>
                     }
                     <form method="post" asp-page-handler="CreateContact">
                         <div class="container mt-2 d-none" id="addContactForm">
@@ -138,7 +141,7 @@
                                         <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
                                     </div>
                                     <div class="col-auto">
-                                            
+
                                         <button id="saveContactButton" type="submit" class="btn btn-success">
                                             <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
                                         </button>
@@ -177,7 +180,6 @@
         </ul>
     </div>
 </div>
-
 
 <!-- Контент для каждого типа объявлений -->
 <div class="row mt-3">
@@ -346,5 +348,12 @@
     function saveContact() {
         cancelAddContact();
     }
+    
+    function deleteContact(contactId) {
+        var input = document.getElementById('contactDeletedInput');
+        input.value = contactId;
+    }
+
+
 
 </script>
