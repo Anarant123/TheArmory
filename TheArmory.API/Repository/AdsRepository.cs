@@ -467,28 +467,6 @@ public class AdsRepository : BaseRepository
     // }
 
     /// <summary>
-    /// Удаление объявления
-    /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="command"></param>
-    /// <returns></returns>
-    public async Task<BaseResult> Delete(
-        Guid userId,
-        AdDeleteCommand command)
-    {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
-        if (ad is null)
-            return new BaseResult<AdViewModel>("Объявление не найдено");
-
-        ad.StatusId = StateStatus.Deleted;
-        return await Context.SaveChangesAsync() switch
-        {
-            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
-            _ => new BaseResult<AdViewModel>(new AdViewModel(ad))
-        };
-    }
-
-    /// <summary>
     /// Добавить объявление в избранное
     /// </summary>
     /// <param name="userId"></param>
@@ -587,17 +565,16 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult()
         };
     }
-    
+
     /// <summary>
     /// Оставить жалобу на объявление
     /// </summary>
-    /// <param name="userId"></param>
-    /// <param name="command"></param>
+    /// <param name="adId"></param>
     /// <returns></returns>
     public async Task<BaseResult> AdBan(
-        AdBanCommand command)
+        Guid adId)
     {
-        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id));
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
         if (ad is null)
             return new BaseResult("Объявление не найдено");
 
@@ -666,6 +643,31 @@ public class AdsRepository : BaseRepository
             return new BaseResult("Объявление не найдено");
 
         ad.StatusId = status;
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<AdViewModel>()
+        };
+    }
+
+    /// <summary>
+    /// Оправдать объявление
+    /// </summary>
+    /// <param name="adId"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> Justify(
+        Guid adId)
+    {
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId));
+        if (ad is null)
+            return new BaseResult("Объявление не найдено");
+
+        var complaints = await Context.Complaints
+            .Where(c => c.AdId.Equals(adId))
+            .ToListAsync();
+
+        Context.Complaints.RemoveRange(complaints);
 
         return await Context.SaveChangesAsync() switch
         {

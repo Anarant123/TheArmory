@@ -1,6 +1,10 @@
 ﻿@page
 @model TheArmory.Web.Pages.Admin.Index
 
+@{
+    ViewData["Title"] = "Жалобы";
+}
+
 <div class="row">
     @if (Model.TileAds is not null && Model.TileAds.Any())
     {
@@ -14,7 +18,7 @@
     }
     else
     {
-        <h1>Объявлений не найдено</h1>
+        <h1>Объявления с жалобами отсутствуют</h1>
     }
 </div>
 

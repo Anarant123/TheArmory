@@ -92,7 +92,6 @@
 </div>
 
 <form method="post" enctype="multipart/form-data" id="form">
-
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="row">
@@ -363,16 +362,15 @@
 </script>
 <script>
     function autoResize(textarea) {
-        textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто
-        textarea.style.height = (textarea.scrollHeight) + 'px'; // Устанавливаем высоту текстового поля равной его высоте контента
+        textarea.style.height = 'auto'; 
+        textarea.style.height = (textarea.scrollHeight) + 'px'; 
     }
     
     function validatePrice(input) {
-        input.value = input.value.replace(/[^0-9.]/g, ''); // Заменяем все символы, кроме цифр и точки, на пустую строку
-        // Удалить лишние точки
-        let countDots = (input.value.match(/\./g) || []).length; // Подсчитываем количество точек в значении поля ввода
-        if (countDots > 1) { // Если количество точек больше 1
-            input.value = input.value.replace(/\./g, ''); // Удаляем все точки из значения поля ввода, кроме первой
+        input.value = input.value.replace(/[^0-9.]/g, ''); 
+        let countDots = (input.value.match(/\./g) || []).length;
+        if (countDots > 1) { 
+            input.value = input.value.replace(/\./g, '');
         }
     }
     

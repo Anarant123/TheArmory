@@ -14,7 +14,7 @@ namespace TheArmory.Controllers;
 [ApiController]
 public class AdsController : BaseController
 {
-    protected readonly ILogger<ConditionsController> Logger;
+    private readonly ILogger<ConditionsController> Logger;
     private readonly AdsRepository _adsRepository;
     
     public AdsController(
@@ -28,7 +28,7 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Получение выбранного объявления
+    /// Выбранное объявление
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -51,9 +51,10 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Получение выбранного объявления
+    /// Свое выбранное объявление
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpGet]
     [Route("SelectedMy")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> GetSelectedMy()
@@ -74,7 +75,7 @@ public class AdsController : BaseController
     }
 
     /// <summary>
-    /// Получить все объявления
+    /// Объявления
     /// </summary>
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
@@ -94,10 +95,11 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Получить все объявления
+    /// Забаненные объявления
     /// </summary>
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     [Route("Banned")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetBannedAds(
@@ -114,10 +116,11 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Получить все объявления
+    /// Свои объявления
     /// </summary>
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpGet]
     [Route("My")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetMyAds(
@@ -140,6 +143,7 @@ public class AdsController : BaseController
     /// </summary>
     /// <param name="queryItemsParams"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpGet]
     [Route("Favorites")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetFavoritesAds(
@@ -179,12 +183,12 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
-    /// Получить все данные необходимые для публикации объявления
+    /// Данные необходимые для публикации объявления
     /// </summary>
-    /// <param name="adId"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpGet]
     [Route("PublishInformation")]
     public async Task<ActionResult<BaseResult<AdPublishInfoViewModel>>> GetPublishInformation()
@@ -198,7 +202,7 @@ public class AdsController : BaseController
     }
 
     /// <summary>
-    /// Получить все данные необходимые для фильтрации объявлений
+    /// Данные необходимые для фильтрации объявлений
     /// </summary>
     /// <returns></returns>
     [HttpGet]
@@ -214,9 +218,10 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Разместить объявление
+    /// Опубликовать объявление
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> PostAd(
@@ -238,6 +243,7 @@ public class AdsController : BaseController
     /// Добавить в избранное
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("ToFavorite")]
     public async Task<ActionResult<BaseResult>> AddToFavorite()
@@ -261,10 +267,11 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Добавить в избранное
+    /// Подать жалобу
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("Complaint")]
     public async Task<ActionResult<BaseResult>> AdToComplaint(
@@ -288,16 +295,15 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
-    /// Добавить в избранное
+    /// Забанить
     /// </summary>
-    /// <param name="command"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Admin")]
     [HttpPost]
     [Route("Ban")]
-    public async Task<ActionResult<BaseResult>> AdBan(
-        [FromBody]AdBanCommand command)
+    public async Task<ActionResult<BaseResult>> AdBan()
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
@@ -306,9 +312,8 @@ public class AdsController : BaseController
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
-        command.Id = adIdResponse.Item;
 
-        var result = await _adsRepository.AdBan(command);
+        var result = await _adsRepository.AdBan(adIdResponse.Item);
 
         if (result.Success)
             return Ok(result);
@@ -321,6 +326,7 @@ public class AdsController : BaseController
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> AddMedia(
@@ -372,6 +378,7 @@ public class AdsController : BaseController
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("SelectMy")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> SelectMy(
@@ -398,6 +405,7 @@ public class AdsController : BaseController
     /// Снять с публикации
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPut]
     [Route("Deactivate")]
     public async Task<ActionResult<BaseResult>> DeactivateAd()
@@ -409,7 +417,6 @@ public class AdsController : BaseController
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
-
 
         var result = await _adsRepository.ChangeStateStatus(
             userResponse.Item.Id,
@@ -426,6 +433,7 @@ public class AdsController : BaseController
     /// Активировать объявление
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpPut]
     [Route("Activate")]
     public async Task<ActionResult<BaseResult>> ActivateAd()
@@ -437,7 +445,6 @@ public class AdsController : BaseController
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
-
 
         var result = await _adsRepository.ChangeStateStatus(
             userResponse.Item.Id,
@@ -451,10 +458,37 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Оправдать объявление
+    /// </summary>
+    /// <returns></returns>
+    [Authorize(Roles = "Admin")]
+    [HttpPut]
+    [Route("Justify")]
+    public async Task<ActionResult<BaseResult>> JustifyAd()
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+        var result = await _adsRepository.Justify(
+            adIdResponse.Item);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Удалить фото объявления
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpDelete]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> DeleteMedia(
@@ -478,6 +512,7 @@ public class AdsController : BaseController
     /// Удалить объявление из избранного
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpDelete]
     [Route("Favorite")]
     public async Task<ActionResult<BaseResult>> DeleteFromFavorite()
@@ -505,6 +540,7 @@ public class AdsController : BaseController
     /// Удалить объявление
     /// </summary>
     /// <returns></returns>
+    [Authorize(Roles = "Client")]
     [HttpDelete]
     [Route("")]
     public async Task<ActionResult<BaseResult>> DeleteAd()
