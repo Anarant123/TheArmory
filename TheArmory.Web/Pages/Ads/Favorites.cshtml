@@ -9,14 +9,14 @@
                 @foreach (var ad in Model.TileAds)
                 {
                     ad.BaseUrl = Model.BaseUrl;
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         @await Html.PartialAsync("AdTile", ad)
                     </div>
                 }
             }
             else
             {
-                <h1>Объявлений не найдено</h1>
+                <h1>Вы еще не добавили ни одного объявлени в избранное</h1>
             }
         </div>
     </div>

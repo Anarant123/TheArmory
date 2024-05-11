@@ -15,11 +15,9 @@ public class Index : PageModel
     private readonly ConditionsService _conditionsService;
     private readonly RegionsService _regionsService;
     
-    [BindProperty]
-    public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
+    [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
-    [BindProperty]
-    public AdCreateCommand Command { get; set; }
+    [BindProperty] public AdCreateCommand Command { get; set; }
 
     public Index(AdsService adsService, ConditionsService conditionsService, RegionsService regionsService)
     {
@@ -38,6 +36,7 @@ public class Index : PageModel
     public async Task<IActionResult> OnPostAsync()
     {
         ModelState.Remove("Categories");
+        ModelState.Remove("YouTubeLink");
         
         if (Command.CategoryId != Guid.Parse("3666fab5-1175-4e6c-b9ac-ff9b811e7d8a"))
         {
@@ -52,7 +51,7 @@ public class Index : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Ads/My");
+            return RedirectToPage("/Ads/MyAd");
         }
 
         await OnGetAsync();
