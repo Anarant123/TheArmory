@@ -67,25 +67,25 @@
 <div class="row mt-3">
     @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Actively))
     {
-            <div class="col">
-        <form method="post" asp-page-handler="Deactivate">
+        <div class="col">
+            <form method="post" asp-page-handler="Deactivate">
                 <button type="submit" class="btn btn-primary btn-block">Снять с публикации</button>
-        </form>
-            </div>
+            </form>
+        </div>
     }
     @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Inactive))
     {
-            <div class="col">
-        <form method="post" asp-page-handler="Activate">
+        <div class="col">
+            <form method="post" asp-page-handler="Activate">
                 <button type="submit" class="btn btn-primary btn-block">Опубликовать</button>
-        </form>
-            </div>
+            </form>
+        </div>
     }
     <div class="col">
-            <form method="post" asp-page-handler="Delete">
-                    <button type="submit" class="btn btn-danger btn-block">Удалить</button>
-            </form>
-                </div>
+        <form method="post" asp-page-handler="Delete">
+            <button type="submit" class="btn btn-danger btn-block">Удалить</button>
+        </form>
+    </div>
     <div class="col">
         <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
     </div>
@@ -157,14 +157,14 @@
                     </div>
                 </div>
 
-                <div id="characteristics-block" style="display: none">
+                <div id="characteristicsblock">
                     <h1>Характеристики</h1>
                     <div class="row mt-3">
                         <div class="col-3">
                             <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.WeaponTypeId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="Command.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.WeaponTypeId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Id">@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Name</option>
@@ -181,7 +181,7 @@
                             <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.CaliberId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="Command.CaliberId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.CaliberId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Id">@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Name</option>
@@ -199,7 +199,7 @@
                             <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.BarrelPositionId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="Command.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.BarrelPositionId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Id">@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Name</option>
@@ -379,10 +379,8 @@
      let images = [];
      let currentImageIndex = 0;
      
-     // Получаем все элементы img с классом img-thumbnail
      let thumbnailImages = document.querySelectorAll('.img-thumbnail');
      
-     // Проходимся по каждому элементу и добавляем его src в массив images
      thumbnailImages.forEach(function(image) {
          images.push(image.src);
      });
@@ -482,19 +480,32 @@
     });
 
     const categorySelect = document.getElementById('categorySelect');
-    const characteristicsBlock = document.getElementById('characteristics-block');
-    const huntingCategoryId = '3666fab5-1175-4e6c-b9ac-ff9b811e7d8a'; // замените на реальный ID
-    if (categorySelect.value === huntingCategoryId) 
-        characteristicsBlock.style.display = 'block'
-        
-    categorySelect.addEventListener('change', function() {
-        const selectedCategoryId = categorySelect.value;
-            
-        if (selectedCategoryId === huntingCategoryId) {
-            characteristicsBlock.style.display = 'block';
+    const characteristicsBlock = document.getElementById('characteristicsblock');
+   
+    function categoryChanged() {
+        const selectedCategoryId = document.getElementById('categorySelect').value;
+   
+        if (selectedCategoryId === "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
+            showCharacteristicsBlock();
         } else {
-            characteristicsBlock.style.display = 'none';
+            hideCharacteristicsBlock();
         }
-    });
+    }
+   
+    function showCharacteristicsBlock() {
+        characteristicsBlock.style.display = 'block'; 
+    }
+   
+    function hideCharacteristicsBlock() {
+        characteristicsBlock.style.display = 'none'; 
+    }
+       
+    categorySelect.addEventListener('change', categoryChanged);
+   
+    if (categorySelect.value === "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
+        showCharacteristicsBlock();
+    } else {
+        hideCharacteristicsBlock();
+    }
     
 </script>
