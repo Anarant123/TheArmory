@@ -310,6 +310,72 @@ public class AdsService : BaseService<Ad>
         }
     }
     
+    public async Task<BaseResult> DeactivateAd()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Deactivate";
+            var response = await httpClient.PutAsync(uri, null);
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> ActivateAd()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Activate";
+            var response = await httpClient.PutAsync(uri, null);
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
+    public async Task<BaseResult> DeleteAd()
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+            var response = await httpClient.DeleteAsync(uri);
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+                return errorResult ?? new BaseResult(await response.Content.ReadAsStringAsync());
+            }
+
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
+    
     public async Task<BaseResult> Complaint(AdToComplaintCommand command)
     {
         try

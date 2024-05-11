@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Commands.Ad;
+using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Condition;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
@@ -17,13 +19,12 @@ public class MyAd : PageModel
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
     
+    [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
-    [BindProperty]
-    public AdUpdateCommand Command { get; set; }
+    [BindProperty] public AdUpdateCommand Command { get; set; }
     
-    [BindProperty]
-    public MyAdViewModel MyAdViewModel { get; set; }
+    [BindProperty] public MyAdViewModel MyAdViewModel { get; set; }
     
     public MyAd(UserService userService, 
         AdsService adsService,
@@ -62,5 +63,19 @@ public class MyAd : PageModel
             MyAdViewModel = adResult.Item;
         
         return Page();
+    }
+
+    public async Task<ActionResult> OnPostActivateAsync()
+    {
+        Result = await _adsService.ActivateAd();
+        if (!Result.Success) return Page();
+        return await OnGetSelectedAsync();
+    }
+    
+    public async Task<ActionResult> OnPostDeactivateAsync()
+    {
+        Result = await _adsService.DeactivateAd();
+        if (!Result.Success) return Page();
+        return await OnGetSelectedAsync();
     }
 }

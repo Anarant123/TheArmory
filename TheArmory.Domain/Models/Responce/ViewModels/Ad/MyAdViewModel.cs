@@ -61,6 +61,12 @@ public class MyAdViewModel
     /// </summary>
     [JsonPropertyName("youTubeLink")]
     public string? YouTubeLink { get; set; }
+    
+    /// <summary>
+    /// Статус
+    /// </summary>
+    [JsonPropertyName("statusId")]
+    public StateStatus StatusId { get; set; }
 
     /// <summary>
     /// Состояние
@@ -118,6 +124,7 @@ public class MyAdViewModel
 
         YouTubeLink = ad.YouTubeLink;
         ConditionId = ad.ConditionId;
+        StatusId = ad.StatusId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
@@ -138,6 +145,7 @@ public class MyAdViewModel
 
         YouTubeLink = ad.YouTubeLink;
         ConditionId = ad.ConditionId;
+        StatusId = ad.StatusId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
@@ -161,6 +169,7 @@ public class MyAdViewModel
 
         YouTubeLink = ad.YouTubeLink;
         ConditionId = ad.ConditionId;
+        StatusId = ad.StatusId;
         Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;

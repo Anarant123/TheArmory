@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
@@ -394,6 +395,62 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Снять с публикации
+    /// </summary>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("Deactivate")]
+    public async Task<ActionResult<BaseResult>> DeactivateAd()
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+
+        var result = await _adsRepository.ChangeStateStatus(
+            userResponse.Item.Id,
+            adIdResponse.Item,
+            StateStatus.Inactive);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Активировать объявление
+    /// </summary>
+    /// <returns></returns>
+    [HttpPut]
+    [Route("Activate")]
+    public async Task<ActionResult<BaseResult>> ActivateAd()
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+
+        var result = await _adsRepository.ChangeStateStatus(
+            userResponse.Item.Id,
+            adIdResponse.Item,
+            StateStatus.Actively);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Удалить фото объявления
     /// </summary>
     /// <param name="command"></param>
@@ -437,6 +494,34 @@ public class AdsController : BaseController
         var result = await _adsRepository.DeleteFromFavorite(
             userResponse.Item.Id,
             adIdResponse.Item);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
+    /// Удалить объявление
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]
+    [Route("")]
+    public async Task<ActionResult<BaseResult>> DeleteAd()
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+
+
+        var result = await _adsRepository.ChangeStateStatus(
+            userResponse.Item.Id,
+            adIdResponse.Item,
+            StateStatus.Deleted);
 
         if (result.Success)
             return Ok(result);

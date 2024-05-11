@@ -1,4 +1,5 @@
 ﻿@page
+@using TheArmory.Domain.Models.Enums
 @model MyAd
 
 @{
@@ -29,37 +30,62 @@
     }
     
     .image-cell {
-        width: 100px; /* Ширина ячейки */
-        height: 100px; /* Высота ячейки */
-        overflow: hidden; /* Скрытие избыточного контента */
-        display: flex; /* Использование flexbox */
-        align-items: center; /* Выравнивание по вертикали */
-        justify-content: center; /* Выравнивание по горизонтали */
-        margin: 0; /* Убираем отступы между ячейками */
+        width: 100px;
+        height: 100px; 
+        overflow: hidden; 
+        display: flex;
+        align-items: center; 
+        justify-content: center; 
+        margin: 0; 
         }
     
     .image-cell img {
-        max-width: 100%; /* Максимальная ширина изображения внутри ячейки */
-        max-height: 100%; /* Максимальная высота изображения внутри ячейки */
-        width: auto; /* Автоматическое вычисление ширины для сохранения пропорций */
-        height: auto; /* Автоматическое вычисление высоты для сохранения пропорций */
+        max-width: 100%; 
+        max-height: 100%; 
+        width: auto; 
+        height: auto; 
         }
             
     .marker-container {
-        position: relative; /* Делаем контейнер относительным, чтобы позиционировать маркер внутри него */
-        width: 100%; /* Ширина контейнера должна соответствовать ширине карты */
-        height: 100%; /* Высота контейнера должна соответствовать высоте карты */
+        position: relative; 
+        width: 100%; 
+        height: 100%; 
     }
     
     .marker {
-        position: absolute; /* Позиционируем маркер абсолютно относительно контейнера */
-        top: 50%; /* Располагаем маркер по вертикали на 50% относительно контейнера */
-        left: 50%; /* Располагаем маркер по горизонтали на 50% относительно контейнера */
-        transform: translate(-50%, -50%); /* Центрируем маркер относительно его собственных размеров */
+        position: absolute; 
+        top: 50%; 
+        left: 50%;
+        transform: translate(-50%, -50%);
         margin-top: -220px;
     }
         
 </style>
+
+@await Html.PartialAsync("ErrorModelWindow", Model.Result)
+
+<div class="row mt-3">
+    @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Actively))
+    {
+        <form method="post" asp-page-handler="Deactivate">
+            <div class="col">
+                <button type="submit" class="btn btn-primary btn-block">Снять с публикации</button>
+            </div>
+        </form>
+    }
+    @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Inactive))
+    {
+        <form method="post" asp-page-handler="Activate">
+            <div class="col">
+                <button type="submit" class="btn btn-primary btn-block">Опубликовать</button>
+            </div>
+        </form>
+    }
+    <div class="col">
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+    </div>
+</div>
+
 <form method="post" enctype="multipart/form-data" id="form">
 
     <div class="row mt-3">
@@ -274,7 +300,7 @@
                     <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
                 </div>
                 <div class="col">
-                    <button type="button" class="btn btn-danger btn-block">Отменить и выйти</button>
+                    <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
                 </div>
             </div>
         </div>
@@ -283,48 +309,48 @@
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
 <script type="text/javascript">
-var myMap;
+    var myMap;
+    initializeMap();
         
-            initializeMap();
+    function initializeMap() {
+        ymaps.ready(function () {
+            let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+            let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
         
-            function initializeMap() {
-                ymaps.ready(function () {
-                    let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
-                    let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
+            myMap = new ymaps.Map("map", {
+                center: [latitudeValue, longitudeValue],
+                zoom: 7
+            });
         
-                    myMap = new ymaps.Map("map", {
-                        center: [latitudeValue, longitudeValue],
-                        zoom: 7
-                    });
-        
-                    var myGeoObject = new ymaps.GeoObject({
-                        geometry: {
-                            type: "Point",
-                            coordinates: [latitudeValue, longitudeValue]
-                        }
-                    });
-                    myMap.geoObjects.add(myGeoObject);
+            var myGeoObject = new ymaps.GeoObject({
+                geometry: {
+                    type: "Point",
+                    coordinates: [latitudeValue, longitudeValue]
+                }
+            });
                     
-                    myMap.events.add('boundschange', function (event) {
-                        var newCenter = event.get('newCenter');
-                        latitude = newCenter[0];
-                        longitude = newCenter[1];
+            myMap.geoObjects.add(myGeoObject);
+                    
+            myMap.events.add('boundschange', function (event) {
+                var newCenter = event.get('newCenter');
+                latitude = newCenter[0];
+                longitude = newCenter[1];
                                         
-                        let latitudeInfo = document.getElementById('latitude');
-                        latitudeInfo.value = latitude;
-                        let longitudeInfo = document.getElementById('longitude');
-                        longitudeInfo.value = longitude;
+                let latitudeInfo = document.getElementById('latitude');
+                latitudeInfo.value = latitude;
+                let longitudeInfo = document.getElementById('longitude');
+                longitudeInfo.value = longitude;
                                         
-                        ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
-                        var firstGeoObject = res.geoObjects.get(0);
-                        let address = document.getElementById('addressInfo');
-                        address.value = firstGeoObject.getAddressLine();
-                        });
-                                        
-                    });
+                ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+                let address = document.getElementById('addressInfo');
+                address.value = firstGeoObject.getAddressLine();
                 });
-            }
-    </script>
+                                        
+            });
+        });
+    }
+</script>
 <script>
     function autoResize(textarea) {
         textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто

@@ -647,4 +647,30 @@ public class AdsRepository : BaseRepository
 
         return new BaseResult();
     }
+
+    /// <summary>
+    /// Изменить статус объявления
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="adId"></param>
+    /// <param name="status"></param>
+    /// <returns></returns>
+    public async Task<BaseResult> ChangeStateStatus(
+        Guid userId,
+        Guid adId,
+        StateStatus status)
+    {
+        var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(adId)
+                                                            && a.UserId.Equals(userId));
+        if (ad is null)
+            return new BaseResult("Объявление не найдено");
+
+        ad.StatusId = status;
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<AdViewModel>()
+        };
+    }
 }
