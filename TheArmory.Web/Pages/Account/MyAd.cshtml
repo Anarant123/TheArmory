@@ -271,12 +271,17 @@
                             <input type="text" asp-for="Command.YouTubeLink" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
                             <span asp-validation-for="Command.YouTubeLink" class="text-danger"></span>
                         </div>
-                        <div id="youtubeVideo" class="row mt-3" style="display: none;">
-                            <iframe id="videoFrame" width="560" height="315" frameborder="0" allowfullscreen></iframe>
-                        </div>
+                        @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
+                        {
+                            var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
+                            <div id="youtubeVideo" class="row mt-3">
+                                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
+
 
             <div class="row address-container">
                 <div class="row mt-3">

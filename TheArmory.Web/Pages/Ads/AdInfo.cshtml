@@ -68,13 +68,13 @@
     }
 
     .image-cell {
-        width: 100px; /* Ширина ячейки */
-        height: 100px; /* Высота ячейки */
-        overflow: hidden; /* Скрытие избыточного контента */
-        display: flex; /* Использование flexbox */
-        align-items: center; /* Выравнивание по вертикали */
-        justify-content: center; /* Выравнивание по горизонтали */
-        margin: 0; /* Убираем отступы между ячейками */
+        width: 100px; 
+        height: 100px; 
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        margin: 0; 
     }
 
     .image-cell img {
@@ -174,13 +174,12 @@
 
 @if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
 {
+    var videoId = Model.AdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
     <div class="row mt-3">
         <div class="col">
-            <iframe width="560" height="315" src="@Model.AdViewModel.YouTubeLink"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen="true" referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
+            <div id="youtubeVideo" class="row mt-3">
+                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         </div>
     </div>
 }
