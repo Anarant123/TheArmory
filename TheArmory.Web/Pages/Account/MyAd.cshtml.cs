@@ -78,4 +78,11 @@ public class MyAd : PageModel
         if (!Result.Success) return Page();
         return await OnGetSelectedAsync();
     }
+    
+    public async Task<ActionResult> OnPostDeleteAsync()
+    {
+        Result = await _adsService.DeleteAd();
+        if (!Result.Success) return Page();
+        return RedirectToPage("/Account/PersonalInfo");
+    }
 }
