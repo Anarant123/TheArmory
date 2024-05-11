@@ -1,5 +1,13 @@
 ﻿@model TheArmory.Domain.Models.Responce.ViewModels.Ad.TileAdViewModel
 
+<style>
+    .card-img-top {
+        object-fit: cover;
+        height: 150px; 
+        width: 100%;
+    }
+</style>
+
 <a href="@Url.Page("MyAd", new { handler = "Select", id = Model.Id})" class="card-link" style="text-decoration: none; color: black;">
     <div class="card border">
         <div class="image-container">
