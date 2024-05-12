@@ -66,7 +66,7 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseQueryResult<TileAdViewModel>> GetFavoritesAds(BaseQueryItemsParams queryItemsParams)
     {
         try
@@ -88,7 +88,7 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseQueryResult<TileAdComplaintViewModel>> GetComplaintsAds(BaseQueryItemsParams queryItemsParams)
     {
         try
@@ -102,7 +102,8 @@ public class AdsService : BaseService<Ad>
                 return new BaseQueryResult<TileAdComplaintViewModel>(await response.Content.ReadAsStringAsync());
 
             var responseStream = await response.Content.ReadAsStreamAsync();
-            var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdComplaintViewModel>>(responseStream);
+            var result =
+                await JsonSerializer.DeserializeAsync<BaseQueryResult<TileAdComplaintViewModel>>(responseStream);
             return result ?? new BaseQueryResult<TileAdComplaintViewModel>(ErrorsMessage.SomethingWentWrong);
         }
         catch (Exception exception)
@@ -110,13 +111,14 @@ public class AdsService : BaseService<Ad>
             return new BaseQueryResult<TileAdComplaintViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<AdViewModel>> Select(AdSelectCommand command)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Select";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
@@ -130,13 +132,14 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<AdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> SelectMy(AdSelectCommand command)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/SelectMy";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
@@ -169,7 +172,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<AdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> GetSelectedMy()
     {
         try
@@ -188,7 +191,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<AdPublishInfoViewModel>> GetPublishInformation()
     {
         try
@@ -207,7 +210,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<AdPublishInfoViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<AdFilterViewModel>> GetFilterViewModel()
     {
         try
@@ -228,44 +231,47 @@ public class AdsService : BaseService<Ad>
     }
 
     public async Task<BaseResult<AdViewModel>> PostAd(AdCreateCommand command)
-{
-    try
     {
-        var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-        var formData = new MultipartFormDataContent();
-        formData.Add(new StringContent(command.Name), "name");
-        formData.Add(new StringContent(command.Price.ToString(CultureInfo.InvariantCulture)), "price");
-        formData.Add(new StringContent(command.Description ?? ""), "description");
-        formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
-        formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
-        if (command.Address != null) formData.Add(new StringContent(command.Address), "address");
-        if (command.Latitude != null) formData.Add(new StringContent(command.Latitude), "latitude");
-        if (command.Longitude != null) formData.Add(new StringContent(command.Longitude), "longitude");
-        formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
-        foreach (var characteristicsJson in command.Characteristics.Select(photo => JsonSerializer.Serialize(command.Characteristics)))
+        try
         {
-            formData.Add(new StringContent(characteristicsJson, Encoding.UTF8, "application/json"), "characteristics");
+            var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
+            var formData = new MultipartFormDataContent();
+            formData.Add(new StringContent(command.Name), "name");
+            formData.Add(new StringContent(command.Price.ToString(CultureInfo.InvariantCulture)), "price");
+            formData.Add(new StringContent(command.Description ?? ""), "description");
+            formData.Add(new StringContent(command.YouTubeLink ?? ""), "youtubeLink");
+            formData.Add(new StringContent(command.ConditionId.ToString()), "conditionId");
+            if (command.Address != null) formData.Add(new StringContent(command.Address), "address");
+            if (command.Latitude != null) formData.Add(new StringContent(command.Latitude), "latitude");
+            if (command.Longitude != null) formData.Add(new StringContent(command.Longitude), "longitude");
+            formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
+            var characteristicIndex = 0;
+            foreach (var characteristicJson in command.Characteristics.Select(characteristic => JsonSerializer.Serialize(characteristic)))
+            {
+                formData.Add(new StringContent(characteristicJson, Encoding.UTF8, "application/json"), $"characteristics[{characteristicIndex}]");
+                characteristicIndex++;
+            }
+
+            foreach (var photo in command.Photos)
+            {
+                var streamContent = new StreamContent(photo.OpenReadStream());
+                formData.Add(streamContent, "photos", photo.FileName);
+            }
+
+            var response = await httpClient.PostAsync(url, formData);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
+            return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
         }
-        foreach (var photo in command.Photos)
+        catch (Exception exception)
         {
-            var streamContent = new StreamContent(photo.OpenReadStream());
-            formData.Add(streamContent, "photos", photo.FileName);
+            return new BaseResult<AdViewModel>(exception.Message);
         }
-
-        var response = await httpClient.PostAsync(url, formData);
-        if (!response.IsSuccessStatusCode)
-            return new BaseResult<AdViewModel>(await response.Content.ReadAsStringAsync());
-
-        var responseStream = await response.Content.ReadAsStreamAsync();
-        var result = await JsonSerializer.DeserializeAsync<BaseResult<AdViewModel>>(responseStream);
-        return result ?? new BaseResult<AdViewModel>(ErrorsMessage.SomethingWentWrong);
     }
-    catch (Exception exception)
-    {
-        return new BaseResult<AdViewModel>(exception.Message);
-    }
-}
-    
+
     public async Task<BaseResult> ToFavorites()
     {
         // todo сделать аналогичное возвращение ошибки для остальных сервисов
@@ -288,7 +294,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> DeleteFavorite()
     {
         try
@@ -310,7 +316,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> DeactivateAd()
     {
         try
@@ -332,7 +338,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> ActivateAd()
     {
         try
@@ -354,7 +360,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> DeleteAd()
     {
         try
@@ -376,13 +382,14 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> Complaint(AdToComplaintCommand command)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Complaint";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             var responseStream = await response.Content.ReadAsStreamAsync();
             if (!response.IsSuccessStatusCode)
@@ -399,7 +406,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> Ban()
     {
         try
@@ -421,7 +428,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> Justify()
     {
         try
@@ -443,13 +450,14 @@ public class AdsService : BaseService<Ad>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> Update(AdUpdateCommand command)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json"));
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json"));
             var response = await httpClient.PutAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
@@ -462,5 +470,4 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-
 }

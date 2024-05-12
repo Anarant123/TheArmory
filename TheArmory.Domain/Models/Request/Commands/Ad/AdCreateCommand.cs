@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
+using TheArmory.Domain.Models.Request.Commands.Characteristic;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad
 {
@@ -65,8 +66,8 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         /// <summary>
         /// Набор характеристик
         /// </summary>
-        [JsonPropertyName("characteristics")] 
-        public List<Characteristic>? Characteristics { get; set; } = new List<Characteristic>();
+        [JsonPropertyName("сharacteristics")] 
+        public List<CharacteristicCreateCommand> Characteristics { get; set; } = new List<CharacteristicCreateCommand>();
 
         /// <summary>
         /// Фотографии

@@ -317,6 +317,7 @@ public class AdsRepository : BaseRepository
             YouTubeLink = command.YouTubeLink,
             ConditionId = command.ConditionId,
             UserId = userId,
+            Characteristics = new List<Characteristic>()
         };
 
         var address = command.Address ?? string.Empty;
@@ -338,10 +339,19 @@ public class AdsRepository : BaseRepository
             };
         }
 
+        if (command.Characteristics != null)
+            newAd.Characteristics.AddRange(command.Characteristics
+                .Select(s => new Characteristic()
+                { 
+                    Name = s.Name,
+                    Description = s.Description,
+                    AdId = newAd.Id
+                })
+                .ToList());
+
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
         if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
-
-
+        
         newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
@@ -350,11 +360,12 @@ public class AdsRepository : BaseRepository
 
         var ad = await Context.Ads
             .Include(a => a.Condition)
+            .Include(a => a.Characteristics)
             .Include(a => a.Medias)
             .Include(a => a.User)
             .FirstOrDefaultAsync(a => a.Id.Equals(newAd.Id));
 
-        return new BaseResult<AdViewModel>(new AdViewModel(newAd));
+        return new BaseResult<AdViewModel>(new AdViewModel(ad));
     }
 
 

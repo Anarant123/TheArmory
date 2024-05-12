@@ -124,6 +124,17 @@
                         </select>
                     </div>
                 </div>
+                <div class="row">
+                    <h1>Характеристики</h1>
+                    <div class="row mt-3" id="characteristics-container">
+                        
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-block" onclick="addCharacteristic()">Добавить характеристику</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -459,19 +470,49 @@
         return videoId;
     }
     
-    const categorySelect = document.getElementById('categorySelect');
-    const characteristicsBlock = document.getElementById('characteristics-block');
-    const huntingCategoryId = '3666fab5-1175-4e6c-b9ac-ff9b811e7d8a'; // замените на реальный ID
-    if (categorySelect.value === huntingCategoryId) 
-                characteristicsBlock.style.display = 'block'
+    let index = 0;
+    let characteristicsContainer = document.getElementById('characteristics-container');
     
-    categorySelect.addEventListener('change', function() {
-        const selectedCategoryId = categorySelect.value;
+    function addCharacteristic() {
+        let characteristicContainer = document.createElement('div');
+        characteristicContainer.className = 'row';
+        let characteristicNameContainer = document.createElement('div');
+        characteristicNameContainer.className = 'col-3';
+        let characteristicValueContainer = document.createElement('div');
+        characteristicValueContainer.className = 'col-8';
+        let characteristicDeleteContainer = document.createElement('div');
+        characteristicDeleteContainer.className = 'col-1';
         
-        if (selectedCategoryId === huntingCategoryId) {
-            characteristicsBlock.style.display = 'block';
-        } else {
-            characteristicsBlock.style.display = 'none';
-        }
-    });
+        let characteristicNameInput = document.createElement('input');
+        characteristicNameInput.type = 'text';
+        characteristicNameInput.name = `Command.Characteristics[${index}].Name`;
+        characteristicNameInput.className = 'form-control mb-3';
+        characteristicNameInput.placeholder = 'Наименование характеристики';
+        
+        let characteristicValueInput = document.createElement('input');
+        characteristicValueInput.type = 'text';
+        characteristicValueInput.name = `Command.Characteristics[${index}].Value`;
+        characteristicValueInput.className = 'form-control mb-3';
+        characteristicValueInput.placeholder = 'Значение характеристики';
+        
+        let removeCharacteristicButton = document.createElement('button');
+        removeCharacteristicButton.type = 'button';
+        removeCharacteristicButton.className = 'btn btn-danger btn-block mb-3';
+        removeCharacteristicButton.textContent = 'Удалить';
+        removeCharacteristicButton.onclick = function() {
+            characteristicsContainer.removeChild(characteristicContainer);
+            index--;
+        };
+        
+        characteristicNameContainer.appendChild(characteristicNameInput);
+        characteristicValueContainer.appendChild(characteristicValueInput);
+        characteristicDeleteContainer.appendChild(removeCharacteristicButton);
+        
+        characteristicContainer.appendChild(characteristicNameContainer);
+        characteristicContainer.appendChild(characteristicValueContainer);
+        characteristicContainer.appendChild(characteristicDeleteContainer);
+        
+        characteristicsContainer.appendChild(characteristicContainer);
+        index++;
+    }
 </script>
