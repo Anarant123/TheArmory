@@ -428,43 +428,78 @@ public class AdsRepository : BaseRepository
     }
 
 
-    // /// <summary>
-    // /// Обновление объявления
-    // /// </summary>
-    // /// <param name="userId"></param>
-    // /// <param name="command"></param>
-    // /// <returns></returns>
-    // public async Task<BaseResult<AdViewModel>> Update(
-    //     Guid userId,
-    //     AdUpdateCommand command)
-    // {
-    //     var ad = await Context.Ads.FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
-    //     if (ad is null)
-    //         return new BaseResult<AdViewModel>("Объявление не найдено");
-    //
-    //     if (!string.IsNullOrEmpty(command.Name))
-    //         ad.Name = command.Name;
-    //     if (command.Price is not null)
-    //     {
-    //         ad.OldPrice = ad.Price;
-    //         ad.Price = Convert.ToDecimal(command.Price);
-    //     }
-    //
-    //     if (!string.IsNullOrEmpty(command.Description))
-    //         ad.Description = command.Description;
-    //     if (!string.IsNullOrEmpty(command.YouToubeLink))
-    //         ad.YouTubeLink = command.YouToubeLink;
-    //     if (command.ConditionId is not null)
-    //         ad.ConditionId = (WeaponCondition)command.ConditionId;
-    //     if (command.RegionId is not null)
-    //         ad.RegionId = (Guid)command.RegionId;
-    //
-    //     return await Context.SaveChangesAsync() switch
-    //     {
-    //         0 => new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных"),
-    //         _ => new BaseResult<AdViewModel>(new AdViewModel(ad))
-    //     };
-    // }
+    /// <summary>
+    /// Обновление объявления
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<MyAdViewModel>> Update(
+    Guid userId,
+    AdUpdateCommand command)
+{
+    var ad = await Context.Ads
+        .Include(a => a.Medias)
+        .Include(a => a.Condition)
+        .Include(a => a.Region)
+        .Include(a => a.User)
+        .ThenInclude(u => u.Contacts)
+        .Include(a => a.User)
+        .ThenInclude(u => u.Ads)
+        .Include(a => a.Location)
+        .Include(a => a.Characteristic)
+        .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
+
+    if (ad is null)
+        return new BaseResult<MyAdViewModel>("Объявление не найдено");
+
+    if (!string.IsNullOrEmpty(command.Name))
+        ad.Name = command.Name;
+
+    if (command.Price is not null)
+    {
+        ad.OldPrice = ad.Price;
+        ad.Price = command.Price.Value;
+    }
+
+    if (!string.IsNullOrEmpty(command.Description))
+        ad.Description = command.Description;
+
+    if (!string.IsNullOrEmpty(command.YouTubeLink))
+        ad.YouTubeLink = command.YouTubeLink;
+
+    if (command.ConditionId is not null)
+        ad.ConditionId = command.ConditionId.Value;
+
+  
+    if (command.CaliberId is not null || command.WeaponTypeId is not null || command.BarrelPositionId is not null || command.YearOfProduction is not null)
+    {
+        if (ad.CharacteristicId is null)
+            ad.Characteristic = new Characteristic();
+
+        if (command.CaliberId is not null)
+            ad.Characteristic.CaliberId = command.CaliberId.Value;
+
+        if (command.WeaponTypeId is not null)
+            ad.Characteristic.WeaponTypeId = command.WeaponTypeId.Value;
+
+        if (command.BarrelPositionId is not null)
+            ad.Characteristic.BarrelPositionId = command.BarrelPositionId.Value;
+
+        if (command.YearOfProduction is not null)
+            ad.Characteristic.YearOfProduction = command.YearOfProduction.Value;
+    }
+
+    var result = await Context.SaveChangesAsync();
+
+    return result switch
+    {
+        0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
+        _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
+    };
+}
+
+
 
     /// <summary>
     /// Добавить объявление в избранное

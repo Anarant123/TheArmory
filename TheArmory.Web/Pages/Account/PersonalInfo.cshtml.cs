@@ -22,14 +22,10 @@ public class PersonalInfo : PageModel
     
     public readonly string BaseUrl;
     
-    [BindProperty]
-    public UserPersonalInfoViewModel UserInfo { get; set; }
-    [BindProperty]
-    public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    [BindProperty]
-    public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    [BindProperty]
-    public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+    [BindProperty] public UserPersonalInfoViewModel UserInfo { get; set; }
+    [BindProperty] public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+    [BindProperty] public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+    [BindProperty] public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
 
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }

@@ -22,7 +22,7 @@ public class MyAd : PageModel
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
-    [BindProperty] public AdUpdateCommand Command { get; set; }
+    [BindProperty] public AdUpdateCommand UpdateCommand { get; set; }
     
     [BindProperty] public MyAdViewModel MyAdViewModel { get; set; }
     
@@ -84,5 +84,12 @@ public class MyAd : PageModel
         Result = await _adsService.DeleteAd();
         if (!Result.Success) return Page();
         return RedirectToPage("/Account/PersonalInfo");
+    }
+
+    public async Task<ActionResult> OnPostUpdateAsync()
+    {
+        Result = await _adsService.Update(UpdateCommand);
+        if (!Result.Success) return Page();
+        return await OnGetSelectedAsync();
     }
 }

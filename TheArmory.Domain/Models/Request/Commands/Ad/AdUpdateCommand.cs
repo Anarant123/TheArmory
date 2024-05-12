@@ -1,73 +1,80 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Enums;
+using TheArmory.Domain.Models.Request.Commands.Ad;
 
-namespace TheArmory.Domain.Models.Request.Commands.Ad;
-
-public class AdUpdateCommand
+public class AdUpdateCommand : AdCommand
 {
     /// <summary>
     /// Наименование
     /// </summary>
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    [AllowNull]
+    public string? Name { get; set; }
 
     /// <summary>
     /// Цена
     /// </summary>
     [JsonPropertyName("price")]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     /// <summary>
     /// Описание
     /// </summary>
     [JsonPropertyName("description")]
-    public string? Description { get; set; } = string.Empty;
+    [AllowNull]
+    public string? Description { get; set; }
 
     /// <summary>
     /// Ссылка на YouTube видео с обзором
     /// </summary>
     [JsonPropertyName("youtubeLink")]
-    public string? YouTubeLink { get; set; } = string.Empty;
+    [AllowNull]
+    public string? YouTubeLink { get; set; }
 
     /// <summary>
     /// Id Состояния
     /// </summary>
     [JsonPropertyName("conditionId")]
-    public WeaponCondition ConditionId { get; set; }
+    public WeaponCondition? ConditionId { get; set; }
 
     /// <summary>
     /// Адрес
     /// </summary>
     [JsonPropertyName("address")]
-    public string? Address { get; set; } = string.Empty;
+    [AllowNull]
+    public string? Address { get; set; }
 
     /// <summary>
     /// Широта
     /// </summary>
     [JsonPropertyName("latitude")]
-    public string? Latitude { get; set; } = string.Empty;
+    [AllowNull]
+    public string? Latitude { get; set; }
 
     /// <summary>
     /// Долгота
     /// </summary>
     [JsonPropertyName("longitude")]
-    public string? Longitude { get; set; } = string.Empty;
+    [AllowNull]
+    public string? Longitude { get; set; }
 
     /// <summary>
     /// Id Категории
     /// </summary>
     [JsonPropertyName("CategoryId")]
-    public Guid CategoryId { get; set; } = Guid.Empty;
+    public Guid? CategoryId { get; set; }
 
-    [JsonPropertyName("caliberId")] 
-    public Guid? CaliberId { get; set; } = Guid.Empty;
+    [JsonPropertyName("caliberId")]
+    public Guid? CaliberId { get; set; }
 
-    [JsonPropertyName("weaponTypeId")] 
-    public Guid? WeaponTypeId { get; set; } = Guid.Empty;
+    [JsonPropertyName("weaponTypeId")]
+    public Guid? WeaponTypeId { get; set; }
 
-    [JsonPropertyName("barrelPositionId")] 
-    public Guid? BarrelPositionId { get; set; } = Guid.Empty;
+    [JsonPropertyName("barrelPositionId")]
+    public Guid? BarrelPositionId { get; set; }
 
-    [JsonPropertyName("yearOfProduction")] 
-    public int? YearOfProduction { get; set; } = 0;
+    [JsonPropertyName("yearOfProduction")]
+    public int? YearOfProduction { get; set; }
 }

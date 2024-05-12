@@ -402,6 +402,35 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Редактировать
+    /// </summary>
+    /// <returns></returns>
+    [Authorize(Roles = "Client")]
+    [HttpPut]
+    [Route("")]
+    public async Task<ActionResult<BaseResult>> UpdateAd(
+        [FromBody]AdUpdateCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
+
+        var result = await _adsRepository.Update(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Снять с публикации
     /// </summary>
     /// <returns></returns>

@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<form method="post" enctype="multipart/form-data" id="form">
+<form method="post" enctype="multipart/form-data" asp-page-handler="Update">
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="row">
@@ -99,20 +99,20 @@
                 <h1>Параметры</h1>
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.Name" class="form-label">Наименование:</label>
+                        <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
                     </div>
                     <div class="col-9">
-                        <input type="text" asp-for="Command.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
-                        <span asp-validation-for="Command.Name" class="text-danger"></span>
+                        <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
+                        <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.ConditionId" class="form-label">Состояние:</label>
+                        <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
                     </div>
                     <div class="col-9">
-                        <select asp-for="Command.ConditionId" class="form-select" required="Обязательно к заполнению">
+                        <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
                             <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
                             @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
                             {
@@ -127,26 +127,26 @@
                 <h1>Подробности</h1>
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.Description" class="form-label">Описание:</label>
+                        <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
                     </div>
                     <div class="col-9">
-                        <input type="text" asp-for="Command.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"/>
+                        <input type="text" asp-for="UpdateCommand.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"/>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.Price" class="form-label">Цена:</label>
+                        <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
                     </div>
                     <div class="col-9">
-                        <input type="number" asp-for="Command.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
+                        <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.CategoryId" class="form-label">Категория:</label>
+                        <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
                     </div>
                     <div class="col-9">
-                        <select asp-for="Command.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                        <select asp-for="UpdateCommand.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
                             <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
                             @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
                             {
@@ -160,10 +160,10 @@
                     <h1>Характеристики</h1>
                     <div class="row mt-3">
                         <div class="col-3">
-                            <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
+                            <label asp-for="UpdateCommand.WeaponTypeId" class="form-label">Тип:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="UpdateCommand.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.WeaponTypeId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Id">@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Name</option>
@@ -177,10 +177,10 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-3">
-                            <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
+                            <label asp-for="UpdateCommand.CaliberId" class="form-label">Калибр:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.CaliberId" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="UpdateCommand.CaliberId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.CaliberId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Id">@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Name</option>
@@ -195,10 +195,10 @@
 
                     <div class="row mt-3">
                         <div class="col-3">
-                            <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
+                            <label asp-for="UpdateCommand.BarrelPositionId" class="form-label">Расположение ствола:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
+                            <select asp-for="UpdateCommand.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
                                 @if (Model.MyAdViewModel.BarrelPositionId != Guid.Empty)
                                 {
                                     <option value="@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Id">@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Name</option>
@@ -212,10 +212,10 @@
                     </div>
                     <div class="row mt-3">
                         <div class="col-3">
-                            <label asp-for="Command.YearOfProduction" class="form-label">Год выпуска:</label>
+                            <label asp-for="UpdateCommand.YearOfProduction" class="form-label">Год выпуска:</label>
                         </div>
                         <div class="col-9">
-                            <select asp-for="Command.YearOfProduction" class="form-select">
+                            <select asp-for="UpdateCommand.YearOfProduction" class="form-select">
                                 @if (Model.MyAdViewModel.YearOfProduction != 0)
                                 {
                                     <option value="@Model.MyAdViewModel.YearOfProduction">@Model.MyAdViewModel.YearOfProduction</option>
@@ -263,12 +263,12 @@
                 <h1>Видео</h1>
                 <div class="row mt-3">
                     <div class="col-3">
-                        <label asp-for="Command.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
+                        <label asp-for="UpdateCommand.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
                     </div>
                     <div class="col-9">
                         <div class="row">
-                            <input type="text" asp-for="Command.YouTubeLink" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                            <span asp-validation-for="Command.YouTubeLink" class="text-danger"></span>
+                            <input type="text" asp-for="UpdateCommand.YouTubeLink" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                            <span asp-validation-for="UpdateCommand.YouTubeLink" class="text-danger"></span>
                         </div>
                         @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
                         {
@@ -285,7 +285,7 @@
             <div class="row address-container">
                 <div class="row mt-3">
                     <div class="d-flex align-items-start justify-content-start">
-                        <input type="text" id="addressInfo" asp-for="Command.Address" value="@Model.MyAdViewModel.Location.Address" class="form-control" placeholder="Адрес" readonly="">
+                        <input type="text" id="addressInfo" asp-for="UpdateCommand.Address" value="@Model.MyAdViewModel.Location.Address" class="form-control" placeholder="Адрес" readonly="">
                     </div>
                 </div>
 
