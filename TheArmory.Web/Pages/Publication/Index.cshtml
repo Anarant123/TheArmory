@@ -275,13 +275,13 @@
                 });
 
                 // Создание метки и добавление её на карту.
-                var myGeoObject = new ymaps.GeoObject({
-                    geometry: {
-                        type: "Point", // тип геометрии - точка
-                        coordinates: [latitude, longitude] // координаты точки
-                    }
-                });
-                myMap.geoObjects.add(myGeoObject);
+                // var myGeoObject = new ymaps.GeoObject({
+                //     geometry: {
+                //         type: "Point", // тип геометрии - точка
+                //         coordinates: [latitude, longitude] // координаты точки
+                //     }
+                // });
+                // myMap.geoObjects.add(myGeoObject);
 
                 // Добавляем обработчик события перемещения карты
                 myMap.events.add('boundschange', function (event) {
@@ -290,7 +290,7 @@
                     latitude = newCenter[0];
                     longitude = newCenter[1];
                     // Обновляем координаты метки
-                    myGeoObject.geometry.setCoordinates([latitude, longitude]);
+                    // myGeoObject.geometry.setCoordinates([latitude, longitude]);
                     let latitudeInfo = document.getElementById('latitude');
                     latitudeInfo.value = latitude;
                     let longitudeInfo = document.getElementById('longitude');
