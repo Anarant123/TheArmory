@@ -51,7 +51,7 @@ public class Index : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Ads/MyAd");
+            return RedirectToPage("/Account/MyAd");
         }
 
         await OnGetAsync();
