@@ -36,6 +36,7 @@ public class AdsRepository : BaseRepository
     {
         var ad = await Context.Ads
             .Include(a => a.Medias)
+            .Include(a => a.Characteristics)
             .Include(a => a.Condition)
             .Include(a => a.Region)
             .Include(a => a.User)
@@ -62,16 +63,7 @@ public class AdsRepository : BaseRepository
         var isFavorite = await Context.Favorites.AnyAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
         var isComplaint = await Context.Complaints.AnyAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(adId));
 
-        if (ad.CharacteristicId is null ) return new BaseResult<AdViewModel>(new AdViewModel(ad, isFavorite, isComplaint));
-
-        var characteristic = await Context.Characteristics
-            .AsNoTracking()
-            .Include(c => c.BarrelPosition)
-            .Include(c => c.WeaponType)
-            .Include(c => c.Caliber)
-            .FirstOrDefaultAsync(c => c.Id.Equals(ad.CharacteristicId));
-
-        return new BaseResult<AdViewModel>(new AdViewModel(ad, characteristic!, isFavorite, isComplaint));
+        return new BaseResult<AdViewModel>(new AdViewModel(ad, isFavorite, isComplaint));
     }
 
     /// <summary>
@@ -180,17 +172,11 @@ public class AdsRepository : BaseRepository
     {
         var conditions = await Context.Conditions.ToListAsync();
         var categories = await Context.Categories.ToListAsync();
-        var calibers = await Context.Calibers.ToListAsync();
-        var weaponTypes = await Context.WeaponTypes.ToListAsync();
-        var barrelPositions = await Context.BarrelPositions.ToListAsync();
 
         var result = new AdPublishInfoViewModel
         {
             Conditions = conditions,
             Categories = categories,
-            Calibers = calibers,
-            WeaponTypes = weaponTypes,
-            BarrelPositions = barrelPositions
         };
 
         return new BaseResult<AdPublishInfoViewModel>(result) { };
@@ -204,9 +190,6 @@ public class AdsRepository : BaseRepository
     {
         var conditions = await Context.Conditions.ToListAsync();
         var categories = await Context.Categories.ToListAsync();
-        var calibers = await Context.Calibers.ToListAsync();
-        var weaponTypes = await Context.WeaponTypes.ToListAsync();
-        var barrelPositions = await Context.BarrelPositions.ToListAsync();
         var regions = await Context.Regions.ToListAsync();
 
         var result = new AdFilterViewModel
@@ -214,9 +197,6 @@ public class AdsRepository : BaseRepository
             Regions = regions,
             Conditions = conditions,
             Categories = categories,
-            Calibers = calibers,
-            WeaponTypes = weaponTypes,
-            BarrelPositions = barrelPositions
         };
 
         return new BaseResult<AdFilterViewModel>(result) { };
@@ -237,12 +217,7 @@ public class AdsRepository : BaseRepository
 
         var adsQuery = Context.Ads
             .Include(a => a.Medias)
-            .Include(a => a.Characteristic)
-            .ThenInclude(c => c.WeaponType)
-            .Include(a => a.Characteristic)
-            .ThenInclude(c => c.BarrelPosition)
-            .Include(a => a.Characteristic)
-            .ThenInclude(c => c.Caliber)
+            .Include(a => a.Characteristics)
             .Include(a => a.Category)
             .Where(a => !a.UserId.Equals(userId)
                         && a.StatusId.Equals(StateStatus.Actively));
@@ -259,27 +234,7 @@ public class AdsRepository : BaseRepository
             Console.WriteLine($"Filter by region: {queryItemsParams.RegionId}");
         }
 
-        if (queryItemsParams.CaliberId != null)
-        {
-            adsQuery = adsQuery.Where(a =>
-                a.Characteristic != null && a.Characteristic.CaliberId.Equals(queryItemsParams.CaliberId));
-            Console.WriteLine($"Filter by caliber: {queryItemsParams.CaliberId}");
-        }
-
-        if (queryItemsParams.WeaponTypeId != null)
-        {
-            adsQuery = adsQuery.Where(a =>
-                a.Characteristic != null && a.Characteristic.WeaponTypeId.Equals(queryItemsParams.WeaponTypeId));
-            Console.WriteLine($"Filter by weapon type: {queryItemsParams.WeaponTypeId}");
-        }
-
-        if (queryItemsParams.BarrelPositionId != null)
-        {
-            adsQuery = adsQuery.Where(a =>
-                a.Characteristic != null &&
-                a.Characteristic.BarrelPositionId.Equals(queryItemsParams.BarrelPositionId));
-            Console.WriteLine($"Filter by barrel position: {queryItemsParams.BarrelPositionId}");
-        }
+        
 
         if (queryItemsParams.PriceFrom > 0 || queryItemsParams.PriceTo < 10000000)
         {
@@ -292,10 +247,7 @@ public class AdsRepository : BaseRepository
             adsQuery = adsQuery.Where(a => a.Name.ToLower().Contains(filter)
                                            || (a.Description != null && a.Description.ToLower().Contains(filter))
                                            || a.Category.Name.ToLower().Contains(filter)
-                                           || (a.Region != null && a.Region.Name.ToLower().Contains(filter))
-                                           || (a.Characteristic != null && a.Characteristic.WeaponType.Name.ToLower().Contains(filter))
-                                           || (a.Characteristic != null && a.Characteristic.BarrelPosition.Name.ToLower().Contains(filter))
-                                           || (a.Characteristic != null && a.Characteristic.Caliber.Name.ToLower().Contains(filter)));
+                                           || (a.Region != null && a.Region.Name.ToLower().Contains(filter)));
             Console.WriteLine($"Filter by text: {filter}");
         }
 
@@ -374,29 +326,7 @@ public class AdsRepository : BaseRepository
             newAd.RegionId = region.Id;
 
         var category = await Context.Categories.FirstOrDefaultAsync(c => c.Id.Equals(command.CategoryId));
-        if (category is not null)
-        {
-            newAd.CategoryId = category.Id;
-            if (category.Name.Equals("Охотничье оружие")
-                && command.WeaponTypeId is not null
-                && command.CaliberId is not null
-                && command.BarrelPositionId is not null
-                && command.YearOfProduction is not null)
-            {
-                var characteristic = new Characteristic()
-                {
-                    WeaponTypeId = (Guid)command.WeaponTypeId,
-                    CaliberId = (Guid)command.CaliberId,
-                    BarrelPositionId = (Guid)command.BarrelPositionId,
-                    YearOfProduction = (int)command.YearOfProduction
-                };
-                newAd.Characteristic = characteristic;
-            }
-            else if (category.Name.Equals("Охотничье оружие"))
-            {
-                return new BaseResult<AdViewModel>("Характеристики необходимо заполнить до конца");
-            }
-        }
+        if (category is not null) newAd.CategoryId = category.Id;
 
         if (!string.IsNullOrEmpty(command.Latitude) && !string.IsNullOrEmpty(command.Longitude))
         {
@@ -447,7 +377,7 @@ public class AdsRepository : BaseRepository
         .Include(a => a.User)
         .ThenInclude(u => u.Ads)
         .Include(a => a.Location)
-        .Include(a => a.Characteristic)
+        .Include(a => a.Characteristics)
         .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
 
     if (ad is null)
@@ -470,25 +400,6 @@ public class AdsRepository : BaseRepository
 
     if (command.ConditionId is not null)
         ad.ConditionId = command.ConditionId.Value;
-
-  
-    if (command.CaliberId is not null || command.WeaponTypeId is not null || command.BarrelPositionId is not null || command.YearOfProduction is not null)
-    {
-        if (ad.CharacteristicId is null)
-            ad.Characteristic = new Characteristic();
-
-        if (command.CaliberId is not null)
-            ad.Characteristic.CaliberId = command.CaliberId.Value;
-
-        if (command.WeaponTypeId is not null)
-            ad.Characteristic.WeaponTypeId = command.WeaponTypeId.Value;
-
-        if (command.BarrelPositionId is not null)
-            ad.Characteristic.BarrelPositionId = command.BarrelPositionId.Value;
-
-        if (command.YearOfProduction is not null)
-            ad.Characteristic.YearOfProduction = command.YearOfProduction.Value;
-    }
 
     var result = await Context.SaveChangesAsync();
 

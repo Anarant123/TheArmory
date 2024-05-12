@@ -1,24 +1,24 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace TheArmory.Domain.Models.Database;
 
 public class Characteristic : DbEntity
 {
-    [Column("caliberId")]
-    public Guid CaliberId { get; set; }
+    [Column("name")]
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
+   
+    [Column("description")]
+    [JsonPropertyName("description")]
+    public string Description { get; set; }
     
-    [Column("weaponTypeId")]
-    public Guid WeaponTypeId { get; set; }
-    
-    [Column("barrelPositionId")]
-    public Guid BarrelPositionId { get; set; }
-    
-    [Column("yearOfProduction")]
-    public int YearOfProduction  { get; set; }
+    [Column("adId")]
+    [JsonIgnore]
+    public Guid AdId { get; set; }
     
     // virtual
-    public virtual WeaponType WeaponType { get; set; }
-    public virtual BarrelPosition BarrelPosition { get; set; }
-    public virtual Caliber Caliber { get; set; }
-    public virtual List<Ad> Ads { get; set; }
+    
+    [JsonIgnore]
+    public virtual Ad Ad { get; set; }
 }

@@ -38,44 +38,6 @@
                         }
                     </select>
                 </div>
-                <!-- Фильтр по харатеристикам -->
-                <div id="characteristics-block" style="display:none;">
-                    <!-- Фильтр по калибру -->
-                    <div class="form-group">
-                        <label for="category">Калибр:</label>
-                        <select asp-for="QueryParams.CaliberId" class="form-select">
-                            <option value="">Калибр</option>
-                            @foreach (var caliber in Model.AdFilterViewModel.Calibers)
-                            {
-                                <option value="@caliber.Id">@caliber.Name</option>
-                            }
-                        </select>
-                    </div>
-
-                    <!-- Фильтр по типу -->
-                    <div class="form-group">
-                        <label for="category">Тип:</label>
-                        <select asp-for="QueryParams.WeaponTypeId" class="form-select">
-                            <option value="">Тип</option>
-                            @foreach (var type in Model.AdFilterViewModel.WeaponTypes)
-                            {
-                                <option value="@type.Id">@type.Name</option>
-                            }
-                        </select>
-                    </div>
-
-                    <!-- Фильтр по расположению ствола -->
-                    <div class="form-group">
-                        <label for="category">Тип:</label>
-                        <select asp-for="QueryParams.BarrelPositionId" class="form-select">
-                            <option value="">Тип</option>
-                            @foreach (var position in Model.AdFilterViewModel.BarrelPositions)
-                            {
-                                <option value="@position.Id">@position.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Применить фильтры</button>
                 </div>

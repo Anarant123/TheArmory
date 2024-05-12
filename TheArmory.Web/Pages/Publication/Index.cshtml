@@ -124,66 +124,6 @@
                         </select>
                     </div>
                 </div>
-
-                <div id="characteristics-block" style="display: none">
-                    <h1>Характеристики</h1>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="Command.WeaponTypeId" class="form-label">Тип:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="Command.WeaponTypeId" class="form-select">
-                                <option value="">Выберите тип</option>
-                                @foreach (var type in Model.PublishInfoViewModel.WeaponTypes)
-                                {
-                                    <option value="@type.Id">@type.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="Command.CaliberId" class="form-label">Калибр:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="Command.CaliberId" class="form-select">
-                                <option value="">Выберите калибр</option>
-                                @foreach (var caliber in Model.PublishInfoViewModel.Calibers)
-                                {
-                                    <option value="@caliber.Id">@caliber.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="Command.BarrelPositionId" class="form-label">Расположение ствола:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="Command.BarrelPositionId" class="form-select">
-                                <option value="">Выберите расположение ствола</option>
-                                @foreach (var position in Model.PublishInfoViewModel.BarrelPositions)
-                                {
-                                    <option value="@position.Id">@position.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="Command.YearOfProduction" class="form-label">Год выпуска:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="Command.YearOfProduction" class="form-select">
-                                @for (var i = DateTime.Now.Year; i >= 1900; i--)
-                                {
-                                    <option value="@i">@i</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <div class="row">

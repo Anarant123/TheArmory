@@ -13,13 +13,4 @@ public class AdFilterViewModel
 
     [JsonPropertyName("categories")]
     public List<Category> Categories { get; set; }
-
-    [JsonPropertyName("calibers")]
-    public List<Caliber> Calibers { get; set; }
-
-    [JsonPropertyName("weaponTypes")]
-    public List<WeaponType> WeaponTypes { get; set; }
-
-    [JsonPropertyName("barrelPositions")]
-    public List<BarrelPosition> BarrelPositions { get; set; }
 }

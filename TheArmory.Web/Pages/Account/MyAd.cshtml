@@ -156,81 +156,7 @@
                     </div>
                 </div>
 
-                <div id="characteristicsblock">
-                    <h1>Характеристики</h1>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="UpdateCommand.WeaponTypeId" class="form-label">Тип:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="UpdateCommand.WeaponTypeId" class="form-select" required="Обязательно к заполнению">
-                                @if (Model.MyAdViewModel.WeaponTypeId != Guid.Empty)
-                                {
-                                    <option value="@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Id">@Model.PublishInfoViewModel.WeaponTypes.First(c => c.Id.Equals(Model.MyAdViewModel.WeaponTypeId)).Name</option>
-                                }
-                                @foreach (var type in Model.PublishInfoViewModel.WeaponTypes.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.WeaponTypeId)))
-                                {
-                                    <option value="@type.Id">@type.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="UpdateCommand.CaliberId" class="form-label">Калибр:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="UpdateCommand.CaliberId" class="form-select" required="Обязательно к заполнению">
-                                @if (Model.MyAdViewModel.CaliberId != Guid.Empty)
-                                {
-                                    <option value="@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Id">@Model.PublishInfoViewModel.Calibers.First(c => c.Id.Equals(Model.MyAdViewModel.CaliberId)).Name</option>
-                                }
-                                @foreach (var caliber in Model.PublishInfoViewModel.Calibers.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CaliberId)))
-                                {
-                                    <option value="@caliber.Id">@caliber.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="UpdateCommand.BarrelPositionId" class="form-label">Расположение ствола:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="UpdateCommand.BarrelPositionId" class="form-select" required="Обязательно к заполнению">
-                                @if (Model.MyAdViewModel.BarrelPositionId != Guid.Empty)
-                                {
-                                    <option value="@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Id">@Model.PublishInfoViewModel.BarrelPositions.First(c => c.Id.Equals(Model.MyAdViewModel.BarrelPositionId)).Name</option>
-                                }
-                                @foreach (var position in Model.PublishInfoViewModel.BarrelPositions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.BarrelPositionId)))
-                                {
-                                    <option value="@position.Id">@position.Name</option>
-                                }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col-3">
-                            <label asp-for="UpdateCommand.YearOfProduction" class="form-label">Год выпуска:</label>
-                        </div>
-                        <div class="col-9">
-                            <select asp-for="UpdateCommand.YearOfProduction" class="form-select">
-                                @if (Model.MyAdViewModel.YearOfProduction != 0)
-                                {
-                                    <option value="@Model.MyAdViewModel.YearOfProduction">@Model.MyAdViewModel.YearOfProduction</option>
-                                }
-                                @for (var i = DateTime.Now.Year; i >= 1900; i--)
-                                {
-                                    if (!i.Equals(@Model.MyAdViewModel.YearOfProduction))
-                                    {
-                                        <option value="@i">@i</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="row">
@@ -285,14 +211,14 @@
             <div class="row address-container">
                 <div class="row mt-3">
                     <div class="d-flex align-items-start justify-content-start">
-                        <input type="text" id="addressInfo" asp-for="UpdateCommand.Address" value="@Model.MyAdViewModel.Location.Address" class="form-control" placeholder="Адрес" readonly="">
+                        <input type="text" id="addressInfo" asp-for="UpdateCommand.Address" value="@Model.MyAdViewModel.Location?.Address" class="form-control" placeholder="Адрес" readonly="">
                     </div>
                 </div>
 
                 <div class="row mt-3">
                     <div class="col">
-                        <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location.Latitude" class="d-none">
-                        <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location.Longitude" class="d-none">
+                        <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
+                        <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
                         <div class="map-container">
                             <div id="map" class="square" style="height: 400px"></div>
                             <div class="marker-container d-none">
@@ -476,34 +402,4 @@
     document.querySelector('.btn-danger').addEventListener('click', function () {
         removeImage(currentImageIndex);
     });
-
-    const categorySelect = document.getElementById('categorySelect');
-    const characteristicsBlock = document.getElementById('characteristicsblock');
-   
-    function categoryChanged() {
-        const selectedCategoryId = document.getElementById('categorySelect').value;
-   
-        if (selectedCategoryId === "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
-            showCharacteristicsBlock();
-        } else {
-            hideCharacteristicsBlock();
-        }
-    }
-   
-    function showCharacteristicsBlock() {
-        characteristicsBlock.style.display = 'block'; 
-    }
-   
-    function hideCharacteristicsBlock() {
-        characteristicsBlock.style.display = 'none'; 
-    }
-       
-    categorySelect.addEventListener('change', categoryChanged);
-   
-    if (categorySelect.value === "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
-        showCharacteristicsBlock();
-    } else {
-        hideCharacteristicsBlock();
-    }
-    
 </script>

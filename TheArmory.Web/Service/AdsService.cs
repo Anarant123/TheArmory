@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
@@ -241,10 +242,10 @@ public class AdsService : BaseService<Ad>
         if (command.Latitude != null) formData.Add(new StringContent(command.Latitude), "latitude");
         if (command.Longitude != null) formData.Add(new StringContent(command.Longitude), "longitude");
         formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
-        if (command.CaliberId.HasValue) formData.Add(new StringContent(command.CaliberId.Value.ToString()), "caliberId");
-        if (command.WeaponTypeId.HasValue) formData.Add(new StringContent(command.WeaponTypeId.Value.ToString()), "weaponTypeId");
-        if (command.BarrelPositionId.HasValue) formData.Add(new StringContent(command.BarrelPositionId.Value.ToString()), "barrelPositionId");
-        if (command.YearOfProduction.HasValue) formData.Add(new StringContent(command.YearOfProduction.Value.ToString()), "yearOfProduction");
+        foreach (var characteristicsJson in command.Characteristics.Select(photo => JsonSerializer.Serialize(command.Characteristics)))
+        {
+            formData.Add(new StringContent(characteristicsJson, Encoding.UTF8, "application/json"), "characteristics");
+        }
         foreach (var photo in command.Photos)
         {
             var streamContent = new StreamContent(photo.OpenReadStream());

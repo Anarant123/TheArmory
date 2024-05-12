@@ -154,33 +154,4 @@ public class MyAdViewModel
         IsFavorite = isFavorite;
         IsComplaint = isComplaint;
     }
-
-    public MyAdViewModel(Database.Ad ad, Characteristic characteristic, bool isFavorite, bool isComplaint)
-    {
-        Id = ad.Id;
-        Name = ad.Name;
-        Price = ad.Price;
-        OldPrice = ad.OldPrice;
-        Description = ad.Description;
-        CreationDateTime = ad.CreationDateTime;
-
-        CountOfViews = ad.CountOfViews;
-        CountOfViewsToday = ad.CountOfViewsToday;
-
-        YouTubeLink = ad.YouTubeLink;
-        ConditionId = ad.ConditionId;
-        StatusId = ad.StatusId;
-        Images = ad.Medias.Select(s => new MediaInfoViewModel(ad, s)).ToList();
-        User = new UserContactsViewModel(ad.User);
-        Location = ad.Location;
-        CategoryId = ad.CategoryId;
-
-        CaliberId = characteristic.CaliberId;
-        WeaponTypeId = characteristic.WeaponTypeId;
-        BarrelPositionId = characteristic.BarrelPositionId;
-        YearOfProduction = characteristic.YearOfProduction;
-
-        IsFavorite = isFavorite;
-        IsComplaint = isComplaint;
-    }
 }

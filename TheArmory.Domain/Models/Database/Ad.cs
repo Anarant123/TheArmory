@@ -96,12 +96,6 @@ public class Ad : DbEntity
     [Column("categoryId")]
     public Guid CategoryId { get; set; }
     
-    /// <summary>
-    /// Id характеристики
-    /// </summary>
-    [Column("characteristicId")]
-    public Guid? CharacteristicId { get; set; }
-    
     // virtual 
     
     public virtual Condition Condition { get; set; }
@@ -112,9 +106,9 @@ public class Ad : DbEntity
     
     public virtual Category Category { get; set; }
     
-    public virtual Characteristic? Characteristic { get; set; }
-    
     public virtual Status Status { get; set; }
+    
+    public virtual List<Characteristic> Characteristics { get; set; }
     
     public virtual List<Complaint> Complaints { get; set; }
     
