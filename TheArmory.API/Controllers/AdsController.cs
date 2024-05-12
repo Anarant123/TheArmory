@@ -57,7 +57,7 @@ public class AdsController : BaseController
     [Authorize(Roles = "Client")]
     [HttpGet]
     [Route("SelectedMy")]
-    public async Task<ActionResult<BaseResult<AdViewModel>>> GetSelectedMy()
+    public async Task<ActionResult<BaseResult<MyAdViewModel>>> GetSelectedMy()
     {
         var userResponse = await GetUser();
 
@@ -67,7 +67,7 @@ public class AdsController : BaseController
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
 
-        var result = await _adsRepository.GetAd(userId, adIdResponse?.Item ?? Guid.Empty);
+        var result = await _adsRepository.GetMyAd((Guid)userId!, adIdResponse?.Item ?? Guid.Empty);
 
         if (result.Success) return Ok(result);
         Logger.LogError(result.Error);

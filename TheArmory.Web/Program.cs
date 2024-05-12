@@ -15,6 +15,7 @@ builder.Services.AddTransient<AdsService>();
 builder.Services.AddTransient<ContactsService>();
 builder.Services.AddTransient<AdminsService>();
 builder.Services.AddTransient<ComplaintsService>();
+builder.Services.AddTransient<CharacteristicsService>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

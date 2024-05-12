@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Reflection.PortableExecutable;
+using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Responce.ViewModels.Media;
@@ -89,17 +90,8 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
         [JsonPropertyName("categoryId")]
         public Guid CategoryId { get; set; }
         
-        [JsonPropertyName("caliber")]
-        public string Caliber { get; set; } = string.Empty;
-
-        [JsonPropertyName("weaponType")]
-        public string WeaponType { get; set; } = string.Empty;
-
-        [JsonPropertyName("barrelPosition")]
-        public string BarrelPosition { get; set; } = string.Empty;
-
-        [JsonPropertyName("yearOfProduction")] 
-        public int YearOfProduction { get; set; } = 0;
+        [JsonPropertyName("characteristics")]
+        public List<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
 
         [JsonPropertyName("isFavorite")] 
         public bool IsFavorite { get; set; } = false;
@@ -127,6 +119,7 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             User = new UserContactsViewModel(ad.User);
             Location = ad.Location;
             CategoryId = ad.CategoryId;
+            Characteristics = ad.Characteristics;
         }
         
         public AdViewModel(Database.Ad ad, bool isFavorite, bool isComplaint)
@@ -147,6 +140,7 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad
             User = new UserContactsViewModel(ad.User);
             Location = ad.Location;
             CategoryId = ad.CategoryId;
+            Characteristics = ad.Characteristics;
             
             IsFavorite = isFavorite;
             IsComplaint = isComplaint;

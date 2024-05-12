@@ -26,6 +26,7 @@ builder.Services.AddTransient<ConditionsRepository>();
 builder.Services.AddTransient<RegionsRepository>();
 builder.Services.AddTransient<ContactsRepository>();
 builder.Services.AddTransient<ComplaintsRepository>();
+builder.Services.AddTransient<CharacteristicsRepository>();
 
 builder.Services.AddTransient<PasswordHasher<User>>();
 

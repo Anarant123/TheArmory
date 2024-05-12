@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<form method="post" enctype="multipart/form-data" asp-page-handler="Update">
+@* <form method="post" enctype="multipart/form-data" asp-page-handler="Update"> *@
     <div class="row mt-3">
         <div class="col-md-12">
             <div class="row">
@@ -155,8 +155,65 @@
                         </select>
                     </div>
                 </div>
-
                 
+            </div>
+            <div class="row">
+                <div class="row">
+                    <div class="col">
+                        <h1>Характеристики</h1>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">Добавить</button>
+                    </div>
+                </div>
+                
+                @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
+                {
+                    <form id="deleteContactForm" method="post" asp-page-handler="DeleteCharacteristic">
+                        <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
+                        <div class="container mt-2">
+                            @foreach (var contact in Model.MyAdViewModel.Characteristics)
+                            {
+                                <div class="rounded bg-light p-2 mb-2">
+                                    <div class="row align-items-center contact-row">
+                                        <div class="col-md-3">
+                                            <h6 class="mb-0">@contact.Name</h6>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span>@contact.Description</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <button type="submit" onclick="deleteCharacteristic(`@contact.Id`)" class="btn btn-secondary">
+                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </form>
+                }
+                <form method="post" asp-page-handler="CreateCharacteristic">
+                    <div class="container mt-2 d-none" id="addCreateCharacteristicForm">
+                        <div class="row align-items-center contact-row">
+                            <div class="col-md-3">
+                                <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
+                            </div>
+                            <div class="col-md-7">
+                                <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
+                            </div>
+                            <div class="col-auto">
+
+                                <button id="saveContactButton" type="submit" class="btn btn-success">
+                                    <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                </button>
+                                <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
+                                    <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
 
             <div class="row">
@@ -240,7 +297,7 @@
             </div>
         </div>
     </div>
-</form>
+@* </form> *@
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
 <script type="text/javascript">
@@ -402,4 +459,23 @@
     document.querySelector('.btn-danger').addEventListener('click', function () {
         removeImage(currentImageIndex);
     });
+    
+    function showCreateCharacteristicForm() {
+        document.getElementById('addCreateCharacteristicForm').classList.remove("d-none");
+    }
+    
+    function cancelCreateCharacteristic() {
+            document.getElementById("CharacteristicNameInput").value = "";
+            document.getElementById("CharacteristicDescriptionInput").value = "";
+            document.getElementById('addCreateCharacteristicForm').classList.add("d-none");
+        }
+        
+    function saveCharacteristic() {
+            cancelAddContact();
+        }
+        
+    function deleteCharacteristic(characteristicId) {
+            var input = document.getElementById('characteristicDeletedInput');
+            input.value = characteristicId;
+        }
 </script>

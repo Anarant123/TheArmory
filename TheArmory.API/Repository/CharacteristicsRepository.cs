@@ -2,58 +2,49 @@
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
-using TheArmory.Domain.Models.Request.Commands.Contact;
+using TheArmory.Domain.Models.Request.Commands.Characteristic;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 
 namespace TheArmory.Repository;
 
-public class ContactsRepository : BaseRepository
+public class CharacteristicsRepository : BaseRepository<Characteristic>
 {
-    public ContactsRepository(
+    public CharacteristicsRepository(
         ApplicationContext context,
-        ILogger<BaseRepository<Contact>> logger)
+        ILogger<BaseRepository<Characteristic>> logger)
         : base(context, logger)
     {
     }
-    
-    public async Task<BaseResult> Create(
-        Guid userId,
-        ContactCreateCommand command)
-    {
-        var user = await Context.Users
-            .Include(u => u.Region)
-            .Include(u => u.Status)
-            .FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        
-        if (user is null)
-            return new BaseResult(ErrorsMessage.UserNotFound);
 
-        var contact = new Contact()
+    public async Task<BaseResult> Create(
+        Guid adId,
+        CharacteristicCreateCommand command)
+    {
+        var characteristic = new Characteristic()
         {
             Name = command.Name,
             Description = command.Description,
-            UserId = user.Id
+            AdId = adId
         };
 
-        Context.Contacts.Add(contact);
-        
+        Context.Characteristics.Add(characteristic);
         return await Context.SaveChangesAsync() switch
         {
-            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            0 => new BaseResult("Произошла ошибка при сохранении данных"),
             _ => new BaseResult()
         };
     }
     
     public async Task<BaseResult> Delete(
-        Guid userId,
-        ContactCommand command)
+        Guid adId,
+        CharacteristicCommand command)
     {
-        var contact = await Context.Contacts.FirstOrDefaultAsync(c => c.Id.Equals(command.Id));
+        var contact = await Context.Characteristics.FirstOrDefaultAsync(c => c.Id.Equals(command.Id));
 
         if (contact is null)
             return new BaseResult("Контакт не найден");
 
-        Context.Contacts.Remove(contact);
+        Context.Characteristics.Remove(contact);
         
         return await Context.SaveChangesAsync() switch
         {

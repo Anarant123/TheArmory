@@ -124,7 +124,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row d-none">
                     <h1>Характеристики</h1>
                     <div class="row mt-3" id="characteristics-container">
                         
@@ -137,7 +137,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row mt-3">
                 <h1 id="photoCountHeader">Фотографии (0 из 5)</h1>
                 <div class="row mt-3">
                     <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
@@ -240,48 +240,39 @@
         var myMap;
 
         if ("geolocation" in navigator) {
-            // Геолокация доступна
             navigator.geolocation.getCurrentPosition(
                 (position) => {
-                    latitude = position.coords.latitude; // Получение широты
-                    longitude = position.coords.longitude; // Получение долготы
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
                     console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-                    initializeMap(latitude, longitude); // Загрузка карты с полученными координатами
+                    initializeMap(latitude, longitude); 
                 },
                 (error) => {
-                    // Обработка ошибок получения геопозиции
                     console.error("Ошибка при получении геопозиции:", error);
                 }
             );
         } else {
-            // Геолокация не поддерживается
             console.error("Геолокация недоступна");
         }
 
         function initializeMap(latitude, longitude) {
-            // Функция ymaps.ready() будет вызвана, когда
-            // загрузятся все компоненты API, а также когда будет готово DOM-дерево.
             ymaps.ready(function () {
-                // Создание карты.
                 myMap = new ymaps.Map("map", {
-                    // Координаты центра карты.
-                    // Порядок по умолчанию: «широта, долгота».
-                    // Чтобы не определять координаты центра карты вручную,
-                    // воспользуйтесь инструментом Определение координат.
                     center: [latitude, longitude],
-                    // Уровень масштабирования. Допустимые значения:
-                    // от 0 (весь мир) до 19.
                     zoom: 7
                 });
 
-                // Создание метки и добавление её на карту.
-                // var myGeoObject = new ymaps.GeoObject({
-                //     geometry: {
-                //         type: "Point", // тип геометрии - точка
-                //         coordinates: [latitude, longitude] // координаты точки
-                //     }
-                // });
-                // myMap.geoObjects.add(myGeoObject);
+                var myGeoObject = new ymaps.GeoObject({
+                    geometry: {
+                        type: "Point", 
+                        coordinates: [latitude, longitude] 
+                    },
+                    options: {
+                        visible: false 
+                    }
+                });
+                myMap.geoObjects.add(myGeoObject);
+
 
                 // Добавляем обработчик события перемещения карты
                 myMap.events.add('boundschange', function (event) {
@@ -290,7 +281,7 @@
                     latitude = newCenter[0];
                     longitude = newCenter[1];
                     // Обновляем координаты метки
-                    // myGeoObject.geometry.setCoordinates([latitude, longitude]);
+                    myGeoObject.geometry.setCoordinates([latitude, longitude]);
                     let latitudeInfo = document.getElementById('latitude');
                     latitudeInfo.value = latitude;
                     let longitudeInfo = document.getElementById('longitude');
@@ -309,16 +300,15 @@
 
 <script>
     function autoResize(textarea) {
-        textarea.style.height = 'auto'; // Устанавливаем высоту текстового поля в режиме авто
-        textarea.style.height = (textarea.scrollHeight) + 'px'; // Устанавливаем высоту текстового поля равной его высоте контента
+        textarea.style.height = 'auto'; 
+        textarea.style.height = (textarea.scrollHeight) + 'px'; 
     }
     
     function validatePrice(input) {
-        input.value = input.value.replace(/[^0-9.]/g, ''); // Заменяем все символы, кроме цифр и точки, на пустую строку
-        // Удалить лишние точки
-        var countDots = (input.value.match(/\./g) || []).length; // Подсчитываем количество точек в значении поля ввода
-        if (countDots > 1) { // Если количество точек больше 1
-            input.value = input.value.replace(/\./g, ''); // Удаляем все точки из значения поля ввода, кроме первой
+        input.value = input.value.replace(/[^0-9.]/g, ''); 
+        var countDots = (input.value.match(/\./g) || []).length; 
+        if (countDots > 1) { 
+            input.value = input.value.replace(/\./g, ''); 
         }
     }
     
@@ -399,21 +389,21 @@
         document.getElementById('photoCountHeader').textContent = `Фотографии (${images.length + 1} из 5)`;
     }
 
-    document.getElementById('file-input').addEventListener('change', handleFileSelect, false); // Добавляем обработчик события change на элементе file-input
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false); 
     
     function removeImage(index) {
-        images.splice(index, 1); // Удаляем изображение из массива по указанному индексу
+        images.splice(index, 1);
         let thumbnailsContainer = document.getElementById('thumbnails-container');
-        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]); // Удаляем соответствующий блок с миниатюрой изображения из контейнера
+        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]); 
         if (currentImageIndex === index) {
             if (currentImageIndex === images.length) {
-                currentImageIndex--; // Переключаемся на предыдущее изображение, если удалено было последнее
+                currentImageIndex--; 
             }
-            updateImage(); // Обновляем отображение после удаления
+            updateImage(); 
         } else if (currentImageIndex > index) {
-            currentImageIndex--; // Корректируем текущий индекс, если он находится после удаленного изображения
+            currentImageIndex--; 
         }
-        if (images.length < 5) { // Если теперь в массиве images меньше 5 изображений, скрываем кнопки управления
+        if (images.length < 5) {
             document.querySelectorAll('.image-controls').forEach(function (element) {
                 element.style.display = 'none';
             });
@@ -461,7 +451,6 @@
         let videoId = '';
         let regExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/(.+)$/;
         if (regExp.test(url)) {
-            // Извлекаем идентификатор видео
             let match = url.match(regExp);
             if (match && match[3]) {
                 videoId = match[3];

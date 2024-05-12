@@ -24,7 +24,7 @@ public class ContactsController : BaseController
     }
     
     /// <summary>
-    /// Разместить объявление
+    /// Создать контакт
     /// </summary>
     /// <returns></returns>
     [HttpPost]
@@ -46,7 +46,7 @@ public class ContactsController : BaseController
     
     
     /// <summary>
-    /// Разместить объявление
+    /// Удалить контакт
     /// </summary>
     /// <returns></returns>
     [HttpDelete]

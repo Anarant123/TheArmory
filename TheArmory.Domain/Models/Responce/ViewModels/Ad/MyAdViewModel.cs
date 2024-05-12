@@ -94,13 +94,8 @@ public class MyAdViewModel
 
     [JsonPropertyName("categoryId")] public Guid CategoryId { get; set; }
 
-    [JsonPropertyName("caliberId")] public Guid CaliberId { get; set; }
-
-    [JsonPropertyName("weaponTypeId")] public Guid WeaponTypeId { get; set; }
-
-    [JsonPropertyName("barrelPositionId")] public Guid BarrelPositionId { get; set; }
-
-    [JsonPropertyName("yearOfProduction")] public int YearOfProduction { get; set; } = 0;
+    [JsonPropertyName("characteristics")]
+    public List<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
 
     [JsonPropertyName("isFavorite")] public bool IsFavorite { get; set; } = false;
 
@@ -129,6 +124,7 @@ public class MyAdViewModel
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
         CategoryId = ad.CategoryId;
+        Characteristics = ad.Characteristics;
     }
 
     public MyAdViewModel(Database.Ad ad, bool isFavorite, bool isComplaint)
@@ -150,6 +146,7 @@ public class MyAdViewModel
         User = new UserContactsViewModel(ad.User);
         Location = ad.Location;
         CategoryId = ad.CategoryId;
+        Characteristics = ad.Characteristics;
 
         IsFavorite = isFavorite;
         IsComplaint = isComplaint;
