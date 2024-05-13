@@ -307,12 +307,12 @@ public class AdsRepository : BaseRepository
     /// <param name="userId"></param>
     /// <param name="command"></param>
     /// <returns></returns>
-    public async Task<BaseResult<AdViewModel>> Create(
+    public async Task<BaseResult<MyAdViewModel>> Create(
         Guid userId,
         AdCreateCommand command)
     {
         if (command.Photos.Count > 5)
-            return new BaseResult<AdViewModel>("Превышено максимально допустимое кол во фотографий");
+            return new BaseResult<MyAdViewModel>("Превышено максимально допустимое кол во фотографий");
 
         var newAd = new Ad()
         {
@@ -355,22 +355,24 @@ public class AdsRepository : BaseRepository
                 .ToList());
 
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
-        if (!saveResult.Success) return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
+        if (!saveResult.Success) return new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных");
         
         newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
         if (await Context.SaveChangesAsync() == 0)
-            return new BaseResult<AdViewModel>("Произошла ошибка при сохранении данных");
+            return new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных");
 
         var ad = await Context.Ads
+            .Include(a => a.Status)
+            .Include(a => a.Region)
             .Include(a => a.Condition)
             .Include(a => a.Characteristics)
             .Include(a => a.Medias)
             .Include(a => a.User)
             .FirstOrDefaultAsync(a => a.Id.Equals(newAd.Id));
 
-        return new BaseResult<AdViewModel>(new AdViewModel(ad));
+        return new BaseResult<MyAdViewModel>(new MyAdViewModel(ad));
     }
 
 

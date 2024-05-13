@@ -224,7 +224,7 @@ public class AdsController : BaseController
     [Authorize(Roles = "Client")]
     [HttpPost]
     [Route("")]
-    public async Task<ActionResult<BaseResult<AdViewModel>>> PostAd(
+    public async Task<ActionResult<BaseResult<MyAdViewModel>>> PostAd(
         [FromForm]AdCreateCommand command)
     {
         var userResponse = await GetUser();

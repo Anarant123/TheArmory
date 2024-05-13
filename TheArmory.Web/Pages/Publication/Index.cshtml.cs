@@ -43,7 +43,7 @@ public class Index : PageModel
 
         if (result.Success)
         {
-            return RedirectToPage("/Account/MyAd");
+            return RedirectToPage("/Account/MyAd", new {handler = "Select", id = result.Item.Id});
         }
 
         await OnGetAsync();
