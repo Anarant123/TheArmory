@@ -78,8 +78,13 @@ public class AdsRepository : BaseRepository
     {
         var ad = await Context.Ads
             .Include(a => a.Medias)
+            .Include(a => a.Characteristics)
             .Include(a => a.Condition)
             .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
             .Include(a => a.Location)
             .FirstOrDefaultAsync(a => a.Id.Equals(adId) 
                                       && a.UserId.Equals(userId));

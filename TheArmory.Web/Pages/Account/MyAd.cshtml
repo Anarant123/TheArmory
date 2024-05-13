@@ -157,6 +157,7 @@
                 </div>
                 
             </div>
+            
             <div class="row">
                 <div class="row">
                     <div class="col">
@@ -169,21 +170,21 @@
                 
                 @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
                 {
-                    <form id="deleteContactForm" method="post" asp-page-handler="DeleteCharacteristic">
+                    <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
                         <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
                         <div class="container mt-2">
-                            @foreach (var contact in Model.MyAdViewModel.Characteristics)
+                            @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
                             {
                                 <div class="rounded bg-light p-2 mb-2">
                                     <div class="row align-items-center contact-row">
                                         <div class="col-md-3">
-                                            <h6 class="mb-0">@contact.Name</h6>
+                                            <h6 class="mb-0">@characteristic.Name</h6>
                                         </div>
                                         <div class="col-md-6">
-                                            <span>@contact.Description</span>
+                                            <span>@characteristic.Description</span>
                                         </div>
                                         <div class="col-auto">
-                                            <button type="submit" onclick="deleteCharacteristic(`@contact.Id`)" class="btn btn-secondary">
+                                            <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
                                                 <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
                                             </button>
                                         </div>
@@ -471,7 +472,7 @@
         }
         
     function saveCharacteristic() {
-            cancelAddContact();
+            cancelCreateCharacteristic();
         }
         
     function deleteCharacteristic(characteristicId) {
