@@ -159,12 +159,12 @@
             </div>
             
             <div class="row">
-                <div class="row">
+                <div class="row mt-3">
                     <div class="col">
                         <h1>Характеристики</h1>
                     </div>
-                    <div>
-                        <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">Добавить</button>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
                     </div>
                 </div>
                 
@@ -175,19 +175,17 @@
                         <div class="container mt-2">
                             @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
                             {
-                                <div class="rounded bg-light p-2 mb-2">
-                                    <div class="row align-items-center contact-row">
-                                        <div class="col-md-3">
-                                            <h6 class="mb-0">@characteristic.Name</h6>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span>@characteristic.Description</span>
-                                        </div>
-                                        <div class="col-auto">
-                                            <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
-                                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                            </button>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label>@characteristic.Name:</label>
+                                    </div>
+                                    <div class="col-6">
+                                        <label>@characteristic.Description</label>
+                                    </div>
+                                    <div class="col-auto ml-auto">
+                                        <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
+                                            <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                        </button>
                                     </div>
                                 </div>
                             }
@@ -195,8 +193,8 @@
                     </form>
                 }
                 <form method="post" asp-page-handler="CreateCharacteristic">
-                    <div class="container mt-2 d-none" id="addCreateCharacteristicForm">
-                        <div class="row align-items-center contact-row">
+                    <div class="container d-none" id="addCreateCharacteristicForm">
+                        <div class="row mt-3">
                             <div class="col-md-3">
                                 <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
                             </div>
