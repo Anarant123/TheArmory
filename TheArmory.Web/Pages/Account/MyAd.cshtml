@@ -91,9 +91,9 @@
     </div>
 </div>
 
-@* <form method="post" enctype="multipart/form-data" asp-page-handler="Update"> *@
-    <div class="row mt-3">
-        <div class="col-md-12">
+<div class="row mt-3">
+    <div class="col-md-12">
+        <form method="post" asp-page-handler="Update">
             <div class="row">
 
                 <h1>Параметры</h1>
@@ -155,148 +155,152 @@
                         </select>
                     </div>
                 </div>
-                
+
             </div>
             
-            <div class="row">
-                <div class="row mt-3">
-                    <div class="col">
-                        <h1>Характеристики</h1>
-                    </div>
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
-                    </div>
+            <div class="row mt-3">
+                <div class="col-3">
+                    <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
                 </div>
-                
-                @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
-                {
-                    <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
-                        <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
-                        <div class="container mt-2">
-                            @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
-                            {
-                                <div class="row">
-                                    <div class="col-3">
-                                        <label>@characteristic.Name:</label>
-                                    </div>
-                                    <div class="col-6">
-                                        <label>@characteristic.Description</label>
-                                    </div>
-                                    <div class="col-auto ml-auto">
-                                        <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
-                                            <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </form>
-                }
-                <form method="post" asp-page-handler="CreateCharacteristic">
-                    <div class="container d-none" id="addCreateCharacteristicForm">
-                        <div class="row mt-3">
-                            <div class="col-md-3">
-                                <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
-                            </div>
-                            <div class="col-md-7">
-                                <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
-                            </div>
-                            <div class="col-auto">
+            </div>
+        </form>
 
-                                <button id="saveContactButton" type="submit" class="btn btn-success">
-                                    <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                </button>
-                                <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
-                                    <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+        <div class="row">
+            <div class="row mt-3">
+                <div class="col">
+                    <h1>Характеристики</h1>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
+                </div>
             </div>
 
-            <div class="row">
-                <div class="row mt-3">
-                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+            @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
+            {
+                <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
+                    <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
+                    <div class="container mt-2">
+                        @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
+                        {
+                            <div class="row">
+                                <div class="col-3">
+                                    <label>@characteristic.Name:</label>
+                                </div>
+                                <div class="col-6">
+                                    <label>@characteristic.Description</label>
+                                </div>
+                                <div class="col-auto ml-auto">
+                                    <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
+                                        <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                    </button>
+                                </div>
+                            </div>
+                        }
                     </div>
-                    <div class="col-md-10 text-center">
-                        <div id="image-area" class="position-relative">
-                            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                </form>
+            }
+            <form method="post" asp-page-handler="CreateCharacteristic">
+                <div class="container d-none" id="addCreateCharacteristicForm">
+                    <div class="row mt-3">
+                        <div class="col-md-3">
+                            <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
+                        </div>
+                        <div class="col-auto">
+
+                            <button id="saveContactButton" type="submit" class="btn btn-success">
+                                <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                            </button>
+                            <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
+                                <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="row mt-3">
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                </div>
+                <div class="col-md-10 text-center">
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
                     </div>
                 </div>
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                </div>
+            </div>
 
-                <!-- Контейнер для ячеек с изображениями -->
-                <div id="thumbnails-container" class="row mt-3">
-                    @foreach (var image in Model.MyAdViewModel.Images) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+            <!-- Контейнер для ячеек с изображениями -->
+            <div id="thumbnails-container" class="row mt-3">
+                @foreach (var image in Model.MyAdViewModel.Images) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+                {
+                    <div class="col-md text-center image-cell position-relative">
+                        <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <h1>Видео</h1>
+            <div class="row mt-3">
+                <div class="col-3">
+                    <label class="form-label">Ссылка на YouTube видео с обзором:</label>
+                </div>
+                <div class="col-9">
+                    <div class="row">
+                        <input type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                        <span class="text-danger"></span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
                     {
-                        <div class="col-md text-center image-cell position-relative">
-                            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
+                        var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
+                        <div id="youtubeVideo" class="row mt-3">
+                            <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     }
                 </div>
             </div>
+        </div>
 
-            <div class="row">
-                <h1>Видео</h1>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.YouTubeLink" class="form-label">Ссылка на YouTube видео с обзором:</label>
-                    </div>
-                    <div class="col-9">
-                        <div class="row">
-                            <input type="text" asp-for="UpdateCommand.YouTubeLink" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                            <span asp-validation-for="UpdateCommand.YouTubeLink" class="text-danger"></span>
-                        </div>
-                        @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
-                        {
-                            var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
-                            <div id="youtubeVideo" class="row mt-3">
-                                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        }
-                    </div>
+
+        <div class="row address-container">
+            <div class="row mt-3">
+                <div class="d-flex align-items-start justify-content-start">
+                    <input type="text" id="addressInfo" value="@Model.MyAdViewModel.Location?.Address" class="form-control" placeholder="Адрес" readonly="">
                 </div>
             </div>
-
-
-            <div class="row address-container">
-                <div class="row mt-3">
-                    <div class="d-flex align-items-start justify-content-start">
-                        <input type="text" id="addressInfo" asp-for="UpdateCommand.Address" value="@Model.MyAdViewModel.Location?.Address" class="form-control" placeholder="Адрес" readonly="">
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col">
-                        <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
-                        <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
-                        <div class="map-container">
-                            <div id="map" class="square" style="height: 400px"></div>
-                            <div class="marker-container d-none">
-                                <img src="/icons/map_marker.png" class="marker" alt=""/>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
 
             <div class="row mt-3">
                 <div class="col">
-                    <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
-                </div>
-                <div class="col">
-                    <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+                    <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
+                    <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
+                    <div class="map-container">
+                        <div id="map" class="square" style="height: 400px"></div>
+                        <div class="marker-container d-none">
+                            <img src="/icons/map_marker.png" class="marker" alt=""/>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
+
+        <div class="row mt-3">
+            <div class="col-3">
+                <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+            </div>
+        </div>
     </div>
-@* </form> *@
+</div>
+
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
 <script type="text/javascript">

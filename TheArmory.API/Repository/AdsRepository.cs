@@ -413,11 +413,11 @@ public class AdsRepository : BaseRepository
     if (!string.IsNullOrEmpty(command.Description))
         ad.Description = command.Description;
 
-    if (!string.IsNullOrEmpty(command.YouTubeLink))
-        ad.YouTubeLink = command.YouTubeLink;
-
     if (command.ConditionId is not null)
         ad.ConditionId = command.ConditionId.Value;
+    
+    if (command.CategoryId is not null)
+        ad.CategoryId = command.CategoryId.Value;
 
     var result = await Context.SaveChangesAsync();
 
