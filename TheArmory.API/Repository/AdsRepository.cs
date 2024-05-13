@@ -59,7 +59,7 @@ public class AdsRepository : BaseRepository
         ad.CountOfViewsToday += 1;
 
         await Context.SaveChangesAsync();
-        
+
         var isFavorite = await Context.Favorites.AnyAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
         var isComplaint = await Context.Complaints.AnyAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(adId));
 
@@ -86,7 +86,7 @@ public class AdsRepository : BaseRepository
             .Include(a => a.User)
             .ThenInclude(u => u.Ads)
             .Include(a => a.Location)
-            .FirstOrDefaultAsync(a => a.Id.Equals(adId) 
+            .FirstOrDefaultAsync(a => a.Id.Equals(adId)
                                       && a.UserId.Equals(userId));
 
         if (ad is null)
@@ -119,7 +119,7 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdViewModel>(ads);
     }
-    
+
     /// <summary>
     /// Возвращает избранные объявления пользователя
     /// </summary>
@@ -136,7 +136,7 @@ public class AdsRepository : BaseRepository
             .Where(f => f.UserId.Equals(userId))
             .Select(f => new TileAdViewModel(f.Ad))
             .ToList();
-        
+
         if (ads.Count == 0)
             return new BaseQueryResult<TileAdViewModel>("Объявлений не найдено");
 
@@ -154,7 +154,7 @@ public class AdsRepository : BaseRepository
         var ads = await Context.Ads
             .Include(a => a.Medias)
             .Include(a => a.Complaints)
-            .Where(a => a.Complaints.Any() 
+            .Where(a => a.Complaints.Any()
                         && a.StatusId == StateStatus.Actively)
             .ToListAsync();
 
@@ -168,7 +168,7 @@ public class AdsRepository : BaseRepository
 
         return new BaseQueryResult<TileAdComplaintViewModel>(viewModels);
     }
-    
+
     /// <summary>
     /// Возвращает все данные необходимые для публикации объявления
     /// </summary>
@@ -239,7 +239,6 @@ public class AdsRepository : BaseRepository
             Console.WriteLine($"Filter by region: {queryItemsParams.RegionId}");
         }
 
-        
 
         if (queryItemsParams.PriceFrom > 0 || queryItemsParams.PriceTo < 10000000)
         {
@@ -347,7 +346,7 @@ public class AdsRepository : BaseRepository
         if (command.Characteristics != null)
             newAd.Characteristics.AddRange(command.Characteristics
                 .Select(s => new Characteristic()
-                { 
+                {
                     Name = s.Name,
                     Description = s.Description,
                     AdId = newAd.Id
@@ -356,7 +355,7 @@ public class AdsRepository : BaseRepository
 
         var saveResult = await _mediasRepository.SaveAdFile(userId, newAd.Id, command.Photos);
         if (!saveResult.Success) return new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных");
-        
+
         newAd.Medias = saveResult.Item;
 
         Context.Ads.Add(newAd);
@@ -383,51 +382,87 @@ public class AdsRepository : BaseRepository
     /// <param name="command"></param>
     /// <returns></returns>
     public async Task<BaseResult<MyAdViewModel>> Update(
-    Guid userId,
-    AdUpdateCommand command)
-{
-    var ad = await Context.Ads
-        .Include(a => a.Medias)
-        .Include(a => a.Condition)
-        .Include(a => a.Region)
-        .Include(a => a.User)
-        .ThenInclude(u => u.Contacts)
-        .Include(a => a.User)
-        .ThenInclude(u => u.Ads)
-        .Include(a => a.Location)
-        .Include(a => a.Characteristics)
-        .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
-
-    if (ad is null)
-        return new BaseResult<MyAdViewModel>("Объявление не найдено");
-
-    if (!string.IsNullOrEmpty(command.Name))
-        ad.Name = command.Name;
-
-    if (command.Price is not null)
+        Guid userId,
+        AdUpdateCommand command)
     {
-        ad.OldPrice = ad.Price;
-        ad.Price = command.Price.Value;
+        var ad = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
+            .Include(a => a.Location)
+            .Include(a => a.Characteristics)
+            .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
+
+        if (ad is null)
+            return new BaseResult<MyAdViewModel>("Объявление не найдено");
+
+        if (!string.IsNullOrEmpty(command.Name))
+            ad.Name = command.Name;
+
+        if (command.Price is not null)
+        {
+            ad.OldPrice = ad.Price;
+            ad.Price = command.Price.Value;
+        }
+
+        if (!string.IsNullOrEmpty(command.Description))
+            ad.Description = command.Description;
+
+        if (command.ConditionId is not null)
+            ad.ConditionId = command.ConditionId.Value;
+
+        if (command.CategoryId is not null)
+            ad.CategoryId = command.CategoryId.Value;
+
+        var result = await Context.SaveChangesAsync();
+
+        return result switch
+        {
+            0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
+        };
     }
-
-    if (!string.IsNullOrEmpty(command.Description))
-        ad.Description = command.Description;
-
-    if (command.ConditionId is not null)
-        ad.ConditionId = command.ConditionId.Value;
     
-    if (command.CategoryId is not null)
-        ad.CategoryId = command.CategoryId.Value;
-
-    var result = await Context.SaveChangesAsync();
-
-    return result switch
+    /// <summary>
+    /// Обновление объявления
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<MyAdViewModel>> ChangeYoutubeLink(
+        Guid userId,
+        AdChangeYouTubeLinkCommand command)
     {
-        0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
-        _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
-    };
-}
+        var ad = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
+            .Include(a => a.Location)
+            .Include(a => a.Characteristics)
+            .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
 
+        if (ad is null)
+            return new BaseResult<MyAdViewModel>("Объявление не найдено");
+
+        if (!string.IsNullOrEmpty(command.YouTubeLink))
+            ad.YouTubeLink = command.YouTubeLink;
+
+        var result = await Context.SaveChangesAsync();
+
+        return result switch
+        {
+            0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
+        };
+    }
 
 
     /// <summary>
@@ -446,7 +481,8 @@ public class AdsRepository : BaseRepository
 
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
-        var favoriteChek = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
+        var favoriteChek =
+            await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
         if (favoriteChek is not null)
             return new BaseResult("Объявление уже в избранном");
 
@@ -464,7 +500,7 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult<AdViewModel>()
         };
     }
-    
+
     /// <summary>
     /// Удалить объявление из избранного
     /// </summary>
@@ -484,7 +520,7 @@ public class AdsRepository : BaseRepository
         var favorite = await Context.Favorites.FirstOrDefaultAsync(f => f.UserId.Equals(userId) && f.AdId.Equals(adId));
         if (favorite is null)
             return new BaseResult("Объявление не добавлено в избранное");
-        
+
         Context.Favorites.Remove(favorite);
 
         return await Context.SaveChangesAsync() switch
@@ -509,8 +545,9 @@ public class AdsRepository : BaseRepository
             return new BaseResult("Объявление не найдено");
 
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        
-        var complaintChek = await Context.Complaints.FirstOrDefaultAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(command.Id));
+
+        var complaintChek =
+            await Context.Complaints.FirstOrDefaultAsync(c => c.UserId.Equals(userId) && c.AdId.Equals(command.Id));
         if (complaintChek is not null)
             return new BaseResult("Вы уже подали жалобу на данное объявление");
 

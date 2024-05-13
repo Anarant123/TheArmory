@@ -458,50 +458,5 @@
         }
         return videoId;
     }
-    
-    let index = 0;
-    let characteristicsContainer = document.getElementById('characteristics-container');
-    
-    function addCharacteristic() {
-        let characteristicContainer = document.createElement('div');
-        characteristicContainer.className = 'row';
-        let characteristicNameContainer = document.createElement('div');
-        characteristicNameContainer.className = 'col-3';
-        let characteristicValueContainer = document.createElement('div');
-        characteristicValueContainer.className = 'col-8';
-        let characteristicDeleteContainer = document.createElement('div');
-        characteristicDeleteContainer.className = 'col-1';
-        
-        let characteristicNameInput = document.createElement('input');
-        characteristicNameInput.type = 'text';
-        characteristicNameInput.name = `Command.Characteristics[${index}].Name`;
-        characteristicNameInput.className = 'form-control mb-3';
-        characteristicNameInput.placeholder = 'Наименование характеристики';
-        
-        let characteristicValueInput = document.createElement('input');
-        characteristicValueInput.type = 'text';
-        characteristicValueInput.name = `Command.Characteristics[${index}].Value`;
-        characteristicValueInput.className = 'form-control mb-3';
-        characteristicValueInput.placeholder = 'Значение характеристики';
-        
-        let removeCharacteristicButton = document.createElement('button');
-        removeCharacteristicButton.type = 'button';
-        removeCharacteristicButton.className = 'btn btn-danger btn-block mb-3';
-        removeCharacteristicButton.textContent = 'Удалить';
-        removeCharacteristicButton.onclick = function() {
-            characteristicsContainer.removeChild(characteristicContainer);
-            index--;
-        };
-        
-        characteristicNameContainer.appendChild(characteristicNameInput);
-        characteristicValueContainer.appendChild(characteristicValueInput);
-        characteristicDeleteContainer.appendChild(removeCharacteristicButton);
-        
-        characteristicContainer.appendChild(characteristicNameContainer);
-        characteristicContainer.appendChild(characteristicValueContainer);
-        characteristicContainer.appendChild(characteristicDeleteContainer);
-        
-        characteristicsContainer.appendChild(characteristicContainer);
-        index++;
-    }
 </script>
+

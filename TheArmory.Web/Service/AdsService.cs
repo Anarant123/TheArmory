@@ -470,4 +470,24 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
+    
+    public async Task<BaseResult<MyAdViewModel>> ChangeYoutubeLink(AdChangeYouTubeLinkCommand command)
+    {
+        try
+        {
+            var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/YouTubeLink";
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json"));
+            var response = await httpClient.PutAsync(uri, content);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<MyAdViewModel>>(responseStream);
+            return result ?? new BaseResult<MyAdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<MyAdViewModel>(exception.Message);
+        }
+    }
 }

@@ -23,6 +23,7 @@ public class MyAd : PageModel
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
+    [BindProperty] public AdChangeYouTubeLinkCommand ChangeYouTubeLinkCommand { get; set; }
     [BindProperty] public AdUpdateCommand UpdateCommand { get; set; }
     [BindProperty] public CharacteristicCreateCommand CharacteristicCreateCommand { get; set; }
     [BindProperty] public CharacteristicCommand DeleteCharacteristicCommand { get; set; }
@@ -107,6 +108,14 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostDeleteCharacteristicAsync()
     {
         Result = await _characteristicsService.DeleteCharacteristic(DeleteCharacteristicCommand);
+        if (!Result.Success) return Page();
+        await OnGetSelectedAsync();
+        return Page();
+    }
+    
+    public async Task<ActionResult> OnPostChangeVideoAsync()
+    {
+        Result = await _adsService.ChangeYoutubeLink(ChangeYouTubeLinkCommand);
         if (!Result.Success) return Page();
         await OnGetSelectedAsync();
         return Page();

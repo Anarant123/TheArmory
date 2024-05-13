@@ -250,24 +250,29 @@
 
         <div class="row">
             <h1>Видео</h1>
-            <div class="row mt-3">
-                <div class="col-3">
-                    <label class="form-label">Ссылка на YouTube видео с обзором:</label>
-                </div>
-                <div class="col-9">
-                    <div class="row">
-                        <input type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                        <span class="text-danger"></span>
+            <form method="post" asp-page-handler="ChangeVideo">
+                <div class="row mt-3">
+                    <div class="col-3">
+                        <label class="form-label">Ссылка на YouTube видео с обзором:</label>
                     </div>
-                    @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
-                    {
-                        var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
-                        <div id="youtubeVideo" class="row mt-3">
-                            <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <div class="col-9">
+                        <div class="row">
+                            <input id="youtubeVideoLink" asp-for="ChangeYouTubeLinkCommand.YouTubeLink" type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                            <span class="text-danger"></span>
                         </div>
-                    }
+                        @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
+                        {
+                            var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
+                            <div id="youtubeVideo" class="row mt-3">
+                                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
+                <div class="row mt-3">
+                    <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+                </div>     
+            </form>
         </div>
 
 
@@ -481,4 +486,50 @@
             var input = document.getElementById('characteristicDeletedInput');
             input.value = characteristicId;
         }
+        
+    const youtubeLinkInput = document.getElementById('youtubeVideoLink');
+    const videoFrame = document.getElementById('videoFrame');
+    
+    youtubeLinkInput.addEventListener('input', function() {
+        alert("jgfsdfd");
+      let youtubeLink = youtubeLinkInput.value.trim();
+      if (youtubeLink === '') {
+        document.getElementById('youtubeVideo').style.display = 'none';
+        videoFrame.src = '';
+        return;
+      }
+    
+      let youtubeRegExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+    
+      if (youtubeRegExp.test(youtubeLink)) {
+        document.getElementById('youtubeVideo').style.display = 'block';
+        let videoId = getYoutubeVideoId(youtubeLink);
+        console.log('Идентификатор видео:', videoId);
+        if (videoId) {
+          let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+          videoFrame.setAttribute('src', embedUrl);
+        } else {
+          console.error('Не удалось извлечь идентификатор видео из ссылки.');
+          document.getElementById('youtubeVideo').style.display = 'none';
+          videoFrame.src = '';
+        }
+      } else {
+        console.error('Введенная ссылка не соответствует формату ссылки на видео YouTube.');
+        document.getElementById('youtubeVideo').style.display = 'none';
+        videoFrame.src = '';
+      }
+    });
+    
+    function getYoutubeVideoId(url) {
+      let videoId = '';
+      let regExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/(.+)$/;
+      if (regExp.test(url)) {
+        let match = url.match(regExp);
+        if (match && match[3]) {
+          videoId = match[3];
+        }
+      }
+      return videoId;
+    }
+
 </script>
