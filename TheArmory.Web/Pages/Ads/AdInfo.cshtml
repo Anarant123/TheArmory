@@ -195,6 +195,20 @@
                     <p>@Model.AdViewModel.Condition</p>
                 </div>
             </div>
+            @if (Model.AdViewModel.Characteristics is not null && Model.AdViewModel.Characteristics.Any())
+            {
+                @foreach (var characteristic in Model.AdViewModel.Characteristics)
+                {
+                    <div class="row">
+                        <div class="col-3">
+                            <label>@characteristic.Name:</label>
+                        </div>
+                        <div class="col-3">
+                            <label>@characteristic.Description</label>
+                        </div>
+                    </div>    
+                }
+            }
         </div>
 
         <!-- Блок с описанием -->
