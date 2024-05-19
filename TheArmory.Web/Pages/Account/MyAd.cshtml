@@ -223,19 +223,35 @@
         </div>
 
         <div class="row">
-            <div class="row mt-3">
-                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                    <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-                </div>
-                <div class="col-md-10 text-center">
-                    <div id="image-area" class="position-relative">
-                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+            <form method="post" asp-page-handler="DeleteMedia">
+                <div class="row mt-3">
+                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                    </div>
+                    <div class="col-md-10 text-center">
+                        @if (Model.MyAdViewModel.Images.Count > 0)
+                        {
+                            <input type="hidden" asp-for="DeleteMediaCommand.MediaId" value="@Model.MyAdViewModel.Images.First().Id"/>
+                            <div id="image-area" class="position-relative">
+                                <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="image-area" class="position-relative">
+                                <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
                     </div>
                 </div>
-                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                    <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
-                </div>
+
+            <div class="row mt-3">
+                <button type="submit" class="btn btn-danger">Удалить</button>
             </div>
+            </form>
 
             <!-- Контейнер для ячеек с изображениями -->
             <div id="thumbnails-container" class="row mt-3">
@@ -246,6 +262,12 @@
                     </div>
                 }
             </div>
+            
+            <form method="post" asp-page-handler="AddMedia">
+            <div class="row mt-3">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        </div>
+                        </form>
         </div>
 
         <div class="row">
@@ -504,7 +526,7 @@
       if (youtubeRegExp.test(youtubeLink)) {
         document.getElementById('youtubeVideo').style.display = 'block';
         let videoId = getYoutubeVideoId(youtubeLink);
-        console.log('Идентификатор видео:', videoId);
+        console.log('Идентификатор видео:', videoId);S
         if (videoId) {
           let embedUrl = `https://www.youtube.com/embed/${videoId}`;
           videoFrame.setAttribute('src', embedUrl);

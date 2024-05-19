@@ -550,11 +550,16 @@ public class AdsController : BaseController
     [HttpDelete]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> DeleteMedia(
-        [FromForm]AdDeleteMediaCommand command)
+        [FromQuery]AdDeleteMediaCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
 
         var result = await _adsRepository.DeleteMedia(
             userResponse.Item.Id,

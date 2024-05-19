@@ -118,9 +118,18 @@
                 <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
             </div>
             <div class="col-md-10 text-center">
-                <div id="image-area" class="position-relative">
-                    <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
-                </div>
+                @if (Model.AdViewModel.Images.Count > 0)
+                {
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                    </div>
+                }
+                else
+                {
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                    </div>
+                }
             </div>
             <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
                 <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>

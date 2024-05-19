@@ -490,4 +490,23 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
+    
+    public async Task<BaseResult<MyAdViewModel>> DeleteMedia(AdDeleteMediaCommand command)
+    {
+        try
+        {
+            var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Media");
+            uriBuilder.Query = $"id={command.Id}&mediaId={command.MediaId}";;
+            var response = await httpClient.DeleteAsync(uriBuilder.Uri);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult<MyAdViewModel>>(responseStream);
+            return result ?? new BaseResult<MyAdViewModel>(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult<MyAdViewModel>(exception.Message);
+        }
+    }
 }
