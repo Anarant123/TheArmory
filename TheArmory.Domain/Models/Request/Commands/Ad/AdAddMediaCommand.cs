@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Http;
 
 namespace TheArmory.Domain.Models.Request.Commands.Ad;
 
 public class AdAddMediaCommand : AdCommand
 {
-    public IFormFile Photo { get; set; }
+    [JsonIgnore] public IFormFile Photo { get; set; }
 }

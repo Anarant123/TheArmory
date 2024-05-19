@@ -92,240 +92,243 @@
 </div>
 
 <div class="row mt-3">
-    <div class="col-md-12">
-        <form method="post" asp-page-handler="Update">
-            <div class="row">
+<div class="col-md-12">
+<form method="post" asp-page-handler="Update">
+    <div class="row">
 
-                <h1>Параметры</h1>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
-                        <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
-                    </div>
-                    <div class="col-9">
-                        <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
-                            <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
-                            @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
-                            {
-                                <option value="@condition.Id">@condition.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+        <h1>Параметры</h1>
+        <div class="row mt-3">
+            <div class="col-3">
+                <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
             </div>
-
-            <div class="row">
-                <h1>Подробности</h1>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
-                    </div>
-                    <div class="col-9">
-                        <input type="text" asp-for="UpdateCommand.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"/>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
-                    </div>
-                    <div class="col-9">
-                        <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
-                    </div>
-                    <div class="col-9">
-                        <select asp-for="UpdateCommand.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
-                            <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
-                            @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
-                            {
-                                <option value="@category.Id">@category.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
-
-            </div>
-            
-            <div class="row mt-3">
-                <div class="col-3">
-                    <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
-                </div>
-            </div>
-        </form>
-
-        <div class="row">
-            <div class="row mt-3">
-                <div class="col">
-                    <h1>Характеристики</h1>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
-                </div>
-            </div>
-
-            @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
-            {
-                <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
-                    <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
-                    <div class="container mt-2">
-                        @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
-                        {
-                            <div class="row">
-                                <div class="col-3">
-                                    <label>@characteristic.Name:</label>
-                                </div>
-                                <div class="col-6">
-                                    <label>@characteristic.Description</label>
-                                </div>
-                                <div class="col-auto ml-auto">
-                                    <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
-                                        <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </form>
-            }
-            <form method="post" asp-page-handler="CreateCharacteristic">
-                <div class="container d-none" id="addCreateCharacteristicForm">
-                    <div class="row mt-3">
-                        <div class="col-md-3">
-                            <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
-                        </div>
-                        <div class="col-md-7">
-                            <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
-                        </div>
-                        <div class="col-auto">
-
-                            <button id="saveContactButton" type="submit" class="btn btn-success">
-                                <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                            </button>
-                            <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
-                                <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-        <div class="row">
-            <form method="post" asp-page-handler="DeleteMedia">
-                <div class="row mt-3">
-                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                        <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-                    </div>
-                    <div class="col-md-10 text-center">
-                        @if (Model.MyAdViewModel.Images.Count > 0)
-                        {
-                            <input type="hidden" asp-for="DeleteMediaCommand.MediaId" value="@Model.MyAdViewModel.Images.First().Id"/>
-                            <div id="image-area" class="position-relative">
-                                <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
-                            </div>
-                        }
-                        else
-                        {
-                            <div id="image-area" class="position-relative">
-                                <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
-                            </div>
-                        }
-                    </div>
-                    <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                        <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
-                    </div>
-                </div>
-
-            <div class="row mt-3">
-                <button type="submit" class="btn btn-danger">Удалить</button>
-            </div>
-            </form>
-
-            <!-- Контейнер для ячеек с изображениями -->
-            <div id="thumbnails-container" class="row mt-3">
-                @foreach (var image in Model.MyAdViewModel.Images) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
-                {
-                    <div class="col-md text-center image-cell position-relative">
-                        <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
-                    </div>
-                }
-            </div>
-            
-            <form method="post" asp-page-handler="AddMedia">
-            <div class="row mt-3">
-                            <button type="submit" class="btn btn-danger">Удалить</button>
-                        </div>
-                        </form>
-        </div>
-
-        <div class="row">
-            <h1>Видео</h1>
-            <form method="post" asp-page-handler="ChangeVideo">
-                <div class="row mt-3">
-                    <div class="col-3">
-                        <label class="form-label">Ссылка на YouTube видео с обзором:</label>
-                    </div>
-                    <div class="col-9">
-                        <div class="row">
-                            <input id="youtubeVideoLink" asp-for="ChangeYouTubeLinkCommand.YouTubeLink" type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                            <span class="text-danger"></span>
-                        </div>
-                        @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
-                        {
-                            var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
-                            <div id="youtubeVideo" class="row mt-3">
-                                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                            </div>
-                        }
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
-                </div>     
-            </form>
-        </div>
-
-
-        <div class="row address-container">
-            <div class="row mt-3">
-                <div class="d-flex align-items-start justify-content-start">
-                    <input type="text" id="addressInfo" value="@Model.MyAdViewModel.Location?.Address" class="form-control" placeholder="Адрес" readonly="">
-                </div>
-            </div>
-
-            <div class="row mt-3">
-                <div class="col">
-                    <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
-                    <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
-                    <div class="map-container">
-                        <div id="map" class="square" style="height: 400px"></div>
-                        <div class="marker-container d-none">
-                            <img src="/icons/map_marker.png" class="marker" alt=""/>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-9">
+                <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
+                <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
             </div>
         </div>
-
 
         <div class="row mt-3">
             <div class="col-3">
-                <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+                <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
+            </div>
+            <div class="col-9">
+                <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
+                    <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
+                    @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
+                    {
+                        <option value="@condition.Id">@condition.Name</option>
+                    }
+                </select>
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <h1>Подробности</h1>
+        <div class="row mt-3">
+            <div class="col-3">
+                <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
+            </div>
+            <div class="col-9">
+                <input type="text" asp-for="UpdateCommand.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" oninput="autoResize(this)" maxlength="2000"/>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3">
+                <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
+            </div>
+            <div class="col-9">
+                <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" oninput="validatePrice(this)" required="Обязательно к заполнению">
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-3">
+                <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
+            </div>
+            <div class="col-9">
+                <select asp-for="UpdateCommand.CategoryId" id="categorySelect" class="form-select" required="Обязательно к заполнению">
+                    <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
+                    @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="row mt-3">
+        <div class="col">
+            <h1>Характеристики</h1>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
+        </div>
+    </div>
+
+    @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
+    {
+        <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
+            <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
+            <div class="container mt-2">
+                @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
+                {
+                    <div class="row">
+                        <div class="col-3">
+                            <label>@characteristic.Name:</label>
+                        </div>
+                        <div class="col-6">
+                            <label>@characteristic.Description</label>
+                        </div>
+                        <div class="col-auto ml-auto">
+                            <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
+                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </form>
+    }
+    <form method="post" asp-page-handler="CreateCharacteristic">
+        <div class="container d-none" id="addCreateCharacteristicForm">
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
+                </div>
+                <div class="col-md-7">
+                    <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
+                </div>
+                <div class="col-auto">
+
+                    <button id="saveContactButton" type="submit" class="btn btn-success">
+                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                    </button>
+                    <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
+                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <form method="post" asp-page-handler="DeleteMedia">
+        <div class="row mt-3">
+            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+            </div>
+            <div class="col-md-10 text-center">
+                @if (Model.MyAdViewModel.Images.Count > 0)
+                {
+                    <input type="hidden" asp-for="DeleteMediaCommand.MediaId" value="@Model.MyAdViewModel.Images.First().Id"/>
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                    </div>
+                }
+                else
+                {
+                    <div id="image-area" class="position-relative">
+                        <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                    </div>
+                }
+            </div>
+            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </div>
+    </form>
+
+    <!-- Контейнер для ячеек с изображениями -->
+    <div id="thumbnails-container" class="row mt-3">
+        @foreach (var image in Model.MyAdViewModel.Images) // Пропускаем первое изображение, так как оно уже отображено в основном блоке
+        {
+            <div class="col-md text-center image-cell position-relative">
+                <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
+            </div>
+        }
+    </div>
+
+    <form method="post" enctype="multipart/form-data" asp-page-handler="AddMedia">
+        <div class="row mt-3">
+            <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
+            <button type="button" id="add-photo-btn" class="btn btn-primary">Добавить</button>
+            <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
+            <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <h1>Видео</h1>
+    <form method="post" asp-page-handler="ChangeVideo">
+        <div class="row mt-3">
+            <div class="col-3">
+                <label class="form-label">Ссылка на YouTube видео с обзором:</label>
+            </div>
+            <div class="col-9">
+                <div class="row">
+                    <input id="youtubeVideoLink" asp-for="ChangeYouTubeLinkCommand.YouTubeLink" type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                    <span class="text-danger"></span>
+                </div>
+                @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
+                {
+                    var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
+                    <div id="youtubeVideo" class="row mt-3">
+                        <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row mt-3">
+            <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+        </div>
+    </form>
+</div>
+
+
+<div class="row address-container">
+    <div class="row mt-3">
+        <div class="d-flex align-items-start justify-content-start">
+            <input type="text" id="addressInfo" value="@Model.MyAdViewModel.Location?.Address" class="form-control" placeholder="Адрес" readonly="">
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col">
+            <input type="hidden" id="latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
+            <input type="hidden" id="longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
+            <div class="map-container">
+                <div id="map" class="square" style="height: 400px"></div>
+                <div class="marker-container d-none">
+                    <img src="/icons/map_marker.png" class="marker" alt=""/>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row mt-3">
+    <div class="col-3">
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+    </div>
+</div>
+</div>
 </div>
 
 
@@ -374,6 +377,17 @@
     }
 </script>
 <script>
+    let images = [];
+    let newImage = null;
+    let currentImageIndex = 0;
+    let thumbnailsContainer = document.getElementById('thumbnails-container');
+    
+    let thumbnailImages = document.querySelectorAll('.img-thumbnail');
+         
+    thumbnailImages.forEach(function(image) {
+        images.push(image.src);
+    });
+
     function autoResize(textarea) {
         textarea.style.height = 'auto'; 
         textarea.style.height = (textarea.scrollHeight) + 'px'; 
@@ -386,15 +400,6 @@
             input.value = input.value.replace(/\./g, '');
         }
     }
-    
-     let images = [];
-     let currentImageIndex = 0;
-     
-     let thumbnailImages = document.querySelectorAll('.img-thumbnail');
-     
-     thumbnailImages.forEach(function(image) {
-         images.push(image.src);
-     });
      
      function prevImage() {
          if (images.length < 2)
@@ -422,73 +427,6 @@
          let image = document.getElementById("current-image");
          image.src = images[currentImageIndex];
      }
-
-    
-    function handleFileSelect(event) {
-        if (images.length >= 5) { 
-            alert("Вы уже добавили максимальное количество изображений.");
-            return;
-        }
-    
-        let files = event.target.files;
-        let thumbnailsContainer = document.getElementById('thumbnails-container');
-        let numberOfImagesToAdd = Math.min(files.length, 5 - images.length); 
-        let numberOfImagesAdded = 0;
-    
-        for (let i = 0; i < files.length && numberOfImagesAdded < numberOfImagesToAdd; i++) {
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let arrayBuffer = e.target.result; 
-        
-                images.push(arrayBuffer);
-        
-                let thumbnailContainer = document.createElement('div');
-                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
-                let thumbnail = document.createElement('img');
-                thumbnail.className = 'img-thumbnail img-fluid';
-                
-                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
-                thumbnail.src = URL.createObjectURL(blob);
-        
-                thumbnailContainer.appendChild(thumbnail);
-                thumbnailsContainer.appendChild(thumbnailContainer);
-        
-                numberOfImagesAdded++;
-                currentImageIndex = images.length - 1; 
-                updateImage();
-        
-                if (images.length === 5) { 
-                    document.querySelectorAll('.image-controls').forEach(function (element) {
-                        element.style.display = 'flex';
-                    });
-                }
-            };
-            reader.readAsArrayBuffer(files[i]); 
-        }
-    }
-    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
-    
-    function removeImage(index) {
-        images.splice(index, 1);
-        let thumbnailsContainer = document.getElementById('thumbnails-container');
-        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]);
-        if (currentImageIndex === index) {
-            if (currentImageIndex === images.length) {
-                currentImageIndex--;
-            }
-            updateImage();
-        } else if (currentImageIndex > index) {
-            currentImageIndex--;
-        }
-        if (images.length < 5) {
-            document.querySelectorAll('.image-controls').forEach(function (element) {
-                element.style.display = 'none';
-            });
-        }
-    }
-    document.querySelector('.btn-danger').addEventListener('click', function () {
-        removeImage(currentImageIndex);
-    });
     
     function showCreateCharacteristicForm() {
         document.getElementById('addCreateCharacteristicForm').classList.remove("d-none");
@@ -553,5 +491,94 @@
       }
       return videoId;
     }
+    
+    // Обработчик события клика на изображении профиля для выбора файла
+    document.getElementById('add-photo-btn').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+    });
+    
+    // Функция для обновления изображения при выборе файла
+    function handleFileSelect(event) {
+        if (newImage != null){
+            alert("Для начала определитесь с текущим изображением");    
+            return;
+        }
+        
+        if (images.length >= 5) { 
+            alert("Вы уже добавили максимальное количество изображений.");
+            return;
+        }
+        
+        let files = event.target.files;
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        let numberOfImagesAdded = 0;
+        
+        if (files.length > 0) { 
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let arrayBuffer = e.target.result; 
+                
+                let thumbnailContainer = document.createElement('div');
+                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
+                let thumbnail = document.createElement('img');
+                thumbnail.className = 'img-thumbnail img-fluid';
+                                                    
+                let image = document.getElementById("current-image");
+                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                image.src = URL.createObjectURL(blob);
+                newImage = URL.createObjectURL(blob);
+                thumbnail.src = URL.createObjectURL(blob);
+                                            
+                thumbnailContainer.appendChild(thumbnail);
+                thumbnailsContainer.appendChild(thumbnailContainer);
+                                            
+                numberOfImagesAdded++;
+                
+                currentImageIndex = images.length - 1; 
+                updateImage();
+                                            
+                if (images.length === 5) { 
+                    document.querySelectorAll('.image-controls').forEach(function (element) {
+                        element.style.display = 'flex';
+                    });
+                }
+            };
+            reader.readAsArrayBuffer(files[0]); // Читаем только первый файл
+        }
+        document.getElementById('add-photo-btn').style.display = 'none';
+        document.getElementById('save-photo-btn').style.display = 'inline-block';
+        document.getElementById('cancel-photo-btn').style.display = 'inline-block';
+    }
+    // Добавляем обработчик события change на элемент file-input
+    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
+    
+       
+    
+    // Функция для удаления фото и возвращения предыдущего изображения
+    function removeImage(index) {
+        images.splice(index, 1);
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]);
+        if (currentImageIndex === index) {
+            if (currentImageIndex === images.length) {
+                currentImageIndex--;
+            }
+            updateImage();
+        } else if (currentImageIndex > index) {
+            currentImageIndex--;
+        }
+        if (images.length < 5) {
+            document.querySelectorAll('.image-controls').forEach(function (element) {
+                element.style.display = 'none';
+            });
+        }
+        newImage = null;
+        document.getElementById('file-input').value = ""; 
+        document.getElementById('save-photo-btn').style.display = 'none';
+        document.getElementById('cancel-photo-btn').style.display = 'none';
+    }
+    document.querySelector('.btn-danger').addEventListener('click', function () {
+        removeImage(currentImageIndex);
+    });
 
 </script>

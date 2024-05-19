@@ -322,7 +322,7 @@ public class AdsController : BaseController
     }
     
     /// <summary>
-    /// Удалить фото объявления
+    /// Добавить фото к объявлению
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
@@ -335,6 +335,11 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
 
         var result = await _adsRepository.AddMedia(
             userResponse.Item.Id,

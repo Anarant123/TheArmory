@@ -509,4 +509,28 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
+    
+    public async Task<BaseResult> AddMedia(AdAddMediaCommand command)
+    {
+        try
+        {
+            var url = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Media";
+            var formData = new MultipartFormDataContent();
+            formData.Add(new StringContent(command.Id.ToString()), "id");
+            var streamContent = new StreamContent(command.Photo.OpenReadStream());
+            formData.Add(streamContent, "photo", command.Photo.FileName);
+
+            var response = await httpClient.PostAsync(url, formData);
+            if (!response.IsSuccessStatusCode)
+                return new BaseResult(await response.Content.ReadAsStringAsync());
+
+            var responseStream = await response.Content.ReadAsStreamAsync();
+            var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
+            return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
+        }
+        catch (Exception exception)
+        {
+            return new BaseResult(exception.Message);
+        }
+    }
 }

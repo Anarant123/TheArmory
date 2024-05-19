@@ -623,7 +623,13 @@ public class AdsRepository : BaseRepository
         if (!result.Success)
             return new BaseResult(result.Error);
 
-        return new BaseResult();
+        Context.Medias.Add(result.Item);
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult()
+        };
     }
 
     /// <summary>

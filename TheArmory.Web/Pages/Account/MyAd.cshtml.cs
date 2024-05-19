@@ -24,6 +24,7 @@ public class MyAd : PageModel
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
     [BindProperty] public AdChangeYouTubeLinkCommand ChangeYouTubeLinkCommand { get; set; }
+    [BindProperty] public AdAddMediaCommand AddMediaCommand { get; set; }
     [BindProperty] public AdUpdateCommand UpdateCommand { get; set; }
     [BindProperty] public AdDeleteMediaCommand DeleteMediaCommand { get; set; }
     [BindProperty] public CharacteristicCreateCommand CharacteristicCreateCommand { get; set; }
@@ -125,6 +126,14 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostDeleteMediaAsync()
     {
         Result = await _adsService.DeleteMedia(DeleteMediaCommand);
+        if (!Result.Success) return Page();
+        await OnGetSelectedAsync();
+        return Page();
+    }
+    
+    public async Task<ActionResult> OnPostAddMediaAsync()
+    {
+        Result = await _adsService.AddMedia(AddMediaCommand);
         if (!Result.Success) return Page();
         await OnGetSelectedAsync();
         return Page();
