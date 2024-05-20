@@ -248,9 +248,12 @@
             </div>
         </div>
 
-        <div class="row mt-3">
-            <button type="submit" class="btn btn-danger">Удалить</button>
-        </div>
+        @if (Model.MyAdViewModel.Images.Count > 0)
+        {
+            <div class="row mt-3">
+                <button type="submit" class="btn btn-danger">Удалить</button>
+            </div>
+        }
     </form>
 
     <!-- Контейнер для ячеек с изображениями -->
@@ -266,9 +269,17 @@
     <form method="post" enctype="multipart/form-data" asp-page-handler="AddMedia">
         <div class="row mt-3">
             <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
-            <button type="button" id="add-photo-btn" class="btn btn-primary">Добавить</button>
-            <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
-            <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+            <div class="row">
+                <button type="button" id="add-photo-btn" class="btn btn-primary">Добавить</button>
+            </div>
+            <div class="row">
+                <div class="col-auto">
+                    <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+                </div>
+            </div>
         </div>
     </form>
 </div>
@@ -292,6 +303,13 @@
                         <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
                 }
+                else
+                {
+                    <div id="youtubeVideo" class="row mt-3" style="display: none;">
+                        <iframe id="videoFrame" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                }
+                
             </div>
         </div>
         <div class="row mt-3">
@@ -451,45 +469,44 @@
     const videoFrame = document.getElementById('videoFrame');
     
     youtubeLinkInput.addEventListener('input', function() {
-        alert("jgfsdfd");
-      let youtubeLink = youtubeLinkInput.value.trim();
-      if (youtubeLink === '') {
-        document.getElementById('youtubeVideo').style.display = 'none';
-        videoFrame.src = '';
-        return;
-      }
-    
-      let youtubeRegExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
-    
-      if (youtubeRegExp.test(youtubeLink)) {
-        document.getElementById('youtubeVideo').style.display = 'block';
-        let videoId = getYoutubeVideoId(youtubeLink);
-        console.log('Идентификатор видео:', videoId);S
-        if (videoId) {
-          let embedUrl = `https://www.youtube.com/embed/${videoId}`;
-          videoFrame.setAttribute('src', embedUrl);
-        } else {
-          console.error('Не удалось извлечь идентификатор видео из ссылки.');
-          document.getElementById('youtubeVideo').style.display = 'none';
-          videoFrame.src = '';
+        let youtubeLink = youtubeLinkInput.value.trim();
+        if (youtubeLink === '') {
+            document.getElementById('youtubeVideo').style.display = 'none';
+            videoFrame.src = '';
+            return;
         }
-      } else {
-        console.error('Введенная ссылка не соответствует формату ссылки на видео YouTube.');
-        document.getElementById('youtubeVideo').style.display = 'none';
-        videoFrame.src = '';
-      }
+    
+        let youtubeRegExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
+    
+        if (youtubeRegExp.test(youtubeLink)) {
+            document.getElementById('youtubeVideo').style.display = 'block';
+            let videoId = getYoutubeVideoId(youtubeLink);
+            console.log('Идентификатор видео:', videoId);S
+        if (videoId) {
+            let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+            videoFrame.setAttribute('src', embedUrl);
+        } else {
+            console.error('Не удалось извлечь идентификатор видео из ссылки.');
+            document.getElementById('youtubeVideo').style.display = 'none';
+            videoFrame.src = '';
+        }
+        } else {
+            console.error('Введенная ссылка не соответствует формату ссылки на видео YouTube.');
+            document.getElementById('youtubeVideo').style.display = 'none';
+            videoFrame.src = '';
+        }
     });
     
     function getYoutubeVideoId(url) {
-      let videoId = '';
-      let regExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/(.+)$/;
-      if (regExp.test(url)) {
-        let match = url.match(regExp);
-        if (match && match[3]) {
-          videoId = match[3];
+        let videoId = '';
+        let regExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/(.+)$/;
+        if (regExp.test(url)) {
+            let match = url.match(regExp);
+            if (match && match[3]) {
+                videoId = match[3];
+            }
         }
-      }
-      return videoId;
+        return videoId;
     }
     
     // Обработчик события клика на изображении профиля для выбора файла
