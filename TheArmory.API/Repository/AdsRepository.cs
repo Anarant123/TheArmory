@@ -463,6 +463,51 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
         };
     }
+    
+    /// <summary>
+    /// Обновление объявления
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    public async Task<BaseResult<MyAdViewModel>> ChangeLocation(
+        Guid userId,
+        AdLocationCommand command)
+    {
+        var ad = await Context.Ads
+            .Include(a => a.Medias)
+            .Include(a => a.Condition)
+            .Include(a => a.Region)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Contacts)
+            .Include(a => a.User)
+            .ThenInclude(u => u.Ads)
+            .Include(a => a.Location)
+            .Include(a => a.Characteristics)
+            .FirstOrDefaultAsync(a => a.Id.Equals(command.Id) && a.UserId.Equals(userId));
+
+        if (ad is null)
+            return new BaseResult<MyAdViewModel>("Объявление не найдено");
+        
+        var address = command.Address ?? string.Empty;
+
+        var region = await Context.Regions.FirstOrDefaultAsync(r => address.ToLower().Contains(r.Name.ToLower()));
+        if (region is not null)
+            ad.RegionId = region.Id;
+
+        ad.Location = new Location()
+        {
+            Address = address,
+            Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
+            Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
+        };
+
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
+            _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
+        };
+    }
 
 
     /// <summary>

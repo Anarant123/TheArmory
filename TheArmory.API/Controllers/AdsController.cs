@@ -465,6 +465,35 @@ public class AdsController : BaseController
     }
     
     /// <summary>
+    /// Изменить геолокацию
+    /// </summary>
+    /// <returns></returns>
+    [Authorize(Roles = "Client")]
+    [HttpPut]
+    [Route("Location")]
+    public async Task<ActionResult<BaseResult>> ChangeLocationAd(
+        [FromBody]AdLocationCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse.Item is null)
+            return BadRequest(userResponse);
+        
+        var adIdResponse = GetSelectedMyAdId();
+        if (!adIdResponse.Success)
+            return BadRequest(adIdResponse);
+        command.Id = adIdResponse.Item;
+
+        var result = await _adsRepository.ChangeLocation(
+            userResponse.Item.Id,
+            command);
+
+        if (result.Success)
+            return Ok(result);
+
+        return BadRequest(result);
+    }
+    
+    /// <summary>
     /// Снять с публикации
     /// </summary>
     /// <returns></returns>

@@ -23,6 +23,7 @@ public class MyAd : PageModel
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
     
+    [BindProperty] public AdLocationCommand LocationCommand { get; set; }
     [BindProperty] public AdChangeYouTubeLinkCommand ChangeYouTubeLinkCommand { get; set; }
     [BindProperty] public AdAddMediaCommand AddMediaCommand { get; set; }
     [BindProperty] public AdUpdateCommand UpdateCommand { get; set; }
@@ -118,6 +119,14 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostChangeVideoAsync()
     {
         Result = await _adsService.ChangeYoutubeLink(ChangeYouTubeLinkCommand);
+        if (!Result.Success) return Page();
+        await OnGetSelectedAsync();
+        return Page();
+    }
+    
+    public async Task<ActionResult> OnPostChangeLocationAsync()
+    {
+        Result = await _adsService.ChangeLocation(LocationCommand);
         if (!Result.Success) return Page();
         await OnGetSelectedAsync();
         return Page();
