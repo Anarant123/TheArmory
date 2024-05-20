@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
-using TheArmory.Middleware;
 using TheArmory.Repository;
 using TheArmory.Utils.Initializer;
 
@@ -114,7 +113,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<CookieExpirationMiddleware>();
 
 using var scope = app.Services.CreateScope();
 await using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
