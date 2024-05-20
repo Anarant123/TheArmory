@@ -25,9 +25,11 @@ public class AuthUtils
 
         var claimsIdentity = new ClaimsIdentity(
             claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
         var authProperties = new AuthenticationProperties()
         {
-            IsPersistent = isPersistent
+            IsPersistent = isPersistent,
+            ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1)
         };
 
         await httpContext.SignInAsync(
@@ -35,4 +37,5 @@ public class AuthUtils
             new ClaimsPrincipal(claimsIdentity),
             authProperties);
     }
+
 }

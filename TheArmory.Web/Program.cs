@@ -58,10 +58,9 @@ builder.Services.TryAddSingleton(s => new BaseUrlOptions
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddHttpClient("MyNamedClient", client =>
-{
-    client.Timeout = TimeSpan.FromHours(12);
-});
+builder.Services
+    .AddHttpClient("httpClient", client => { })
+    .SetHandlerLifetime(TimeSpan.FromHours(12));
 
 var app = builder.Build();
 
@@ -77,7 +76,6 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
