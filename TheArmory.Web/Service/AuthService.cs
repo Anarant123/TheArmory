@@ -25,9 +25,12 @@ public class AuthService : BaseService<User>
             var uri = $"{baseUrlOptions.GetFullApiUrl("Auth")}/Login";
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
-            if (!response.IsSuccessStatusCode)
-                return new BaseResult<UserViewModel>(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult<UserViewModel>>(responseStream);
+                return errorResult ?? new BaseResult<UserViewModel>(await response.Content.ReadAsStringAsync());
+            }
             var result = await JsonSerializer.DeserializeAsync<BaseResult<UserViewModel>>(responseStream);
             return result ?? new BaseResult<UserViewModel>(ErrorsMessage.SomethingWentWrong);
         }
@@ -44,9 +47,12 @@ public class AuthService : BaseService<User>
             var uri = $"{baseUrlOptions.GetFullApiUrl("Auth")}/Registration";
             using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
-            if (!response.IsSuccessStatusCode)
-                return new BaseResult<User>(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult<UserViewModel>>(responseStream);
+                return errorResult ?? new BaseResult<UserViewModel>(await response.Content.ReadAsStringAsync());
+            }
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
         }
@@ -63,9 +69,12 @@ public class AuthService : BaseService<User>
             var uri = $"{baseUrlOptions.GetFullApiUrl("Auth")}/Logout";
             using var content = new StringContent(string.Empty, MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
-            if (!response.IsSuccessStatusCode)
-                return new BaseResult(await response.Content.ReadAsStringAsync());
             var responseStream = await response.Content.ReadAsStreamAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorResult = await JsonSerializer.DeserializeAsync<BaseResult<UserViewModel>>(responseStream);
+                return errorResult ?? new BaseResult<UserViewModel>(await response.Content.ReadAsStringAsync());
+            }
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
         }
