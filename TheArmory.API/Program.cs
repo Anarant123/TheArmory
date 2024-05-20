@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
+using TheArmory.Middleware;
 using TheArmory.Repository;
 using TheArmory.Utils.Initializer;
 
@@ -49,10 +50,10 @@ builder.Services
         options.Cookie.Domain = builder.Configuration.GetSection("CookieDomain").Value ?? $"localhost";
         options.Cookie.HttpOnly = false;
         options.ExpireTimeSpan = TimeSpan.FromDays(30);
+        options.SlidingExpiration = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.Name = builder.Configuration.GetSection("CookieName").Value ?? $"{new Random().Next()}";
         options.Cookie.SameSite = SameSiteMode.None;
-        options.SlidingExpiration = true;
         options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
         options.Cookie.Path = "/";
         options.Events.OnRedirectToLogin = context =>
@@ -112,6 +113,8 @@ app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<CookieExpirationMiddleware>();
 
 using var scope = app.Services.CreateScope();
 await using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
