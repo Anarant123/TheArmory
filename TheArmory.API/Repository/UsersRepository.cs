@@ -130,6 +130,26 @@ public class UsersRepository : BaseRepository
         };
     }
     
+    public async Task<BaseResult> ChangePassword(
+        Guid userId,
+        UserChangePasswordCommand command)
+    {
+        var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
+        if (user is null)
+            return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
+        
+        if (!command.Password.Equals(command.PasswordConfirm))
+            return new BaseResult(ErrorsMessage.ConfirmPasswordNotMatch);
+
+        user.PasswordHash = _passwordHasher.HashPassword(user, command.Password);
+        
+        return await Context.SaveChangesAsync() switch
+        {
+            0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
+            _ => new BaseResult()
+        };
+    }
+    
     public async Task<BaseResult> DeleteMe(
         Guid userId)
     {

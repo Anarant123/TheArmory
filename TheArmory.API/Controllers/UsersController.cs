@@ -14,13 +14,14 @@ public class UsersController : BaseController
 {
     protected readonly ILogger<UsersController> Logger;
     private readonly UsersRepository _usersRepository;
-    
-    public UsersController(ILogger<UsersController> logger, UsersRepository usersRepository) : base(logger, usersRepository)
+
+    public UsersController(ILogger<UsersController> logger, UsersRepository usersRepository) : base(logger,
+        usersRepository)
     {
         Logger = logger;
         _usersRepository = usersRepository;
     }
-    
+
     /// <summary>
     /// Получить себя
     /// </summary>
@@ -47,7 +48,7 @@ public class UsersController : BaseController
     [Authorize]
     [Route("ChangeProfilePhoto")]
     public async Task<ActionResult<BaseResult>> ChangeProfilePhoto(
-        [FromForm]UserChangeProfilePhotoCommand command)
+        [FromForm] UserChangeProfilePhotoCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse is { Success: false, Item: not null })
@@ -59,10 +60,10 @@ public class UsersController : BaseController
 
         if (!result.Success)
             return BadRequest(result);
-        
+
         return Ok(result);
     }
-    
+
     /// <summary>
     /// Смена фотографии профиля
     /// </summary>
@@ -72,7 +73,7 @@ public class UsersController : BaseController
     [Authorize]
     [Route("ChangeName")]
     public async Task<ActionResult<BaseResult>> ChangeProfileName(
-        [FromBody]UserChangeNameCommand command)
+        [FromBody] UserChangeNameCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse is { Success: false, Item: not null })
@@ -84,10 +85,35 @@ public class UsersController : BaseController
 
         if (!result.Success)
             return BadRequest(result);
-        
+
         return Ok(result);
     }
-    
+
+    /// <summary>
+    /// Смена пароля
+    /// </summary>
+    /// <param name="command"></param>
+    /// <returns></returns>
+    [HttpPut]
+    [Authorize]
+    [Route("Password")]
+    public async Task<ActionResult<BaseResult>> ChangePassword(
+        [FromBody]UserChangePasswordCommand command)
+    {
+        var userResponse = await GetUser();
+        if (userResponse is { Success: false, Item: not null })
+            BadRequest(userResponse);
+
+        var user = userResponse.Item!;
+
+        var result = await _usersRepository.ChangePassword(user.Id, command);
+
+        if (!result.Success)
+            return BadRequest(result);
+
+        return Ok(result);
+    }
+
     /// <summary>
     /// Получить себя
     /// </summary>
@@ -107,8 +133,7 @@ public class UsersController : BaseController
 
         if (!result.Success)
             return BadRequest(result);
-        
+
         return Ok(result);
     }
-    
 }
