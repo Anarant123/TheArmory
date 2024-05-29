@@ -18,19 +18,15 @@ public class Index : PageModel
     
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
     
-    [BindProperty]
-    public List<RegionListViewModel> Regions { get; set; }
+    [BindProperty] public List<RegionListViewModel> Regions { get; set; }
 
     [BindProperty] public TileAdQueryItemsParams QueryParams { get; set; } = new TileAdQueryItemsParams();
     
-    [BindProperty]
-    public AdFilterViewModel AdFilterViewModel { get; set; }
+    [BindProperty] public AdFilterViewModel AdFilterViewModel { get; set; }
     
-    [BindProperty]
-    public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
+    [BindProperty] public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
     
-    [BindProperty]
-    public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
+    [BindProperty] public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
 
     public Index(
         AdsService adsService,

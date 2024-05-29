@@ -9,17 +9,27 @@
         <div class="row">
             <!-- Фильтры -->
             <div class="col-md-2">
-                <h5 class="text-muted">Фильтры</h5>
+                <h5 class="text-muted"><i class="bi bi-filter"></i> Фильтры</h5>
                 <div class="form-group">
-                    <label class="small text-muted" for="price-from">Цена от:</label>
-                    <input type="text" class="form-control form-control-sm" asp-for="QueryParams.PriceFrom" value="@Model.QueryParams.PriceFrom" id="price-from" placeholder="От">
+                    <label class="small text-muted" for="price-from">₽ Цена от:</label>
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">₽</span>
+                        </div>
+                        <input type="text" class="form-control" asp-for="QueryParams.PriceFrom" value="@Model.QueryParams.PriceFrom" id="price-from" placeholder="От">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="small text-muted" for="price-to">Цена до:</label>
-                    <input type="text" class="form-control form-control-sm" asp-for="QueryParams.PriceTo" value="@Model.QueryParams.PriceTo" id="price-to" placeholder="До">
+                    <label class="small text-muted" for="price-to">₽ Цена до:</label>
+                    <div class="input-group input-group-sm">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">₽</span>
+                        </div>
+                        <input type="text" class="form-control" asp-for="QueryParams.PriceTo" value="@Model.QueryParams.PriceTo" id="price-to" placeholder="До">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="small text-muted" for="region">Регион:</label>
+                    <label class="small text-muted" for="region"><i class="bi bi-globe"></i> Регион:</label>
                     <select asp-for="QueryParams.RegionId" class="form-select form-select-sm" id="category-select">
                         <option value="">Регион</option>
                         @foreach (var region in Model.AdFilterViewModel.Regions)
@@ -29,7 +39,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="small text-muted" for="category">Категория:</label>
+                    <label class="small text-muted" for="category"><i class="bi bi-tags"></i> Категория:</label>
                     <select asp-for="QueryParams.CategoryId" class="form-select form-select-sm">
                         <option value="">Категория</option>
                         @foreach (var category in Model.AdFilterViewModel.Categories)
@@ -39,9 +49,10 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Применить фильтры</button>
+                    <button type="submit" class="btn btn-primary fs-6 mt-3 w-100"><i class="bi bi-funnel me-2"></i>Отфильтровать</button>
                 </div>
             </div>
+
 
             <!-- Плитки с объявлениями -->
             <div class="col-md-10">
