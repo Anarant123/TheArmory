@@ -77,13 +77,13 @@
                                 </div>
                                 <div class="col-auto">
                                     <button id="editButton" type="button" class="btn btn-secondary" onclick="editName()">
-                                        <img src="/icons/edit_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        <i class="bi bi-pencil-fill"></i>
                                     </button>
                                     <button id="saveButton" type="submit" class="btn btn-success d-none" onclick="saveName()">
-                                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        <i class="bi bi-check-circle-fill"></i>
                                     </button>
                                     <button id="cancelButton" type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
-                                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                                        <i class="bi bi-x-circle-fill"></i>
                                     </button>
                                 </div>
                             </div>
@@ -95,9 +95,13 @@
                             <h4>Контакты для связи</h4>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-primary" onclick="showAddContactForm()">Добавить</button>
+                            <button type="button" class="btn btn-primary" onclick="showAddContactForm()">
+                                <i class="bi bi-plus-circle-fill me-2"></i>
+                                Добавить
+                            </button>
                         </div>
                     </div>
+                    
                     @if (Model.UserInfo.Contacts.Any())
                     {
                         <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
@@ -114,11 +118,8 @@
                                                 <span>@contact.Description</span>
                                             </div>
                                             <div class="col-auto">
-                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-md-block d-lg-none hide-button">
-                                                    <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
-                                                </button>
-                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-lg-block hide-button">
-                                                    <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-md-block hide-button">
+                                                    <i class="bi bi-trash-fill"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -166,17 +167,27 @@
     <div class="col-md-12">
         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">Активные</button>
+                <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+                     <i class="bi bi-check-circle-fill me-2"></i>
+                    Активные
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab" aria-controls="inactive" aria-selected="false">Неактивные</button>
+                <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab" aria-controls="inactive" aria-selected="false">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    Неактивные
+                </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="banned-tab" data-bs-toggle="tab" data-bs-target="#banned" type="button" role="tab" aria-controls="banned" aria-selected="false">В бане</button>
+                <button class="nav-link" id="banned-tab" data-bs-toggle="tab" data-bs-target="#banned" type="button" role="tab" aria-controls="banned" aria-selected="false">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Забаннены
+                </button>
             </li>
         </ul>
     </div>
 </div>
+
 
 <!-- Контент для каждого типа объявлений -->
 <div class="row mt-3">
