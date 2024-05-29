@@ -23,10 +23,10 @@ public class ChangePassword : PageModel
         return Page();
     }
     
-    public async Task<ActionResult> OnPostDeleteAsync()
+    public async Task<ActionResult> OnPostAsync()
     {
         RequestResult = await _userService.ChangePassword(ChangePasswordCommand);
         if (!RequestResult.Success) return await OnGetAsync();
-        return RedirectToPage("/Auth/Index");
+        return RedirectToPage("/Account/PersonalInfo");
     }
 }
