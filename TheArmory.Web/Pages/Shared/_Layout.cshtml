@@ -13,7 +13,7 @@
 <body>
 <header>
     <div class="container">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 container-fluid px-3 px-md-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Ads/Index">TheArmory</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -69,11 +69,10 @@
                     }
                     else
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Auth/Index"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Auth/Registration"><i class="bi bi-person-plus"></i> Зарегистрироваться</a>
+                        <li class="nav-item d-flex align-items-center">
+                            <a class="nav-link text-dark px-3 rounded-left" asp-page="/Auth/Index"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
+                            |
+                            <a class="nav-link text-dark px-3 rounded-right" asp-page="/Auth/Registration"><i class="bi bi-person-plus"></i> Зарегистрироваться</a>
                         </li>
                     }
                 </ul>
