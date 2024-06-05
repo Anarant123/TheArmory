@@ -194,14 +194,14 @@
             <div class="container mt-2">
                 @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
                 {
-                    <div class="row">
+                    <div class="row mt-1">
                         <div class="col-3">
                             <label>@characteristic.Name:</label>
                         </div>
-                        <div class="col-6">
-                            <label>@characteristic.Description</label>
+                        <div class="col">
+                            <input type="text" class="form-control" readonly value="@characteristic.Description"/>
                         </div>
-                        <div class="col-auto ml-auto">
+                        <div class="col-auto ms-auto">
                             <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
                                 <i class="bi bi-trash"></i>
                             </button>
