@@ -69,7 +69,9 @@
     {
         <div class="col">
             <form method="post" asp-page-handler="Deactivate">
-                <button type="submit" class="btn btn-primary btn-block">Снять с публикации</button>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="bi bi-x-circle"></i> Снять с публикации
+                </button>
             </form>
         </div>
     }
@@ -77,17 +79,23 @@
     {
         <div class="col">
             <form method="post" asp-page-handler="Activate">
-                <button type="submit" class="btn btn-primary btn-block">Опубликовать</button>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="bi bi-check-circle"></i> Опубликовать
+                </button>
             </form>
         </div>
     }
     <div class="col">
         <form method="post" asp-page-handler="Delete">
-            <button type="submit" class="btn btn-danger btn-block">Удалить</button>
+            <button type="submit" class="btn btn-danger btn-block">
+                <i class="bi bi-trash"></i> Удалить
+            </button>
         </form>
     </div>
     <div class="col">
-        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
+            <i class="bi bi-box-arrow-left"></i> Отменить и выйти
+        </a>
     </div>
 </div>
 
@@ -160,7 +168,9 @@
 
     <div class="row mt-3">
         <div class="col-3">
-            <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="bi bi-save"></i> Сохранить изменения
+            </button>
         </div>
     </div>
 </form>
@@ -171,7 +181,9 @@
             <h1>Характеристики</h1>
         </div>
         <div class="col-auto">
-            <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">+</button>
+            <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">
+                <i class="bi bi-plus"></i>
+            </button>
         </div>
     </div>
 
@@ -191,7 +203,7 @@
                         </div>
                         <div class="col-auto ml-auto">
                             <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-secondary">
-                                <img src="/icons/trash_bin_icon.png" alt="Удалить" style="max-width: 16px; max-height: 16px;">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -209,12 +221,11 @@
                     <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
                 </div>
                 <div class="col-auto">
-
                     <button id="saveContactButton" type="submit" class="btn btn-success">
-                        <img src="/icons/tick_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                        <i class="bi bi-check"></i> 
                     </button>
                     <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
-                        <img src="/icons/cross_icon.png" alt="Edit Icon" style="max-width: 16px; max-height: 16px;">
+                        <i class="bi bi-x"></i> 
                     </button>
                 </div>
             </div>
@@ -251,7 +262,9 @@
         @if (Model.MyAdViewModel.Images.Count > 0)
         {
             <div class="row mt-3">
-                <button type="submit" class="btn btn-danger">Удалить</button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Удалить
+                </button>
             </div>
         }
     </form>
@@ -270,14 +283,20 @@
         <div class="row mt-3">
             <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
             <div class="row">
-                <button type="button" id="add-photo-btn" class="btn btn-primary">Добавить</button>
+                <button type="button" id="add-photo-btn" class="btn btn-primary">
+                    <i class="bi bi-plus-lg"></i> Добавить
+                </button>
             </div>
             <div class="row">
                 <div class="col-auto">
-                    <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
+                    <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">
+                        <i class="bi bi-save"></i> Сохранить
+                    </button>
                 </div>
                 <div class="col-auto">
-                    <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+                    <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">
+                        <i class="bi bi-x-lg"></i> Отмена
+                    </button>
                 </div>
             </div>
         </div>
@@ -313,7 +332,9 @@
             </div>
         </div>
         <div class="row mt-3">
-            <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+            <button type="submit" class="btn btn-primary btn-block">
+                <i class="bi bi-save"></i> Сохранить
+            </button>
         </div>
     </form>
 </div>
@@ -328,7 +349,7 @@
                 <div class="row mt-3">
                     <div class="col">
                         <button type="button" onclick="changeNavigation()" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
-                            Показать карту
+                            <i class="bi bi-map"></i> Показать карту
                         </button>
                     </div>
                 </div>
@@ -350,7 +371,9 @@
                 </div>
             </div>
             <div class="row">
-                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save"></i> Сохранить изменения
+                </button>
             </div>
         </form>
 </div>
@@ -358,7 +381,9 @@
 
 <div class="row mt-3">
     <div class="col-3">
-        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">Отменить и выйти</a>
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
+            <i class="bi bi-x-lg"></i> Отменить и выйти
+        </a>
     </div>
 </div>
 </div>
