@@ -133,10 +133,10 @@
                             <div class="rounded bg-light p-2 mb-2">
                                 <div class="row align-items-center contact-row">
                                     <div class="col-md-3">
-                                        <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" placeholder="Название сервиса">
+                                        <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" maxlength="32" placeholder="Название сервиса">
                                     </div>
                                     <div class="col col-md-6">
-                                        <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" placeholder="Ваши реквизиты">
+                                        <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" maxlength="32" placeholder="Ваши реквизиты">
                                     </div>
                                     <div class="col-auto ms-auto">
                                         <button id="saveContactButton" type="submit" class="btn btn-success">
