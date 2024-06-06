@@ -23,7 +23,7 @@ public class RegionsController : BaseController
     }
     
     /// <summary>
-    /// Получить себя
+    /// Получить список регионов
     /// </summary>
     /// <returns></returns>
     [HttpGet]

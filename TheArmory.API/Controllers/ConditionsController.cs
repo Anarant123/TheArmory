@@ -23,7 +23,7 @@ public class ConditionsController : BaseController
     }
     
     /// <summary>
-    /// Получить себя
+    /// Получить список состояний
     /// </summary>
     /// <returns></returns>
     [HttpGet]

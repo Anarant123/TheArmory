@@ -51,7 +51,7 @@ public class CharacteristicsController : BaseController
     }
     
     /// <summary>
-    /// Удалить контакт
+    /// Удалить характеристику
     /// </summary>
     /// <returns></returns>
     [HttpDelete]

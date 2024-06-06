@@ -215,10 +215,10 @@
         <div class="container d-none" id="addCreateCharacteristicForm">
             <div class="row mt-3">
                 <div class="col-md-3">
-                    <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" placeholder="Название">
+                    <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" maxlength="30" placeholder="Название">
                 </div>
                 <div class="col-md-7">
-                    <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" placeholder="Значение">
+                    <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" maxlength="100" placeholder="Значение">
                 </div>
                 <div class="col-auto">
                     <button id="saveContactButton" type="submit" class="btn btn-success">
