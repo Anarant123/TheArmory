@@ -65,7 +65,7 @@ public class UsersController : BaseController
     }
 
     /// <summary>
-    /// Смена фотографии профиля
+    /// Смена имени профиля
     /// </summary>
     /// <param name="command"></param>
     /// <returns></returns>
@@ -115,7 +115,7 @@ public class UsersController : BaseController
     }
 
     /// <summary>
-    /// Получить себя
+    /// Удалить себя
     /// </summary>
     /// <returns></returns>
     [HttpDelete]
