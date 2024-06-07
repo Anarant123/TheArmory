@@ -24,5 +24,5 @@ public class TileAdQueryItemsParams : BaseQueryItemsParams
     public decimal PriceFrom { get; set; } = 0;
     
     [JsonPropertyName("priceFrom")] 
-    public decimal PriceTo { get; set; }  = decimal.MaxValue;
+    public decimal PriceTo { get; set; }  = 10000000;
 }

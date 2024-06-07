@@ -4,19 +4,75 @@
     ViewData["Title"] = "Объявления";
 }
 
+<style>
+    .filter-header {
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control, .form-select, .input-group-text, .page-link, .btn {
+        border-radius: 0.25rem;
+    }
+
+    .page-link {
+        color: #007bff;
+    }
+
+    .page-item.active .page-link {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .pagination .page-item {
+        margin: 0 2px;
+    }
+
+    .filter-container {
+        background: #f8f9fa;
+        border-radius: 0.25rem;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .ad-tile-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .ad-tile {
+        flex: 0 1 calc(25% - 20px);
+    }
+
+    .ad-tile img {
+        width: 100%;
+        border-radius: 0.25rem;
+    }
+
+    .ad-tile h5 {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+</style>
+
 <form id="form" method="post" asp-page-handler="Filter">
     <div class="container-fluid d-flex flex-column min-vh-100">
         <div class="row">
             <!-- Фильтры -->
-            <div class="col-md-2">
-                <h5 class="text-muted"><i class="bi bi-filter"></i> Фильтры</h5>
+            <div class="col-md-2 filter-container">
+                <h5 class="filter-header"><i class="bi bi-filter"></i> Фильтры</h5>
                 <div class="form-group">
                     <label class="small text-muted" for="price-from">₽ Цена от:</label>
                     <div class="input-group input-group-sm">
                         <div class="input-group-prepend">
                             <span class="input-group-text">₽</span>
                         </div>
-                        <input type="text" class="form-control" asp-for="QueryParams.PriceFrom" value="@Model.QueryParams.PriceFrom" id="price-from" placeholder="От">
+                        <input type="text" class="form-control" asp-for="QueryParams.PriceFrom" value="@Model.QueryParams.PriceFrom" id="price-from" placeholder="От" maxlength="13" oninput="validateDecimalInput(this)">
                     </div>
                 </div>
                 <div class="form-group">
@@ -25,7 +81,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">₽</span>
                         </div>
-                        <input type="text" class="form-control" asp-for="QueryParams.PriceTo" value="@Model.QueryParams.PriceTo" id="price-to" placeholder="До">
+                        <input type="text" class="form-control" asp-for="QueryParams.PriceTo" value="@Model.QueryParams.PriceTo" id="price-to" placeholder="До" maxlength="13" oninput="validateDecimalInput(this)">
                     </div>
                 </div>
                 <div class="form-group">
@@ -53,18 +109,16 @@
                 </div>
             </div>
 
-
-            <!-- Плитки с объявлениями -->
             <div class="col-md-10">
                 <div class="row mb-3">
                     <div class="col-md-10">
                         <h4>Всего активных объявлений: @Model.QueryResult.TotalCount</h4>
                     </div>
                 </div>
-                <div class="row mb-3">
+                <div class="row mb-3 align-items-center">
                     <!-- Сортировка -->
                     <div class="col-md-2">
-                        <div class="form-group">
+                        <div class="form-group w-100 mb-0">
                             <select class="form-control" id="category" asp-for="QueryParams.OrderBy">
                                 <option>Сначала новые</option>
                                 <option>Сначала старые</option>
@@ -74,22 +128,22 @@
                         </div>
                     </div>
                     <!-- Строка поиска -->
-                    <div class="col-md-9">
+                    <div class="col-md-8">
                         <input type="text" asp-for="QueryParams.FilterText" class="form-control" placeholder="Поиск...">
                     </div>
-                    <div class="col-md-1">
-                        <button type="submit" class="btn btn-success">Поиск</button>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-success w-100">Поиск</button>
                     </div>
                 </div>
 
                 <!-- Плитки с объявлениями -->
-                <div class="row">
+                <div class="ad-tile-container">
                     @if (Model.TileAds is not null && Model.TileAds.Any())
                     {
                         @foreach (var ad in Model.TileAds)
                         {
                             ad.BaseUrl = Model.BaseUrl;
-                            <div class="col-md-3 mb-3">
+                            <div class="ad-tile">
                                 @await Html.PartialAsync("AdTile", ad)
                             </div>
                         }
@@ -129,20 +183,21 @@
     </div>
 </form>
 
-
 <script>
-    document.getElementById("category-select").addEventListener("change", function() {
-        var selectedValue = this.value;
-
-        var characteristicsBlock = document.getElementById("characteristics-block");
-
-        if (selectedValue == "3666fab5-1175-4e6c-b9ac-ff9b811e7d8a") {
-            characteristicsBlock.style.display = "block";
-        } else {
-            characteristicsBlock.style.display = "none";
+    function validateDecimalInput(input) {
+        input.value = input.value.replace(/[^0-9.]/g, ''); // Разрешить только цифры и точку
+        let parts = input.value.split('.');
+        if (parts.length > 2) {
+            input.value = parts[0] + '.' + parts[1].slice(0, 2); // Ограничить количество знаков после точки до двух
+        } else if (parts.length === 2 && parts[1].length > 2) {
+            input.value = parts[0] + '.' + parts[1].slice(0, 2); // Ограничить количество знаков после точки до двух
         }
-    });
-    
+        if (input.value.length > 13) {
+            input.value = input.value.slice(0, 13); // Ограничить количество символов
+        }
+    }
+</script>
+<script>
     function paginate(button) {
         var pageNumber = button.textContent;
         var pageNumberInput = document.getElementById("pageNumber");

@@ -13,6 +13,7 @@
     .contact-row:hover .hide-button {
         visibility: visible;
     }
+
     .square-container {
         position: relative;
         width: 100%;
@@ -28,173 +29,149 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .form-control[readonly] {
+        background-color: #f8f9fa;
+        opacity: 1;
+    }
 </style>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.Result)
 
-<div class="row">
-    <div class="col-md-10">
-        <div class="container">
-            <div class="row">
-                <!-- Фото профиля -->
-                <div class="col-3">
-                    <form method="post" enctype="multipart/form-data" id="changePhotoForm" asp-page-handler="ChangePhoto">
-                        <div class="row">
-                            @if (!string.IsNullOrEmpty(@Model.UserInfo.PhotoName))
-                            {
-                                <div class="square-container">
-                                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.UserInfo.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="square-container">
-                                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
-                                </div>
-                            }
-                        </div>
-                        <div class="row mt-2">
-
-                            <input type="file" id="file-input" asp-for="ChangeProfilePhotoCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
-                            <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">Сохранить</button>
-                            <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
-                        </div>
-                    </form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <form method="post" enctype="multipart/form-data" id="changePhotoForm" asp-page-handler="ChangePhoto">
+                <div class="square-container mb-2">
+                    @if (!string.IsNullOrEmpty(@Model.UserInfo.PhotoName))
+                    {
+                        <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.UserInfo.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                    }
+                    else
+                    {
+                        <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
+                    }
                 </div>
+                <div class="d-flex justify-content-center">
+                    <input type="file" id="file-input" asp-for="ChangeProfilePhotoCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
+                    <button type="button" id="change-photo-btn" class="btn btn-secondary me-2" onclick="document.getElementById('file-input').click();">Изменить</button>
+                    <button type="submit" id="save-photo-btn" class="btn btn-primary me-2" style="display: none;">Сохранить</button>
+                    <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">Отмена</button>
+                </div>
+            </form>
+        </div>
 
-                <div class="col-md-9">
-                    <form method="post" asp-page-handler="ChangeName">
-                        <div class="container">
-                            <h4 class="mt-3">Ваши данные</h4>
-                            <div class="row align-items-center">
-                                <div class="col-2">
-                                    <h5>Имя</h5>
-                                </div>
-                                <div class="col">
-                                    <span id="nameText">@Model.UserInfo.Name</span>
-                                    <input type="text" id="nameInput" class="form-control d-none" asp-for="ChangeNameCommand.NewName">
-                                </div>
-                                <div class="col-auto">
-                                    <button id="editButton" type="button" class="btn btn-secondary" onclick="editName()">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </button>
-                                    <button id="saveButton" type="submit" class="btn btn-success d-none" onclick="saveName()">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                    </button>
-                                    <button id="cancelButton" type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
-                                        <i class="bi bi-x-circle-fill"></i>
-                                    </button>
+        <div class="col-md-9">
+            <form method="post" asp-page-handler="ChangeName">
+                <div class="mb-3">
+                    <h4>Ваши данные</h4>
+                    <div class="input-group">
+                        <span id="nameText" class="form-control">@Model.UserInfo.Name</span>
+                        <input type="text" id="nameInput" class="form-control d-none" asp-for="ChangeNameCommand.NewName">
+                        <button id="editButton" type="button" class="btn btn-secondary" onclick="editName()">
+                            <i class="bi bi-pencil-fill"></i>
+                        </button>
+                        <button id="saveButton" type="submit" class="btn btn-success d-none">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </button>
+                        <button id="cancelButton" type="button" class="btn btn-danger d-none" onclick="cancelEdit()">
+                            <i class="bi bi-x-circle-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="mb-3">
+                <h4>Контакты для связи</h4>
+                <button type="button" class="btn btn-primary mb-3" onclick="showAddContactForm()">
+                    <i class="bi bi-plus-circle-fill me-2"></i> Добавить контакт
+                </button>
+            </div>
+            @if (Model.UserInfo.Contacts.Any())
+            {
+                <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
+                    <input type="hidden" asp-for="DeleteContactCommand.Id" id="contactDeletedInput"/>
+                    <div class="container mb-3">
+                        @foreach (var contact in Model.UserInfo.Contacts)
+                        {
+                            <div class="rounded bg-light p-2 mb-2 contact-row">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3">
+                                        <h6 class="mb-0">@contact.Name</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <span>@contact.Description</span>
+                                    </div>
+                                    <div class="col-auto ms-auto">
+                                        <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-danger btn-sm hide-button">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                    <div class="container mt-2">
-                        <div class="row mt-3">
-
-                            <div class="col">
-                                <h4>Контакты для связи</h4>
+                        }
+                    </div>
+                </form>
+            }
+            <form method="post" asp-page-handler="CreateContact">
+                <div class="container mb-3 d-none" id="addContactForm">
+                    <div class="rounded bg-light p-2 mb-2">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" maxlength="32" placeholder="Название сервиса">
                             </div>
-                            <div class="col-auto">
-                                <button type="button" class="btn btn-primary" onclick="showAddContactForm()">
-                                    <i class="bi bi-plus-circle-fill me-2"></i>
-                                    Добавить контакт
+                            <div class="col-md-6">
+                                <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" maxlength="32" placeholder="Ваши реквизиты">
+                            </div>
+                            <div class="col-auto ms-auto">
+                                <button id="saveContactButton" type="submit" class="btn btn-success me-2">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </button>
+                                <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
+                                    <i class="bi bi-x-circle-fill"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    @if (Model.UserInfo.Contacts.Any())
-                    {
-                        <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
-                            <input type="hidden" asp-for="DeleteContactCommand.Id" id="contactDeletedInput"/>
-                            <div class="container mt-2">
-                                @foreach (var contact in Model.UserInfo.Contacts)
-                                {
-                                    <div class="rounded bg-light p-2 mb-2">
-                                        <div class="row align-items-center contact-row">
-                                            <div class="col-md-3">
-                                                <h6 class="mb-0">@contact.Name</h6>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <span>@contact.Description</span>
-                                            </div>
-                                            <div class="col-auto ms-auto">
-                                                <button type="submit" onclick="deleteContact(`@contact.Id`)" class="btn btn-secondary btn-sm d-none d-md-block hide-button">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                            </div>
-                        </form>
-                    }
-                    <form method="post" asp-page-handler="CreateContact">
-                        <div class="container mt-2 d-none" id="addContactForm">
-                            <div class="rounded bg-light p-2 mb-2">
-                                <div class="row align-items-center contact-row">
-                                    <div class="col-md-3">
-                                        <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" maxlength="32" placeholder="Название сервиса">
-                                    </div>
-                                    <div class="col col-md-6">
-                                        <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" maxlength="32" placeholder="Ваши реквизиты">
-                                    </div>
-                                    <div class="col-auto ms-auto">
-                                        <button id="saveContactButton" type="submit" class="btn btn-success">
-                                            <i class="bi bi-check-circle-fill"></i>
-                                        </button>
-                                        <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelAddContact()">
-                                            <i class="bi bi-x-circle-fill"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
+                </div>
+            </form>
+        </div>
 
-                </div>
-                <div class="row mt-3">
-                    <div class="row">
-                        <label class="mt-3">Дата регистрации на площадке: @Model.UserInfo.RegistrationDateTime</label>
-                    </div>
-                </div>
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <label class="mt-3">Дата регистрации на площадке: @Model.UserInfo.RegistrationDateTime</label>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Типы объявлений -->
-<div class="row mt-3">
+<div class="row mt-5">
     <div class="col-md-12">
         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
-                    <i class="bi bi-check-circle-fill me-2"></i>
-                    Активные
+                    <i class="bi bi-check-circle-fill me-2"></i> Активные
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="inactive-tab" data-bs-toggle="tab" data-bs-target="#inactive" type="button" role="tab" aria-controls="inactive" aria-selected="false">
-                    <i class="bi bi-x-circle-fill me-2"></i>
-                    Неактивные
+                    <i class="bi bi-x-circle-fill me-2"></i> Неактивные
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="banned-tab" data-bs-toggle="tab" data-bs-target="#banned" type="button" role="tab" aria-controls="banned" aria-selected="false">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    Забаннены
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Забаннены
                 </button>
             </li>
         </ul>
     </div>
 </div>
 
-
 <!-- Контент для каждого типа объявлений -->
 <div class="row mt-3">
     <div class="col-md-12">
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="active" role="tabpanel" aria-labelledby="active-tab">
-                <!-- Плитки с активными объявлениями -->
                 <div class="row">
                     @if (Model.ActiveAdsQueryResult.Items is not null && Model.ActiveAdsQueryResult.Items.Any())
                     {
@@ -208,17 +185,16 @@
                     }
                     else
                     {
-                        <h1>Активных объявлений не найдено</h1>
-                        <div class="row">
-                            <div class="col-2">
-                                <a class="btn btn-primary" asp-page="/Publication/Index"><i class="bi bi-card-checklist"></i> Разместить объявление</a>
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                Активных объявлений не найдено.
                             </div>
+                            <a class="btn btn-primary" asp-page="/Publication/Index"><i class="bi bi-card-checklist"></i> Разместить объявление</a>
                         </div>
                     }
                 </div>
             </div>
             <div class="tab-pane fade" id="inactive" role="tabpanel" aria-labelledby="inactive-tab">
-                <!-- Плитки с неактивными объявлениями -->
                 <div class="row">
                     @if (Model.InactiveAdsQueryResult.Items is not null && Model.InactiveAdsQueryResult.Items.Any())
                     {
@@ -232,12 +208,15 @@
                     }
                     else
                     {
-                        <h1>Неактивных объявлений не найдено</h1>
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                Неактивных объявлений не найдено.
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
             <div class="tab-pane fade" id="banned" role="tabpanel" aria-labelledby="banned-tab">
-                <!-- Плитки с объявлениями в бане -->
                 <div class="row">
                     @if (Model.BannedAdsQueryResult.Items is not null && Model.BannedAdsQueryResult.Items.Any())
                     {
@@ -251,7 +230,11 @@
                     }
                     else
                     {
-                        <h1>У вас нет забаненных объявлений</h1>
+                        <div class="col-12">
+                            <div class="alert alert-info" role="alert">
+                                У вас нет забаненных объявлений.
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
@@ -259,40 +242,41 @@
     </div>
 </div>
 
-<script> 
-    let images; 
+<script>
+    let images;
     let imageUrl = document.getElementById("profile-photo").src;
-    
+
     function updateImage() {
         let image = document.getElementById("profile-photo");
         let blob = new Blob([new Uint8Array(images)], { type: 'image/jpeg' });
         image.src = URL.createObjectURL(blob);
     }
-    
+
     // Обработчик события клика на изображении профиля для выбора файла
     document.getElementById('profile-photo').addEventListener('click', function() {
         document.getElementById('file-input').click();
     });
-    
+
     // Функция для обновления изображения при выборе файла
     function handleFileSelect(event) {
         let files = event.target.files;
-    
+
         if (files.length > 0) {
             let reader = new FileReader();
             reader.onload = function (e) {
-                let arrayBuffer = e.target.result; 
-    
+                let arrayBuffer = e.target.result;
+
                 let image = document.getElementById("profile-photo");
                 let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
-                   image.src = URL.createObjectURL(blob);
+                image.src = URL.createObjectURL(blob);
             };
             reader.readAsArrayBuffer(files[0]); // Читаем только первый файл
         }
         document.getElementById('save-photo-btn').style.display = 'inline-block';
         document.getElementById('cancel-photo-btn').style.display = 'inline-block';
+        document.getElementById('change-photo-btn').style.display = 'none';
     }
-    
+
     // Добавляем обработчик события change на элемент file-input
     document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
 
@@ -300,68 +284,66 @@
     function removeImage() {
         let image = document.getElementById("profile-photo");
         image.src = imageUrl;
-        document.getElementById('file-input').value = ""; 
+        document.getElementById('file-input').value = "";
         document.getElementById('save-photo-btn').style.display = 'none';
         document.getElementById('cancel-photo-btn').style.display = 'none';
+        document.getElementById('change-photo-btn').style.display = 'inline-block';
     }
     document.getElementById('cancel-photo-btn').addEventListener('click', function () {
-                removeImage();
+        removeImage();
     });
-    
+
     function editName() {
         // Скрываем текст и показываем поле ввода
         document.getElementById("nameText").classList.add("d-none");
         document.getElementById("nameInput").classList.remove("d-none");
         document.getElementById("nameInput").value = document.getElementById("nameText").textContent;
-    
+
         // Показываем кнопки "Галочка" и "Крестик", скрываем кнопку "Редактировать"
         document.getElementById("editButton").classList.add("d-none");
         document.getElementById("saveButton").classList.remove("d-none");
         document.getElementById("cancelButton").classList.remove("d-none");
     }
-    
+
     function saveName() {
         // Скрываем поле ввода и показываем текст
         document.getElementById("nameInput").classList.add("d-none");
         document.getElementById("nameText").classList.remove("d-none");
         document.getElementById("nameText").textContent = document.getElementById("nameInput").value
-        
+
         // Скрываем кнопки "Галочка" и "Крестик", показываем кнопку "Редактировать"
         document.getElementById("saveButton").classList.add("d-none");
         document.getElementById("cancelButton").classList.add("d-none");
         document.getElementById("editButton").classList.remove("d-none");
     }
-    
+
     function cancelEdit() {
         // Скрываем поле ввода и показываем текст
         document.getElementById("nameInput").classList.add("d-none");
         document.getElementById("nameText").classList.remove("d-none");
-    
+
         // Скрываем кнопки "Галочка" и "Крестик", показываем кнопку "Редактировать"
         document.getElementById("saveButton").classList.add("d-none");
         document.getElementById("cancelButton").classList.add("d-none");
         document.getElementById("editButton").classList.remove("d-none");
     }
-    
+
     function showAddContactForm() {
         document.getElementById('addContactForm').classList.remove("d-none");
     }
-    
+
     function cancelAddContact() {
         document.getElementById("ContactNameInput").value = "";
         document.getElementById("ContactDescriptionInput").value = "";
         document.getElementById('addContactForm').classList.add("d-none");
     }
-    
+
     function saveContact() {
         cancelAddContact();
     }
-    
+
     function deleteContact(contactId) {
         var input = document.getElementById('contactDeletedInput');
         input.value = contactId;
     }
-
-
-
 </script>

@@ -6,10 +6,27 @@
         height: 150px; 
         width: 100%;
     }
+
+    .card-link {
+        text-decoration: none; 
+        color: black;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.875rem;
+    }
 </style>
 
-<a href="@Url.Page("MyAd", new { handler = "Select", id = Model.Id})" class="card-link" style="text-decoration: none; color: black;">
-    <div class="card border">
+<a href="@Url.Page("MyAd", new { handler = "Select", id = Model.Id})" class="card-link">
+    <div class="card border shadow-sm h-100">
         <div class="image-container">
             @if (Model.Images.Count > 0)
             {
@@ -20,16 +37,16 @@
                 <img src="/Default/Images/Ad/DefoultAdImage.png" class="card-img-top current-image" alt="Фотография объявления">
             }
         </div>
-        <div class="card-body p-1">
-            <h6 class="card-title fw-bold mb-0">@Model.Name</h6>
-            <p class="card-text mb-0"><small class="text-muted">Цена:</small> @Model.Price ₽</p>
-            <p class="card-text mb-0"><small class="text-muted">Опубликовано:</small>@Model.CreationDateTime.Date.ToString("dd.MM.yyyy")</p>
-            <div class="d-flex justify-content-end">
+        <div class="card-body">
+            <h6 class="card-title fw-bold mb-2">@Model.Name</h6>
+            <p class="card-text mb-1"><small class="text-muted">Цена:</small> <span class="fw-bold">@Model.Price ₽</span></p>
+            <p class="card-text mb-1"><small class="text-muted">Опубликовано:</small> @Model.CreationDateTime.Date.ToString("dd.MM.yyyy")</p>
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-eye-fill me-2"></i>
                     <p class="card-text mb-0">@Model.CountOfViews</p>
                 </div>
-                <p class="card-text mb-0 text-success ms-2">@Model.CountOfViewsToday ↑</p>
+                <p class="card-text mb-0 text-success">@Model.CountOfViewsToday <i class="bi bi-arrow-up"></i></p>
             </div>
         </div>
     </div>

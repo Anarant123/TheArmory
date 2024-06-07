@@ -22,51 +22,52 @@
         object-fit: cover;
     }
 
+    .form-control, .btn {
+        border-radius: 0.25rem;
+    }
+
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+    }
 </style>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.RequestResult)
 
-<div class="container mt-2 text-center">
-    <h3>Регистрация администратора</h3>
-    <form method="post" enctype="multipart/form-data" class="mt-4 d-inline-block">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <input type="file" id="file-input" asp-for="Command.Photo" accept="image/*" style="display: none;">
-                <div class="row mt-3">
-                    <div class="square-container">
-                        <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <button type="button" class="btn btn-primary btn-block" onclick="document.getElementById('file-input').click();">Добавить фото</button>
-                </div>
-                <div class="row mt-3">
-                    <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
-                    <span asp-validation-for="Command.Login" class="text-danger"></span>
-                </div>
-                <div class="row mt-3">
-                    <input type="text" asp-for="Command.Name" class="form-control" placeholder="Имя" required>
-                    <span asp-validation-for="Command.Name" class="text-danger"></span>
-                </div>
-                <div class="row mt-3">
-                    <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
-                    <span asp-validation-for="Command.Password" class="text-danger"></span>
-                </div>
-                <div class="row mt-3">
-                    <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required>
-                    <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
-                </div>
-
-                <div class="row mt-3">
-                    <button type="submit" class="btn btn-primary btn-block">Зарегистрировать</button>
-                </div>
+<div class="container mt-4">
+    <h3 class="text-center">Регистрация администратора</h3>
+    <form method="post" enctype="multipart/form-data" class="form-container mt-4">
+        <div class="mb-3 text-center">
+            <input type="file" id="file-input" asp-for="Command.Photo" accept="image/*" style="display: none;">
+            <div class="square-container mx-auto">
+                <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image">
             </div>
+            <button type="button" class="btn btn-primary mt-3" onclick="document.getElementById('file-input').click();">Добавить фото</button>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+            <span asp-validation-for="Command.Login" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input type="text" asp-for="Command.Name" class="form-control" placeholder="Имя" required>
+            <span asp-validation-for="Command.Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+            <span asp-validation-for="Command.Password" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required>
+            <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary btn-block w-100">Зарегистрировать</button>
         </div>
     </form>
 </div>
 
 <script>
-    document.getElementById('file-input').addEventListener('change', function() {
+    document.getElementById('file-input').addEventListener('change', function(event) {
         let files = event.target.files;
 
         if (files.length > 0) {
