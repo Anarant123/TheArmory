@@ -488,26 +488,30 @@ public class AdsRepository : BaseRepository
 
         if (ad is null)
             return new BaseResult<MyAdViewModel>("Объявление не найдено");
-        
+
         var address = command.Address ?? string.Empty;
 
         var region = await Context.Regions.FirstOrDefaultAsync(r => address.ToLower().Contains(r.Name.ToLower()));
         if (region is not null)
             ad.RegionId = region.Id;
 
-        ad.Location = new Location()
-        {
-            Address = address,
-            Latitude = Convert.ToDouble(command.Latitude.Replace('.', ',')),
-            Longitude = Convert.ToDouble(command.Longitude.Replace('.', ',')),
-        };
+        var location = ad.Location ?? new Location();
+        var latitudeStr = string.IsNullOrEmpty(command.Latitude) ? "0" : command.Latitude;
+        var longitudeStr = string.IsNullOrEmpty(command.Longitude) ? "0" : command.Longitude;
 
-        return await Context.SaveChangesAsync() switch
+        location.Address = address;
+        location.Latitude = Convert.ToDouble(latitudeStr.Replace('.', ','));
+        location.Longitude = Convert.ToDouble(longitudeStr.Replace('.', ','));
+
+        var result = await Context.SaveChangesAsync();
+
+        return result switch
         {
             0 => new BaseResult<MyAdViewModel>("Произошла ошибка при сохранении данных"),
             _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
         };
     }
+
 
 
     /// <summary>

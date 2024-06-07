@@ -58,8 +58,8 @@
         left: 50%;
         transform: translate(-50%, -50%);
         margin-top: -220px;
+        display: none;
     }
-        
 </style>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.Result)
@@ -341,45 +341,46 @@
     </form>
 </div>
 
-
 <div class="row address-container">
-        <form method="post" asp-page-handler="ChangeLocation">
-            <div class="row">
-                <h1>Место сделки</h1>
-                <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
-                <p id="address" class="text-muted"></p>
-                <div class="row mt-3">
-                    <div class="col">
-                        <button type="button" onclick="changeNavigation()" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
-                            <i class="bi bi-map"></i> Показать карту
-                        </button>
-                    </div>
+    <form method="post" asp-page-handler="ChangeLocation">
+        <div class="row">
+            <h1>Место сделки</h1>
+            <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
+            <p id="address" class="text-muted"></p>
+            <div class="row mt-3">
+                <div class="col">
+                    <button type="button" onclick="showMap()" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
+                        <i class="bi bi-map"></i> Показать карту
+                    </button>
+                    <button type="button" id="change-location-btn" class="btn btn-primary" style="display: none;" onclick="changeLocation()">
+                        <i class="bi bi-geo-alt"></i> Изменить место сделки
+                    </button>
                 </div>
             </div>
-            
-            <div class="collapse" id="mapCollapse">
-                <div class="row mt-3">
-                    <div class="col">
-                        <input type="text" id="addressInfo" asp-for="LocationCommand.Address" value="@(Model.MyAdViewModel.Location?.Address ?? "")" class="form-control" placeholder="Адрес" readonly="">
-                        <input type="hidden" id="latitude" asp-for="LocationCommand.Latitude"  value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
-                        <input type="hidden" id="longitude" asp-for="LocationCommand.Longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
-                        <div class="map-container">
-                            <div id="map" class="square" style="height: 400px"></div>
-                            <div class="marker-container">
-                                <img src="/icons/map_marker.png" class="marker" alt=""/>
-                            </div>
+        </div>
+        
+        <div class="collapse" id="mapCollapse">
+            <div class="row mt-3">
+                <div class="col">
+                    <input type="text" id="addressInfo" asp-for="LocationCommand.Address" value="@(Model.MyAdViewModel.Location?.Address ?? "")" class="form-control" placeholder="Адрес" readonly="">
+                    <input type="hidden" id="latitude" asp-for="LocationCommand.Latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
+                    <input type="hidden" id="longitude" asp-for="LocationCommand.Longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
+                    <div class="map-container">
+                        <div id="map" class="square" style="height: 400px"></div>
+                        <div class="marker-container">
+                            <img id="map-marker" src="/icons/map_marker.png" class="marker" alt="" style="display: none;"/>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-save"></i> Сохранить изменения
-                </button>
-            </div>
-        </form>
+        </div>
+        <div class="row">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Сохранить изменения
+            </button>
+        </div>
+    </form>
 </div>
-
 
 <div class="row mt-3">
     <div class="col-3">
@@ -395,44 +396,39 @@
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
 
 <script type="text/javascript">
-    var latitude = 60;
-    var longitude = 60;
+    var latitude = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
+    var longitude = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
     var myMap;
+    var myGeoObject;
 
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
-                console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-                initializeMap(latitude, longitude); 
-            },
-            (error) => {
-                console.error("Ошибка при получении геопозиции:", error);
-                initializeMap(latitude, longitude); // Инициализация карты с дефолтными значениями
-            }
-        );
-    } else {
-        console.error("Геолокация недоступна");
-        initializeMap(latitude, longitude); // Инициализация карты с дефолтными значениями
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+        if (!isNaN(latitude) && !isNaN(longitude)) {
+            initializeMap(latitude, longitude);
+        } else if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    initializeMap(latitude, longitude);
+                    console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+                },
+                (error) => {
+                    console.error("Ошибка при получении геопозиции:", error);
+                }
+            );
+        } else {
+            console.error("Геолокация недоступна");
+        }
+    });
 
     function initializeMap(lat, lon) {
         ymaps.ready(function () {
-            let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
-            let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
-            
-            if (!isNaN(latitudeValue) && !isNaN(longitudeValue)) {
-                lat = latitudeValue;
-                lon = longitudeValue;
-            }
-
             myMap = new ymaps.Map("map", {
                 center: [lat, lon],
                 zoom: 7
             });
 
-            var myGeoObject = new ymaps.GeoObject({
+            myGeoObject = new ymaps.GeoObject({
                 geometry: {
                     type: "Point",
                     coordinates: [lat, lon]
@@ -442,60 +438,36 @@
             myMap.geoObjects.add(myGeoObject);
 
             myMap.events.add('boundschange', function (event) {
+                if (document.getElementById('map-marker').style.display !== 'block') return;
+                
                 var newCenter = event.get('newCenter');
                 latitude = newCenter[0];
                 longitude = newCenter[1];
 
-                let latitudeInfo = document.getElementById('latitude');
-                latitudeInfo.value = latitude;
-                let longitudeInfo = document.getElementById('longitude');
-                longitudeInfo.value = longitude;
+                document.getElementById('latitude').value = latitude;
+                document.getElementById('longitude').value = longitude;
 
-                ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
+                ymaps.geocode([latitude, longitude]).then(function (res) {
                     var firstGeoObject = res.geoObjects.get(0);
-                    let address = document.getElementById('addressInfo');
-                    address.value = firstGeoObject.getAddressLine();
+                    document.getElementById('addressInfo').value = firstGeoObject.getAddressLine();
                 });
             });
         });
     }
 
-    function changeNavigation() {
-        ymaps.ready(function () {
-            var myGeoObject = new ymaps.GeoObject({
-                geometry: {
-                    type: "Point",
-                    coordinates: [latitude, longitude]
-                },
-                options: {
-                    draggable: true // Сделать маркер перетаскиваемым
-                }
-            });
-
-            myMap.geoObjects.removeAll();
-            myMap.geoObjects.add(myGeoObject);
-
-            myGeoObject.events.add('dragend', function (e) {
-                var newCoords = e.get('target').geometry.getCoordinates();
-                latitude = newCoords[0];
-                longitude = newCoords[1];
-
-                let latitudeInfo = document.getElementById('latitude');
-                latitudeInfo.value = latitude;
-                let longitudeInfo = document.getElementById('longitude');
-                longitudeInfo.value = longitude;
-
-                ymaps.geocode(newCoords).then(function (res) {
-                    var firstGeoObject = res.geoObjects.get(0);
-                    let address = document.getElementById('addressInfo');
-                    address.value = firstGeoObject.getAddressLine();
-                });
-            });
+    function changeLocation() {
+        document.getElementById('map-marker').style.display = 'block'; // Показать кастомный маркер
+        myMap.geoObjects.removeAll(); // Удалить текущий маркер
+        myMap.setCenter([latitude, longitude], 14, { // Переместить карту на текущую геолокацию пользователя
+            checkZoomRange: true
         });
+    }
+
+    function showMap() {
+        document.getElementById('mapCollapse').classList.add('show');
+        document.getElementById('change-location-btn').style.display = 'inline-block';
     }
 </script>
-
-
 
 <script>
     let images = [];
@@ -705,5 +677,3 @@
         return videoId;
     }
 </script>
-
-
