@@ -37,14 +37,14 @@
         align-items: center; 
         justify-content: center; 
         margin: 0; 
-        }
+    }
     
     .image-cell img {
         max-width: 100%; 
         max-height: 100%; 
         width: auto; 
         height: auto; 
-        }
+    }
             
     .marker-container {
         position: relative; 
@@ -262,7 +262,7 @@
         @if (Model.MyAdViewModel.Images.Count > 0)
         {
             <div class="row mt-3">
-                <button type="submit" class="btn btn-danger">
+                <button type="submit" class="btn btn-danger btn-block">
                     <i class="bi bi-trash"></i> Удалить
                 </button>
             </div>
@@ -283,18 +283,20 @@
         <div class="row mt-3">
             <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
             <div class="row">
-                <button type="button" id="add-photo-btn" class="btn btn-primary">
-                    <i class="bi bi-plus-lg"></i> Добавить
-                </button>
+                <div class="col">
+                    <button type="button" id="add-photo-btn" class="btn btn-primary btn-block">
+                        <i class="bi bi-plus-lg"></i> Добавить
+                    </button>
+                </div>
             </div>
             <div class="row">
-                <div class="col-auto">
-                    <button type="submit" id="save-photo-btn" class="btn btn-primary my-1" style="display: none;">
+                <div class="col">
+                    <button type="submit" id="save-photo-btn" class="btn btn-primary btn-block" style="display: none;">
                         <i class="bi bi-save"></i> Сохранить
                     </button>
                 </div>
-                <div class="col-auto">
-                    <button type="button" id="cancel-photo-btn" class="btn btn-danger" style="display: none;">
+                <div class="col">
+                    <button type="button" id="cancel-photo-btn" class="btn btn-danger btn-block" style="display: none;">
                         <i class="bi bi-x-lg"></i> Отмена
                     </button>
                 </div>
@@ -331,7 +333,7 @@
                 
             </div>
         </div>
-        <div class="row mt-3">
+        <div class="row mt-3" id="save-video-btn" style="display: none;">
             <button type="submit" class="btn btn-primary btn-block">
                 <i class="bi bi-save"></i> Сохранить
             </button>
@@ -392,161 +394,132 @@
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
     var latitude = 60;
     var longitude = 60;
-            var myMap;
-    
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        latitude = position.coords.latitude;
-                        longitude = position.coords.longitude;
-                        console.log("Latitude: " + latitude + ", Longitude: " + longitude);
-                        initializeMap(latitude, longitude); 
-                    },
-                    (error) => {
-                        console.error("Ошибка при получении геопозиции:", error);
-                    }
-                );
-            } else {
-                console.error("Геолокация недоступна");
+    var myMap;
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
+                console.log("Latitude: " + latitude + ", Longitude: " + longitude);
+                initializeMap(latitude, longitude); 
+            },
+            (error) => {
+                console.error("Ошибка при получении геопозиции:", error);
+                initializeMap(latitude, longitude); // Инициализация карты с дефолтными значениями
             }
-    
-    let latitudeInput = document.getElementById('latitude');
-    if (latitudeInput.value != null){
-        initializeMap();
+        );
+    } else {
+        console.error("Геолокация недоступна");
+        initializeMap(latitude, longitude); // Инициализация карты с дефолтными значениями
     }
-    else {
-        initializeNewMap}
-    
-        
-        
-    function initializeMap() {
+
+    function initializeMap(lat, lon) {
         ymaps.ready(function () {
             let latitudeValue = parseFloat(document.getElementById('latitude').value.replace(',', '.'));
             let longitudeValue = parseFloat(document.getElementById('longitude').value.replace(',', '.'));
-        
+            
+            if (!isNaN(latitudeValue) && !isNaN(longitudeValue)) {
+                lat = latitudeValue;
+                lon = longitudeValue;
+            }
+
             myMap = new ymaps.Map("map", {
-                center: [latitudeValue, longitudeValue],
+                center: [lat, lon],
                 zoom: 7
             });
-        
+
             var myGeoObject = new ymaps.GeoObject({
                 geometry: {
                     type: "Point",
-                    coordinates: [latitudeValue, longitudeValue]
+                    coordinates: [lat, lon]
                 }
             });
-                    
+
             myMap.geoObjects.add(myGeoObject);
-                    
+
             myMap.events.add('boundschange', function (event) {
                 var newCenter = event.get('newCenter');
                 latitude = newCenter[0];
                 longitude = newCenter[1];
-                                        
+
                 let latitudeInfo = document.getElementById('latitude');
                 latitudeInfo.value = latitude;
                 let longitudeInfo = document.getElementById('longitude');
                 longitudeInfo.value = longitude;
-                                        
+
                 ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
-                var firstGeoObject = res.geoObjects.get(0);
-                let address = document.getElementById('addressInfo');
-                address.value = firstGeoObject.getAddressLine();
+                    var firstGeoObject = res.geoObjects.get(0);
+                    let address = document.getElementById('addressInfo');
+                    address.value = firstGeoObject.getAddressLine();
                 });
-                                        
             });
         });
     }
-    
-    function initializeNewMap(latitude, longitude) {
-                ymaps.ready(function () {
-                    myMap = new ymaps.Map("map", {
-                        center: [latitude, longitude],
-                        zoom: 7
-                    });
-    
-                    var myGeoObject = new ymaps.GeoObject({
-                        geometry: {
-                            type: "Point", 
-                            coordinates: [latitude, longitude] 
-                        },
-                        options: {
-                            visible: false 
-                        }
-                    });
-                    myMap.geoObjects.add(myGeoObject);
-    
-    
-                    // Добавляем обработчик события перемещения карты
-                    myMap.events.add('boundschange', function (event) {
-                        // Получаем новые координаты центра карты
-                        var newCenter = event.get('newCenter');
-                        latitude = newCenter[0];
-                        longitude = newCenter[1];
-                        // Обновляем координаты метки
-                        myGeoObject.geometry.setCoordinates([latitude, longitude]);
-                        let latitudeInfo = document.getElementById('latitude');
-                        latitudeInfo.value = latitude;
-                        let longitudeInfo = document.getElementById('longitude');
-                        longitudeInfo.value = longitude;
-                        
-                        ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
-                        var firstGeoObject = res.geoObjects.get(0);
-                        let address = document.getElementById('addressInfo');
-                        address.value = firstGeoObject.getAddressLine();
-                        });
-                        
-                    });
+
+    function changeNavigation() {
+        ymaps.ready(function () {
+            var myGeoObject = new ymaps.GeoObject({
+                geometry: {
+                    type: "Point",
+                    coordinates: [latitude, longitude]
+                },
+                options: {
+                    draggable: true // Сделать маркер перетаскиваемым
+                }
+            });
+
+            myMap.geoObjects.removeAll();
+            myMap.geoObjects.add(myGeoObject);
+
+            myGeoObject.events.add('dragend', function (e) {
+                var newCoords = e.get('target').geometry.getCoordinates();
+                latitude = newCoords[0];
+                longitude = newCoords[1];
+
+                let latitudeInfo = document.getElementById('latitude');
+                latitudeInfo.value = latitude;
+                let longitudeInfo = document.getElementById('longitude');
+                longitudeInfo.value = longitude;
+
+                ymaps.geocode(newCoords).then(function (res) {
+                    var firstGeoObject = res.geoObjects.get(0);
+                    let address = document.getElementById('addressInfo');
+                    address.value = firstGeoObject.getAddressLine();
                 });
-            }
-    
-    function changeNavigation()
-    {
-        var myGeoObject = new ymaps.GeoObject({
-            geometry: {
-                type: "Point", 
-                coordinates: [latitude, longitude] 
-            },
-            options: {
-                visible: false 
-            }
-        });
-        
-        myMap.geoObjects.add(myGeoObject);
-                    
-        myMap.events.add('boundschange', function (event) {
-            var newCenter = event.get('newCenter');
-            latitude = newCenter[0];
-            longitude = newCenter[1];
-            myGeoObject.geometry.setCoordinates([latitude, longitude]);
-            let latitudeInfo = document.getElementById('latitude');
-            latitudeInfo.value = latitude;
-            let longitudeInfo = document.getElementById('longitude');
-            longitudeInfo.value = longitude;
-                                        
-            ymaps.geocode(myGeoObject.geometry.getCoordinates()).then(function (res) {
-            var firstGeoObject = res.geoObjects.get(0);
-            let address = document.getElementById('addressInfo');
-            address.value = firstGeoObject.getAddressLine();
             });
         });
     }
 </script>
 
 
+
 <script>
     let images = [];
     let newImage = null;
     let currentImageIndex = 0;
-    let thumbnailsContainer = document.getElementById('thumbnails-container');
-    
-    let thumbnailImages = document.querySelectorAll('.img-thumbnail');
-         
-    thumbnailImages.forEach(function(image) {
-        images.push(image.src);
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        let thumbnailImages = document.querySelectorAll('.img-thumbnail');
+
+        thumbnailImages.forEach(function(image) {
+            images.push(image.src);
+        });
+
+        updateImage(); // Обновление изображения при загрузке страницы
+
+        document.getElementById('add-photo-btn').addEventListener('click', function() {
+            document.getElementById('file-input').click();
+        });
+
+        document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
+
+        document.querySelector('.btn-danger').addEventListener('click', function () {
+            removeImage(currentImageIndex);
+        });
     });
 
     function autoResize(textarea) {
@@ -561,85 +534,165 @@
             input.value = input.value.replace(/\./g, '');
         }
     }
-     
-     function prevImage() {
-         if (images.length < 2)
-             return;
-         if (currentImageIndex > 0) {
-             currentImageIndex--;
-         } else {
+
+    function prevImage() {
+        if (images.length < 2) return;
+        if (currentImageIndex > 0) {
+            currentImageIndex--;
+        } else {
             currentImageIndex = images.length - 1;
-         }
-         updateImage();
-     }
-     
-     function nextImage() {
-         if (images.length < 2)
-             return;
-         if (currentImageIndex < images.length - 1) {
-             currentImageIndex++;
-         } else {
-             currentImageIndex = 0;
-         }
-         updateImage();
-     }
-     
-     function updateImage() {
-         let image = document.getElementById("current-image");
-         image.src = images[currentImageIndex];
-     }
+        }
+        updateImage();
+    }
     
+    function nextImage() {
+        if (images.length < 2) return;
+        if (currentImageIndex < images.length - 1) {
+            currentImageIndex++;
+        } else {
+            currentImageIndex = 0;
+        }
+        updateImage();
+    }
+    
+    function updateImage() {
+        let image = document.getElementById("current-image");
+        if (images.length > 0) {
+            image.src = images[currentImageIndex];
+        } else {
+            image.src = '/Default/Images/Ad/DefoultAdImage.png'; // Путь по умолчанию, если нет изображений
+        }
+    }
+
+    function handleFileSelect(event) {
+        if (newImage != null) {
+            alert("Для начала определитесь с текущим изображением");    
+            return;
+        }
+        
+        if (images.length >= 5) { 
+            alert("Вы уже добавили максимальное количество изображений.");
+            return;
+        }
+
+        let files = event.target.files;
+        let thumbnailsContainer = document.getElementById('thumbnails-container');
+
+        if (files.length > 0) { 
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                let arrayBuffer = e.target.result;
+
+                let thumbnailContainer = document.createElement('div');
+                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
+                let thumbnail = document.createElement('img');
+                thumbnail.className = 'img-thumbnail img-fluid';
+
+                let image = document.getElementById("current-image");
+                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
+                image.src = URL.createObjectURL(blob);
+                newImage = URL.createObjectURL(blob);
+                thumbnail.src = URL.createObjectURL(blob);
+
+                thumbnailContainer.appendChild(thumbnail);
+                thumbnailsContainer.appendChild(thumbnailContainer);
+
+                images.push(newImage);
+                currentImageIndex = images.length - 1;
+                updateImage();
+
+                if (images.length === 5) {
+                    document.querySelectorAll('.image-controls').forEach(function (element) {
+                        element.style.display = 'flex';
+                    });
+                }
+            };
+            reader.readAsArrayBuffer(files[0]);
+        }
+        document.getElementById('add-photo-btn').style.display = 'none';
+        document.getElementById('save-photo-btn').style.display = 'inline-block';
+        document.getElementById('cancel-photo-btn').style.display = 'inline-block';
+    }
+
+    function removeImage(index) {
+        if (index >= 0 && index < images.length) {
+            images.splice(index, 1);
+            let thumbnailsContainer = document.getElementById('thumbnails-container');
+            thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]);
+            if (currentImageIndex >= images.length) {
+                currentImageIndex = images.length - 1;
+            }
+            updateImage();
+
+            if (images.length < 5) {
+                document.querySelectorAll('.image-controls').forEach(function (element) {
+                    element.style.display = 'none';
+                });
+            }
+            newImage = null;
+            document.getElementById('file-input').value = "";
+            document.getElementById('save-photo-btn').style.display = 'none';
+            document.getElementById('cancel-photo-btn').style.display = 'none';
+        }
+    }
+
     function showCreateCharacteristicForm() {
         document.getElementById('addCreateCharacteristicForm').classList.remove("d-none");
     }
     
     function cancelCreateCharacteristic() {
-            document.getElementById("CharacteristicNameInput").value = "";
-            document.getElementById("CharacteristicDescriptionInput").value = "";
-            document.getElementById('addCreateCharacteristicForm').classList.add("d-none");
-        }
-        
+        document.getElementById("CharacteristicNameInput").value = "";
+        document.getElementById("CharacteristicDescriptionInput").value = "";
+        document.getElementById('addCreateCharacteristicForm').classList.add("d-none");
+    }
+    
     function saveCharacteristic() {
-            cancelCreateCharacteristic();
-        }
-        
+        cancelCreateCharacteristic();
+    }
+
     function deleteCharacteristic(characteristicId) {
-            var input = document.getElementById('characteristicDeletedInput');
-            input.value = characteristicId;
-        }
-        
+        var input = document.getElementById('characteristicDeletedInput');
+        input.value = characteristicId;
+    }
+    
     const youtubeLinkInput = document.getElementById('youtubeVideoLink');
     const videoFrame = document.getElementById('videoFrame');
-    
+    const saveVideoBtn = document.getElementById('save-video-btn');
+
+    let originalYoutubeLink = youtubeLinkInput.value.trim();
+
     youtubeLinkInput.addEventListener('input', function() {
         let youtubeLink = youtubeLinkInput.value.trim();
         if (youtubeLink === '') {
             document.getElementById('youtubeVideo').style.display = 'none';
             videoFrame.src = '';
+            saveVideoBtn.style.display = 'none';
             return;
         }
-    
+
         let youtubeRegExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/.+$/;
-    
-        if (youtubeRegExp.test(youtubeLink)) {
+
+        if (youtubeRegExp.test(youtubeLink) && youtubeLink !== originalYoutubeLink) {
             document.getElementById('youtubeVideo').style.display = 'block';
+            saveVideoBtn.style.display = 'block';
             let videoId = getYoutubeVideoId(youtubeLink);
-            console.log('Идентификатор видео:', videoId);S
-        if (videoId) {
-            let embedUrl = `https://www.youtube.com/embed/${videoId}`;
-            videoFrame.setAttribute('src', embedUrl);
-        } else {
-            console.error('Не удалось извлечь идентификатор видео из ссылки.');
-            document.getElementById('youtubeVideo').style.display = 'none';
-            videoFrame.src = '';
-        }
+            if (videoId) {
+                let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                videoFrame.setAttribute('src', embedUrl);
+            } else {
+                console.error('Не удалось извлечь идентификатор видео из ссылки.');
+                document.getElementById('youtubeVideo').style.display = 'none';
+                videoFrame.src = '';
+                saveVideoBtn.style.display = 'none';
+            }
         } else {
             console.error('Введенная ссылка не соответствует формату ссылки на видео YouTube.');
             document.getElementById('youtubeVideo').style.display = 'none';
             videoFrame.src = '';
+            saveVideoBtn.style.display = 'none';
         }
     });
-    
+
     function getYoutubeVideoId(url) {
         let videoId = '';
         let regExp = /^(https?\:\/\/)?(www\.youtube\.com|youtu\.?be)\/(.+)$/;
@@ -651,94 +704,6 @@
         }
         return videoId;
     }
-    
-    // Обработчик события клика на изображении профиля для выбора файла
-    document.getElementById('add-photo-btn').addEventListener('click', function() {
-        document.getElementById('file-input').click();
-    });
-    
-    // Функция для обновления изображения при выборе файла
-    function handleFileSelect(event) {
-        if (newImage != null){
-            alert("Для начала определитесь с текущим изображением");    
-            return;
-        }
-        
-        if (images.length >= 5) { 
-            alert("Вы уже добавили максимальное количество изображений.");
-            return;
-        }
-        
-        let files = event.target.files;
-        let thumbnailsContainer = document.getElementById('thumbnails-container');
-        let numberOfImagesAdded = 0;
-        
-        if (files.length > 0) { 
-            let reader = new FileReader();
-            reader.onload = function (e) {
-                let arrayBuffer = e.target.result; 
-                
-                let thumbnailContainer = document.createElement('div');
-                thumbnailContainer.className = 'col-md text-center image-cell position-relative';
-                let thumbnail = document.createElement('img');
-                thumbnail.className = 'img-thumbnail img-fluid';
-                                                    
-                let image = document.getElementById("current-image");
-                let blob = new Blob([new Uint8Array(arrayBuffer)], { type: 'image/jpeg' });
-                image.src = URL.createObjectURL(blob);
-                newImage = URL.createObjectURL(blob);
-                thumbnail.src = URL.createObjectURL(blob);
-                                            
-                thumbnailContainer.appendChild(thumbnail);
-                thumbnailsContainer.appendChild(thumbnailContainer);
-                                            
-                numberOfImagesAdded++;
-                
-                currentImageIndex = images.length - 1; 
-                updateImage();
-                                            
-                if (images.length === 5) { 
-                    document.querySelectorAll('.image-controls').forEach(function (element) {
-                        element.style.display = 'flex';
-                    });
-                }
-            };
-            reader.readAsArrayBuffer(files[0]); // Читаем только первый файл
-        }
-        document.getElementById('add-photo-btn').style.display = 'none';
-        document.getElementById('save-photo-btn').style.display = 'inline-block';
-        document.getElementById('cancel-photo-btn').style.display = 'inline-block';
-    }
-    // Добавляем обработчик события change на элемент file-input
-    document.getElementById('file-input').addEventListener('change', handleFileSelect, false);
-    
-       
-    
-    // Функция для удаления фото и возвращения предыдущего изображения
-    function removeImage(index) {
-        images.splice(index, 1);
-        let thumbnailsContainer = document.getElementById('thumbnails-container');
-        thumbnailsContainer.removeChild(thumbnailsContainer.childNodes[index]);
-        if (currentImageIndex === index) {
-            if (currentImageIndex === images.length) {
-                currentImageIndex--;
-            }
-            updateImage();
-        } else if (currentImageIndex > index) {
-            currentImageIndex--;
-        }
-        if (images.length < 5) {
-            document.querySelectorAll('.image-controls').forEach(function (element) {
-                element.style.display = 'none';
-            });
-        }
-        newImage = null;
-        document.getElementById('file-input').value = ""; 
-        document.getElementById('save-photo-btn').style.display = 'none';
-        document.getElementById('cancel-photo-btn').style.display = 'none';
-    }
-    document.querySelector('.btn-danger').addEventListener('click', function () {
-        removeImage(currentImageIndex);
-    });
-
 </script>
+
+
