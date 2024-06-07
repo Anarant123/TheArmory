@@ -10,11 +10,28 @@
     <link rel="icon" type="image/png" href="~/favicon.png"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/TheArmory.Web.styles.css" asp-append-version="true"/>
+    <style>
+        .navbar-custom {
+            background-color: #343a40;
+        }
+
+        .navbar-custom .navbar-brand,
+        .navbar-custom .nav-link,
+        .navbar-custom .navbar-toggler-icon {
+            color: #ffffff;
+        }
+
+        .footer-custom {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px 0;
+        }
+    </style>
 </head>
 <body>
 <header>
-    <div class="container">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 container-fluid px-3 px-md-3">
+    <div>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-custom navbar-light border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand d-flex align-items-center" asp-area="" asp-page="/Ads/Index">
                     <img src="~/favicon.png" alt="Logo" style="width: 30px; height: 30px; margin-right: 10px;"/>
@@ -24,65 +41,67 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <li class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-page="/Ads/Index"><i class="bi bi-card-list"></i> Объявления</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-page="/Privacy"><i class="bi bi-file-earmark-text"></i> Правила сайта</a>
-                    </li>
-                
-                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
-                    {
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Publication/Index"><i class="bi bi-card-checklist"></i> Разместить объявление</a>
+                            <a class="nav-link text-light" asp-page="/Ads/Index"><i class="bi bi-card-list"></i> Объявления</a>
                         </li>
-                    }
-                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
-                    {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/Admin/Index"><i class="bi bi-exclamation-triangle"></i> Жалобы</a>
+                            <a class="nav-link text-light" asp-page="/Privacy"><i class="bi bi-file-earmark-text"></i> Правила сайта</a>
                         </li>
-                    }
-                    @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "SuperAdmin")
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-page="/SuperAdmin/Index"><i class="bi bi-people"></i> Администраторы</a>
-                        </li>
-                    }
-                </ul>
-                
-                <ul class="navbar-nav ml-auto">
-                    @if (User.Identity is {IsAuthenticated: true })
-                    {
-                        <li class="nav-item dropdown">
-                            <button class="btn btn-secondary btn-sm btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="bi bi-person-circle"></i> 
-                                Профиль
-                            </button>
-                            <ul class="dropdown-menu">
-                                <a class="dropdown-item" asp-page="/Account/PersonalInfo"><i class="bi bi-person-circle"></i> Личная информация</a>
-                                <a class="dropdown-item" asp-page="/Ads/Favorites"><i class="bi bi-heart"></i> Избранное</a>
-                                <a class="dropdown-item" asp-page="/Account/ChangePassword"><i class="bi bi-key-fill me-2"></i> Сменить пароль</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" asp-page="/Account/DeleteAccount"><i class="bi bi-trash"></i> Удалить аккаунт</a>
-                                <form method="post" asp-page="/Account/PersonalInfo" asp-page-handler="Exit">
-                                    <button class="dropdown-item" type="submit"><i class="bi bi-box-arrow-right"></i> Выйти</button>
-                                </form>
-                            </ul>
-                        </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link text-dark px-3 rounded-left" asp-page="/Auth/Index"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
-                            |
-                            <a class="nav-link text-dark px-3 rounded-right" asp-page="/Auth/Registration"><i class="bi bi-person-plus"></i> Зарегистрироваться</a>
-                        </li>
-                    }
-                </ul>
-
+                    
+                        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-page="/Publication/Index"><i class="bi bi-card-checklist"></i> Разместить объявление</a>
+                            </li>
+                        }
+                        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-page="/Admin/Index"><i class="bi bi-exclamation-triangle"></i> Жалобы</a>
+                            </li>
+                        }
+                        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "SuperAdmin")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-page="/SuperAdmin/Index"><i class="bi bi-people"></i> Администраторы</a>
+                            </li>
+                        }
+                    </ul>
+                    
+                    <ul class="navbar-nav ml-auto">
+                        @if (User.Identity is {IsAuthenticated: true })
+                        {
+                            <li class="nav-item dropdown">
+                                <button class="btn btn-secondary btn-sm btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> 
+                                    Профиль
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-page="/Account/PersonalInfo"><i class="bi bi-person-circle"></i> Личная информация</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Ads/Favorites"><i class="bi bi-heart"></i> Избранное</a></li>
+                                    <li><a class="dropdown-item" asp-page="/Account/ChangePassword"><i class="bi bi-key-fill me-2"></i> Сменить пароль</a></li>
+                                    <div class="dropdown-divider"></div>
+                                    <li><a class="dropdown-item" asp-page="/Account/DeleteAccount"><i class="bi bi-trash"></i> Удалить аккаунт</a></li>
+                                    <li>
+                                        <form method="post" asp-page="/Account/PersonalInfo" asp-page-handler="Exit">
+                                            <button class="dropdown-item" type="submit"><i class="bi bi-box-arrow-right"></i> Выйти</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item d-flex align-items-center">
+                                <a class="nav-link text-light px-3 rounded-left" asp-page="/Auth/Index"><i class="bi bi-box-arrow-in-right"></i> Войти</a>
+                                <span class="text-light px-1">|</span>
+                                <a class="nav-link text-light px-3 rounded-right" asp-page="/Auth/Registration"><i class="bi bi-person-plus"></i> Зарегистрироваться</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
         </nav>
     </div>
@@ -106,3 +125,5 @@
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+
