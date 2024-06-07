@@ -82,204 +82,218 @@
     }
 </style>
 
-<div class="row">
-    <div class="col-6 text-left">
-        <h2>@Model.AdViewModel.Name</h2>
-    </div>
-    <div class="col-3 text-end">
-        <h2>@Model.AdViewModel.Price &#x20bd;</h2>
-    </div>
-    <div class="col-1 d-flex align-items-end">
-        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
-        {
-            @if (!Model.AdViewModel.IsFavorite)
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>@Model.AdViewModel.Name</h2>
+        </div>
+        <div class="col-md-3 text-end">
+            <h2>@Model.AdViewModel.Price &#x20bd;</h2>
+        </div>
+        <div class="col-md-3 d-flex align-items-end justify-content-end">
+            @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
             {
-                <form asp-page-handler="AddToFavorites" method="post">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-bookmark"></i>
-                    </button>
-                </form>
-            }
-            else
-            {
-                <form asp-page-handler="DeleteFavorites" method="post">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-bookmark-fill"></i>
-                    </button>
-                </form>
-            }
-        }
-    </div>
-</div>
-<div class="row mt-3">
-    <div class="col-9">
-        <div class="row">
-            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-            </div>
-            <div class="col-md-10 text-center">
-                @if (Model.AdViewModel.Images.Count > 0)
+                @if (!Model.AdViewModel.IsFavorite)
                 {
-                    <div id="image-area" class="position-relative">
-                        <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                    <form asp-page-handler="AddToFavorites" method="post">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-bookmark"></i>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-page-handler="DeleteFavorites" method="post">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-bookmark-fill"></i>
+                        </button>
+                    </form>
+                }
+            }
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-md-9">
+            <div class="row mb-3">
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                </div>
+                <div class="col-md-10 text-center">
+                    @if (Model.AdViewModel.Images.Count > 0)
+                    {
+                        <div id="image-area" class="position-relative">
+                            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.AdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="image-area" class="position-relative">
+                            <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                        </div>
+                    }
+                </div>
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                </div>
+            </div>
+
+            <!-- Контейнер для ячеек с изображениями -->
+            <div id="thumbnails-container" class="row mt-3">
+                @foreach (var image in Model.AdViewModel.Images)
+                {
+                    <div class="col-md text-center image-cell position-relative">
+                        <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Продавец -->
+        <div class="col-md-3">
+            <div class="row mt-3">
+                @if (!string.IsNullOrEmpty(@Model.AdViewModel.User.PhotoName))
+                {
+                    <div class="square-container">
+                        <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.AdViewModel.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
                     </div>
                 }
                 else
                 {
-                    <div id="image-area" class="position-relative">
-                        <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                    <div class="square-container">
+                        <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
                     </div>
                 }
             </div>
-            <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
-            </div>
-        </div>
-
-        <!-- Контейнер для ячеек с изображениями -->
-        <div id="thumbnails-container" class="row mt-3">
-            @foreach (var image in Model.AdViewModel.Images)
-            {
-                <div class="col-md text-center image-cell position-relative">
-                    <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid " alt=""/>
-                </div>
-            }
-        </div>
-    </div>
-
-    <!-- Продавец -->
-    <div class="col-3">
-        <div class="row mt-3">
-            @if (!string.IsNullOrEmpty(@Model.AdViewModel.User.PhotoName))
-            {
-                <div class="square-container">
-                    <img id="profile-photo" src="@(Model.BaseUrl + '/' + Model.AdViewModel.User.PhotoName)" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
-                </div>
-            }
-            else
-            {
-                <div class="square-container">
-                    <img id="profile-photo" src="/Default/Images/Person/DefoultPersonImage.png" alt="Фото профиля" class="img-fluid rounded-circle square-image" style="object-fit: cover;">
-                </div>
-            }
-        </div>
-        <div class="row mt-3">
-            @foreach (var contact in Model.AdViewModel.User.Contacts)
-            {
-                <div class="col-6">
-                    <p>@contact.Name</p>
-                </div>
-                <div class="col-6">
-                    <p>@contact.Description</p>
-                </div>
-            }
-        </div>
-    </div>
-
-</div>
-
-@if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
-{
-    var videoId = Model.AdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
-    <div class="row mt-3">
-        <div class="col">
-            <div id="youtubeVideo" class="row mt-3">
-                <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-}
-
-<div class="row mt-3">
-    <div class="col-md-12">
-        <!-- Блок с характеристиками -->
-
-        <div class="mb-3">
-            <h1>Характеристики</h1>
-            <div class="row">
-                <div class="col-3">
-                    <p>Состояние:</p>
-                </div>
-                <div class="col-3">
-                    <p>@Model.AdViewModel.Condition</p>
-                </div>
-            </div>
-            @if (Model.AdViewModel.Characteristics is not null && Model.AdViewModel.Characteristics.Any())
-            {
-                @foreach (var characteristic in Model.AdViewModel.Characteristics)
+            <div class="row mt-3">
+                @foreach (var contact in Model.AdViewModel.User.Contacts)
                 {
-                    <div class="row">
-                        <div class="col-3">
-                            <label>@characteristic.Name:</label>
-                        </div>
-                        <div class="col-3">
-                            <label>@characteristic.Description</label>
-                        </div>
-                    </div>    
-                }
-            }
-        </div>
-
-        <!-- Блок с описанием -->
-        <div class="mb-3">
-            <textarea class="form-control" placeholder="Описание" readonly>@Model.AdViewModel.Description</textarea>
-        </div>
-
-        <!-- Блок с геоданными -->
-        @if (Model.AdViewModel.Location is not null)
-        {
-            <div class="row address-container mt-3">
-                <div class="col-12">
-                    <p id="address" class="font-weight-bold">@Model.AdViewModel.Location.Address ▼</p>
-                </div>
-                <div class="col-12">
-                    <div class="map-container">
-                        <div id="map" class="square" style="height: 400px"></div>
+                    <div class="col-6">
+                        <p>@contact.Name</p>
                     </div>
-                </div>
-                <div class="col-12">
-                    <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
-                    <input type="hidden" id="longitude" value="@Model.AdViewModel.Location.Longitude" class="d-none">
-                </div>
+                    <div class="col-6">
+                        <p>@contact.Description</p>
+                    </div>
+                }
             </div>
-        }
+        </div>
+    </div>
 
+    @if (!string.IsNullOrEmpty(Model.AdViewModel.YouTubeLink))
+    {
+        var videoId = Model.AdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
         <div class="row mt-3">
             <div class="col">
-                <p>Дата публикации: @Model.AdViewModel.CreationDateTime</p>
-                <p>Просмотров: @Model.AdViewModel.CountOfViews</p>
-                <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
+                <div id="youtubeVideo" class="row mt-3">
+                    <iframe id="videoFrame" width="100%" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
             </div>
         </div>
-        @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
-        {
-            <div class="row">
-                <div class="col">
-                    <div class="mb-3">
-                        <button id="complainButton" type="button" class="btn btn-danger btn-block">Пожаловаться</button>
+    }
+
+    <div class="row mt-3">
+        <div class="col-md-12">
+            <!-- Блок с характеристиками -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">Характеристики</h3>
+                    <div class="row mb-2">
+                        <div class="col-3">
+                            <strong>Состояние:</strong>
+                        </div>
+                        <div class="col-9">
+                            @Model.AdViewModel.Condition
+                        </div>
                     </div>
+                    @if (Model.AdViewModel.Characteristics is not null && Model.AdViewModel.Characteristics.Any())
+                    {
+                        @foreach (var characteristic in Model.AdViewModel.Characteristics)
+                        {
+                            <div class="row mb-2">
+                                <div class="col-3">
+                                    <strong>@characteristic.Name:</strong>
+                                </div>
+                                <div class="col-9">
+                                    @characteristic.Description
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
-        }
 
-        <div class="row">
+            <!-- Блок с описанием -->
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">Описание</h3>
+                    <textarea class="form-control" readonly>@Model.AdViewModel.Description</textarea>
+                </div>
+            </div>
+
+            <!-- Блок с геоданными -->
+            @if (Model.AdViewModel.Location is not null)
+            {
+                <div class="card mb-3 address-container">
+                    <div class="card-body">
+                        <p class="card-title font-weight-bold">@Model.AdViewModel.Location.Address ▼</p>
+                        <div class="map-container" style="display: none;">
+                            <div id="map" class="square" style="height: 400px"></div>
+                        </div>
+                        <input type="hidden" id="latitude" value="@Model.AdViewModel.Location.Latitude" class="d-none">
+                        <input type="hidden" id="longitude" value="@Model.AdViewModel.Location.Longitude" class="d-none">
+                    </div>
+                </div>
+            }
+
+            <div class="row mt-3">
+                <div class="col">
+                    <p>Дата публикации: @Model.AdViewModel.CreationDateTime</p>
+                    <p>Просмотров: @Model.AdViewModel.CountOfViews</p>
+                    <p>Просмотров за сегодня: @Model.AdViewModel.CountOfViewsToday</p>
+                </div>
+            </div>
+            @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
+            {
+                <div class="row">
+                    <div class="col">
+                        <div class="mb-3">
+                            <button id="complainButton" type="button" class="btn btn-danger btn-block">Пожаловаться</button>
+                        </div>
+                    </div>
+                </div>
+            }
+
             @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
             {
-                <div class="col">
-                    <form method="post" asp-page-handler="Ban">
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-danger btn-block">Заблокировать</button>
+                <div class="container mt-5">
+                    <h3 class="text-center mb-4">Жалобы</h3>
+            
+                    @foreach (var complaint in @Model.Complaints.Items)
+                    {
+                        <div class="card mb-3 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">@complaint.UserName</h5>
+                                <p class="card-text">@complaint.Description</p>
+                            </div>
                         </div>
-                    </form>
-                </div>
-                
-                
-                <div class="col">
-                    <form method="post" asp-page-handler="Justify">
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-danger btn-block">Оправдать</button>
+                    }
+
+                    <div class="row mt-4">
+                        <div class="col">
+                            <form method="post" asp-page-handler="Ban">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-danger">Заблокировать</button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+
+                        <div class="col">
+                            <form method="post" asp-page-handler="Justify">
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">Оправдать</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
