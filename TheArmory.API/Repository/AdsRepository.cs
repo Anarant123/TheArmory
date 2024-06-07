@@ -2,12 +2,10 @@
 using TheArmory.Context;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
-using TheArmory.Domain.Models.Message.Errors;
 using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
-using TheArmory.Domain.Utils;
 
 namespace TheArmory.Repository;
 

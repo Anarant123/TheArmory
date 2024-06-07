@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Ad;

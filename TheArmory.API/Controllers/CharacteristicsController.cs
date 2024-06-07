@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Request.Commands.Characteristic;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Repository;

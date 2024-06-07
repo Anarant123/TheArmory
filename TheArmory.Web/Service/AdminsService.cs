@@ -1,13 +1,9 @@
-﻿using System.Globalization;
-using System.Net.Http.Headers;
-using System.Text.Json;
+﻿using System.Text.Json;
 using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Message.Errors;
-using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Request.Commands.User;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
-using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
 using TheArmory.Web.Utils;

@@ -1,7 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
-using TheArmory.Domain.Models.Database;
 using TheArmory.Domain.Models.Enums;
 using TheArmory.Domain.Models.Request.Commands.Characteristic;
 
