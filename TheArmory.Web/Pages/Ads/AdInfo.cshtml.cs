@@ -5,7 +5,6 @@ using TheArmory.Domain.Models.Request.Commands.Ad;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
 using TheArmory.Domain.Models.Responce.ViewModels.Complaint;
-using TheArmory.Domain.Models.Responce.ViewModels.User;
 using TheArmory.Web.Models;
 using TheArmory.Web.Service;
 

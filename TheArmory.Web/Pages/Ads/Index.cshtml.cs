@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TheArmory.Domain.Models.Request.Queries;
 using TheArmory.Domain.Models.Responce.Result.BaseResult;
 using TheArmory.Domain.Models.Responce.ViewModels.Ad;
-using TheArmory.Domain.Models.Responce.ViewModels.Condition;
 using TheArmory.Domain.Models.Responce.ViewModels.Region;
 using TheArmory.Web.Models;
 using TheArmory.Web.Service;

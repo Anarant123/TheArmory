@@ -11,11 +11,9 @@ using TheArmory.Utils.Initializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Регистрация контекста базы данных
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
 
-// Включение поддержки Legacy Timestamp Behavior для Npgsql
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddTransient<MediasRepository>();
@@ -63,7 +61,6 @@ builder.Services
     });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
