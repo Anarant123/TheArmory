@@ -5,17 +5,19 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Condition;
 
 public class ConditionListViewModel
 {
-    [JsonPropertyName("id")]
-    public WeaponCondition Id { get; set; }
-    
+    [JsonPropertyName("id")] public WeaponCondition Id { get; set; }
+
     /// <summary>
     /// Название
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
 
-    
-    public ConditionListViewModel() {}
+
+    public ConditionListViewModel()
+    {
+    }
+
     public ConditionListViewModel(Database.Condition condition)
     {
         Id = condition.Id;

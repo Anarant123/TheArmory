@@ -15,7 +15,7 @@ public class ConditionsService : BaseService<Condition>
         base(httpClientFactory.CreateClient("httpClient"), baseUrlOptions, logger)
     {
     }
-    
+
     public async Task<BaseQueryResult<ConditionListViewModel>> GetSelectList()
     {
         try
@@ -24,7 +24,7 @@ public class ConditionsService : BaseService<Condition>
             var response = await httpClient.GetAsync(uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseQueryResult<ConditionListViewModel>(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseQueryResult<ConditionListViewModel>>(responseStream);
             return result ?? new BaseQueryResult<ConditionListViewModel>(ErrorsMessage.SomethingWentWrong);

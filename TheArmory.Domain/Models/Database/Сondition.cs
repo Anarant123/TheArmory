@@ -14,17 +14,16 @@ public class Condition : DbEntity
     [Column("id")]
     [JsonPropertyName("id")]
     public WeaponCondition Id { get; set; }
-    
+
     /// <summary>
     /// Название
     /// </summary>
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     // virtual
-    [JsonIgnore]
-    public virtual List<Ad> Ads { get; set; }
+    [JsonIgnore] public virtual List<Ad> Ads { get; set; }
 
     public Condition(WeaponCondition id, string name)
     {

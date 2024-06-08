@@ -4,16 +4,17 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Media;
 
 public class MediaInfoViewModel
 {
-    [JsonPropertyName("id")]
-    public Guid Id { get; set; }
-    
+    [JsonPropertyName("id")] public Guid Id { get; set; }
+
     /// <summary>
     /// Локальный путь до файла
     /// </summary>
     [JsonPropertyName("localPath")]
     public string LocalPath { get; set; }
-    
-    public MediaInfoViewModel() {}
+
+    public MediaInfoViewModel()
+    {
+    }
 
     public MediaInfoViewModel(Database.Ad ad, Database.Media media)
     {

@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen(
             Title = "TheArmory Rest API",
             Description = ""
         });
-        
+
         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.Domain.xml"));
         c.IncludeXmlComments(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "TheArmory.API.xml"));
     }
@@ -89,10 +89,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TheArmory Rest API V1");
-    });
+    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "TheArmory Rest API V1"); });
 }
 
 app.UseStaticFiles();
@@ -120,4 +117,4 @@ await CategoryInitializer.InitializeAsync(context);
 
 app.MapControllers();
 
-app.Run(); 
+app.Run();

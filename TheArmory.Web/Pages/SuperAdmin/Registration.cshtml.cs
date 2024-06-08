@@ -9,22 +9,21 @@ namespace TheArmory.Web.Pages.SuperAdmin;
 public class Registration : PageModel
 {
     private readonly AdminsService _service;
-    
+
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
-    
-    [BindProperty]
-    public UserAdminCreateCommand Command { get; set; }
-    
+
+    [BindProperty] public UserAdminCreateCommand Command { get; set; }
+
     public Registration(AdminsService service)
     {
         _service = service;
     }
-    
+
     public async Task<IActionResult> OnGetAsync()
     {
         return Page();
     }
-    
+
     public async Task<IActionResult> OnPostAsync()
     {
         ModelState.Remove("Error");

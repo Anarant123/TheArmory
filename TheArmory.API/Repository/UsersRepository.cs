@@ -14,6 +14,7 @@ public class UsersRepository : BaseRepository
 {
     private readonly PasswordHasher<User> _passwordHasher;
     private readonly MediasRepository _mediasRepository;
+
     public UsersRepository(
         ApplicationContext context,
         ILogger<BaseRepository<User>> logger,
@@ -24,7 +25,7 @@ public class UsersRepository : BaseRepository
         _passwordHasher = passwordHasher;
         _mediasRepository = mediasRepository;
     }
-    
+
     public async Task<BaseResult<UserViewModel>> Login(
         UserLoginCommand command)
     {
@@ -43,7 +44,7 @@ public class UsersRepository : BaseRepository
         {
             return new BaseResult<UserViewModel>(ErrorsMessage.InvalidPassword);
         }
-        
+
         user.LastVisitDate = DateTime.Now;
         return await Context.SaveChangesAsync() switch
         {
@@ -51,8 +52,8 @@ public class UsersRepository : BaseRepository
             _ => new BaseResult<UserViewModel>(new UserViewModel(user))
         };
     }
-    
-     public async Task<BaseResult> Create(
+
+    public async Task<BaseResult> Create(
         UserCreateCommand command)
     {
         if (command is not ({ Login: not null }
@@ -65,8 +66,8 @@ public class UsersRepository : BaseRepository
 
         if (await Context.Users.AnyAsync(p => p.Login.Equals(command.Login))!)
             return new BaseResult(ErrorsMessage.InaccessibleLogin);
-        
-        
+
+
         var user = new User()
         {
             Login = command.Login,
@@ -85,8 +86,8 @@ public class UsersRepository : BaseRepository
             _ => new BaseResult()
         };
     }
-    
-    
+
+
     /// <summary>
     /// Пользователь по Id
     /// </summary>
@@ -103,14 +104,14 @@ public class UsersRepository : BaseRepository
         if (user is null)
             return new BaseResult<User>(ErrorsMessage.UserNotFound);
         user.LastVisitDate = DateTime.Now;
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult<User>(ErrorsMessage.ErrorSavingChanges),
             _ => new BaseResult<User>(user)
         };
     }
-    
+
     public async Task<BaseResult> ChangeName(
         Guid userId,
         UserChangeNameCommand command)
@@ -120,14 +121,14 @@ public class UsersRepository : BaseRepository
             return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
 
         user.Name = command.NewName;
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
             _ => new BaseResult()
         };
     }
-    
+
     public async Task<BaseResult> ChangePassword(
         Guid userId,
         UserChangePasswordCommand command)
@@ -135,19 +136,19 @@ public class UsersRepository : BaseRepository
         var user = await Context.Users.FirstOrDefaultAsync(u => u.Id.Equals(userId));
         if (user is null)
             return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
-        
+
         if (!command.Password.Equals(command.PasswordConfirm))
             return new BaseResult(ErrorsMessage.ConfirmPasswordNotMatch);
 
         user.PasswordHash = _passwordHasher.HashPassword(user, command.Password);
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
             _ => new BaseResult()
         };
     }
-    
+
     public async Task<BaseResult> DeleteMe(
         Guid userId)
     {
@@ -161,19 +162,19 @@ public class UsersRepository : BaseRepository
         var ads = await Context.Ads
             .Where(a => a.UserId.Equals(userId))
             .ToListAsync();
-        
+
         foreach (var ad in ads)
         {
             ad.StatusId = StateStatus.Deleted;
         }
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
             _ => new BaseResult()
         };
     }
-    
+
     public async Task<BaseResult> ChangeProfilePhoto(
         User user,
         IFormFile photo)

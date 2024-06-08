@@ -98,7 +98,7 @@ public class UsersController : BaseController
     [Authorize]
     [Route("Password")]
     public async Task<ActionResult<BaseResult>> ChangePassword(
-        [FromBody]UserChangePasswordCommand command)
+        [FromBody] UserChangePasswordCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse is { Success: false, Item: not null })

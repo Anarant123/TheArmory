@@ -246,9 +246,11 @@ public class AdsService : BaseService<Ad>
             if (command.Longitude != null) formData.Add(new StringContent(command.Longitude), "longitude");
             formData.Add(new StringContent(command.CategoryId.ToString()), "categoryId");
             var characteristicIndex = 0;
-            foreach (var characteristicJson in command.Characteristics.Select(characteristic => JsonSerializer.Serialize(characteristic)))
+            foreach (var characteristicJson in command.Characteristics.Select(characteristic =>
+                         JsonSerializer.Serialize(characteristic)))
             {
-                formData.Add(new StringContent(characteristicJson, Encoding.UTF8, "application/json"), $"characteristics[{characteristicIndex}]");
+                formData.Add(new StringContent(characteristicJson, Encoding.UTF8, "application/json"),
+                    $"characteristics[{characteristicIndex}]");
                 characteristicIndex++;
             }
 
@@ -469,7 +471,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> ChangeYoutubeLink(AdChangeYouTubeLinkCommand command)
     {
         try
@@ -489,7 +491,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> ChangeLocation(AdLocationCommand command)
     {
         try
@@ -509,13 +511,14 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<MyAdViewModel>> DeleteMedia(AdDeleteMediaCommand command)
     {
         try
         {
             var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}/Media");
-            uriBuilder.Query = $"id={command.Id}&mediaId={command.MediaId}";;
+            uriBuilder.Query = $"id={command.Id}&mediaId={command.MediaId}";
+            ;
             var response = await httpClient.DeleteAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<MyAdViewModel>(await response.Content.ReadAsStringAsync());
@@ -528,7 +531,7 @@ public class AdsService : BaseService<Ad>
             return new BaseResult<MyAdViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> AddMedia(AdAddMediaCommand command)
     {
         try

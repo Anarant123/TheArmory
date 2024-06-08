@@ -49,7 +49,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-light" asp-page="/Privacy"><i class="bi bi-file-earmark-text"></i> Правила сайта</a>
                         </li>
-                    
+
                         @if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Client")
                         {
                             <li class="nav-item">
@@ -69,21 +69,29 @@
                             </li>
                         }
                     </ul>
-                    
+
                     <ul class="navbar-nav ml-auto">
                         @if (User.Identity is {IsAuthenticated: true })
                         {
                             <li class="nav-item dropdown">
                                 <button class="btn btn-secondary btn-sm btn-lg dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-person-circle"></i> 
+                                    <i class="bi bi-person-circle"></i>
                                     Профиль
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" asp-page="/Account/PersonalInfo"><i class="bi bi-person-circle"></i> Личная информация</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Ads/Favorites"><i class="bi bi-heart"></i> Избранное</a></li>
-                                    <li><a class="dropdown-item" asp-page="/Account/ChangePassword"><i class="bi bi-key-fill me-2"></i> Сменить пароль</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/PersonalInfo"><i class="bi bi-person-circle"></i> Личная информация</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Ads/Favorites"><i class="bi bi-heart"></i> Избранное</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/ChangePassword"><i class="bi bi-key-fill me-2"></i> Сменить пароль</a>
+                                    </li>
                                     <div class="dropdown-divider"></div>
-                                    <li><a class="dropdown-item" asp-page="/Account/DeleteAccount"><i class="bi bi-trash"></i> Удалить аккаунт</a></li>
+                                    <li>
+                                        <a class="dropdown-item" asp-page="/Account/DeleteAccount"><i class="bi bi-trash"></i> Удалить аккаунт</a>
+                                    </li>
                                     <li>
                                         <form method="post" asp-page="/Account/PersonalInfo" asp-page-handler="Exit">
                                             <button class="dropdown-item" type="submit"><i class="bi bi-box-arrow-right"></i> Выйти</button>
@@ -125,5 +133,3 @@
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-

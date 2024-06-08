@@ -424,7 +424,7 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
         };
     }
-    
+
     /// <summary>
     /// Обновление объявления
     /// </summary>
@@ -461,7 +461,7 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
         };
     }
-    
+
     /// <summary>
     /// Обновление объявления
     /// </summary>
@@ -509,7 +509,6 @@ public class AdsRepository : BaseRepository
             _ => new BaseResult<MyAdViewModel>(new MyAdViewModel(ad))
         };
     }
-
 
 
     /// <summary>

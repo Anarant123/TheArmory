@@ -14,7 +14,7 @@ public class ComplaintsController : BaseController
 {
     protected readonly ILogger<ComplaintsController> Logger;
     private readonly ComplaintsRepository _complaintsRepository;
-    
+
     public ComplaintsController(
         ILogger<ComplaintsController> logger,
         UsersRepository usersRepository,
@@ -24,7 +24,7 @@ public class ComplaintsController : BaseController
         Logger = logger;
         _complaintsRepository = complaintsRepository;
     }
-    
+
     /// <summary>
     /// Получение жалоб выбранного объявления 
     /// </summary>
@@ -33,16 +33,16 @@ public class ComplaintsController : BaseController
     [HttpGet]
     [Route("")]
     public async Task<ActionResult<BaseQueryResult<ComplaintViewModel>>> Get(
-        [FromQuery]BaseQueryItemsParams queryItemsParams) 
+        [FromQuery] BaseQueryItemsParams queryItemsParams)
     {
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
         {
             adIdResponse = GetSelectedMyAdId();
-            if (!adIdResponse.Success) 
+            if (!adIdResponse.Success)
                 return BadRequest(adIdResponse);
         }
-        
+
         var result = await _complaintsRepository.Get(adIdResponse.Item, queryItemsParams);
 
         if (result.Success) return Ok(result);

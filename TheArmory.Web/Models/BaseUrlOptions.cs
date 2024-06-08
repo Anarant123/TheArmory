@@ -1,22 +1,23 @@
-﻿namespace TheArmory.Web.Models;
-
-public class BaseUrlOptions
+﻿namespace TheArmory.Web.Models
 {
-    /// <summary>
-    /// Адрес до API сервера
-    /// </summary>
-    public string? BaseApiUrl
+    public class BaseUrlOptions
     {
-        private get;
-        set;
-    }
+        /// <summary>
+        /// Адрес до API сервера
+        /// </summary>
+        public string? BaseApiUrl
+        {
+            private get;
+            set;
+        }
 
-    public string GetFullApiUrl(string rootPointName)
-    {
-        if (string.IsNullOrEmpty(BaseApiUrl))
-            throw new InvalidOperationException("BaseApiUrl is not set");
-        if (string.IsNullOrEmpty(rootPointName))
-            throw new InvalidOperationException("rootPointName is not set");
-        return $"{BaseApiUrl}/{rootPointName}";
+        public string GetFullApiUrl(string rootPointName)
+        {
+            if (string.IsNullOrEmpty(BaseApiUrl))
+                throw new InvalidOperationException("BaseApiUrl is not set");
+            if (string.IsNullOrEmpty(rootPointName))
+                throw new InvalidOperationException("rootPointName is not set");
+            return $"{BaseApiUrl}/{rootPointName}";
+        }
     }
 }

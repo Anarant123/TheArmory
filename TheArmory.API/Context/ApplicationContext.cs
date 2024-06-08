@@ -29,15 +29,15 @@ public class ApplicationContext : DbContext
             .WithMany(u => u.Ads)
             .HasForeignKey(a => a.StatusId);
         modelBuilder.Entity<Ad>()
-            .HasMany<Complaint>(a => a.Complaints )
+            .HasMany<Complaint>(a => a.Complaints)
             .WithOne(c => c.Ad)
             .HasForeignKey(c => c.AdId);
         modelBuilder.Entity<Ad>()
-            .HasMany<Favorite>(a => a.Favorites )
+            .HasMany<Favorite>(a => a.Favorites)
             .WithOne(f => f.Ad)
             .HasForeignKey(f => f.AdId);
         modelBuilder.Entity<Ad>()
-            .HasMany<Media>(a => a.Medias )
+            .HasMany<Media>(a => a.Medias)
             .WithOne(m => m.Ad)
             .HasForeignKey(m => m.AdId);
         modelBuilder.Entity<Ad>()
@@ -52,8 +52,8 @@ public class ApplicationContext : DbContext
             .HasOne<Category>(a => a.Category)
             .WithMany(c => c.Ads)
             .HasForeignKey(a => a.CategoryId);
-        
-        
+
+
         // связи сущности Complaint
         modelBuilder.Entity<Complaint>()
             .HasOne<Ad>(c => c.Ad)
@@ -63,7 +63,7 @@ public class ApplicationContext : DbContext
             .HasOne<User>(c => c.User)
             .WithMany(u => u.Complaints)
             .HasForeignKey(a => a.UserId);
-        
+
         // связи сущности Favorites
         modelBuilder.Entity<Favorite>()
             .HasOne<Ad>(f => f.Ad)
@@ -73,13 +73,13 @@ public class ApplicationContext : DbContext
             .HasOne<User>(f => f.User)
             .WithMany(u => u.Favorites)
             .HasForeignKey(a => a.UserId);
-        
+
         // связи сущности Media
         modelBuilder.Entity<Media>()
             .HasOne<Ad>(m => m.Ad)
             .WithMany(a => a.Medias)
             .HasForeignKey(a => a.AdId);
-        
+
         // cвязи сущности Region
         modelBuilder.Entity<Region>()
             .HasMany<Ad>(m => m.Ads)
@@ -91,7 +91,7 @@ public class ApplicationContext : DbContext
             .HasMany<User>(r => r.Users)
             .WithOne(u => u.Role)
             .HasForeignKey(u => u.RoleId);
-        
+
         // связи сущности Status
         modelBuilder.Entity<Status>()
             .HasMany<User>(s => s.Users)
@@ -101,7 +101,7 @@ public class ApplicationContext : DbContext
             .HasMany<Ad>(s => s.Ads)
             .WithOne(a => a.Status)
             .HasForeignKey(a => a.StatusId);
-        
+
         // связи сущности User
         modelBuilder.Entity<User>()
             .HasOne<Region>(u => u.Region)
@@ -131,25 +131,25 @@ public class ApplicationContext : DbContext
             .HasMany<Contact>(u => u.Contacts)
             .WithOne(c => c.User)
             .HasForeignKey(c => c.UserId);
-        
+
         // связи сущности Condition
         modelBuilder.Entity<Condition>()
             .HasMany<Ad>(c => c.Ads)
             .WithOne(a => a.Condition)
             .HasForeignKey(a => a.ConditionId);
-        
+
         // связи сущности Contact
         modelBuilder.Entity<Contact>()
             .HasOne<User>(c => c.User)
             .WithMany(u => u.Contacts)
             .HasForeignKey(c => c.UserId);
-        
+
         // связи сущности Location
         modelBuilder.Entity<Location>()
             .HasOne<Ad>(l => l.Ad)
             .WithOne(a => a.Location);
     }
-    
+
     public DbSet<Ad> Ads { get; set; }
     public DbSet<Complaint> Complaints { get; set; }
     public DbSet<Favorite> Favorites { get; set; }

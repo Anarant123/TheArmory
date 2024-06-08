@@ -31,6 +31,7 @@ public static class QueryParametersExtensions
         {
             return queryParameters.OrderBy.Split(' ').Last().ToLowerInvariant().StartsWith("desc");
         }
+
         return false;
     }
 }

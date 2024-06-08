@@ -14,19 +14,17 @@ public class Region : DbEntity
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Код региона
     /// </summary>
     [Column("code")]
     [JsonPropertyName("code")]
     public int Code { get; set; }
-    
+
     // virtual
-    [JsonIgnore]
-    public virtual List<Ad> Ads { get; set; }
-    [JsonIgnore]
-    public virtual List<User> Users { get; set; }
+    [JsonIgnore] public virtual List<Ad> Ads { get; set; }
+    [JsonIgnore] public virtual List<User> Users { get; set; }
 
     public Region(string name, int code)
     {

@@ -11,17 +11,17 @@ public class CharacteristicsController : BaseController
 {
     private readonly ILogger<ConditionsController> Logger;
     private readonly CharacteristicsRepository _characteristicsRepository;
-    
+
     public CharacteristicsController(
         ILogger<ConditionsController> logger,
         UsersRepository usersRepository,
-        CharacteristicsRepository characteristicsRepository) 
+        CharacteristicsRepository characteristicsRepository)
         : base(logger, usersRepository)
     {
         Logger = logger;
         _characteristicsRepository = characteristicsRepository;
     }
-    
+
     /// <summary>
     /// Создать характеристику
     /// </summary>
@@ -29,12 +29,12 @@ public class CharacteristicsController : BaseController
     [HttpPost]
     [Route("")]
     public async Task<ActionResult<BaseResult>> CreateCharacteristic(
-        [FromBody]CharacteristicCreateCommand command)
+        [FromBody] CharacteristicCreateCommand command)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success)
             return userResponse;
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -48,7 +48,7 @@ public class CharacteristicsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Удалить характеристику
     /// </summary>
@@ -56,12 +56,12 @@ public class CharacteristicsController : BaseController
     [HttpDelete]
     [Route("")]
     public async Task<ActionResult<BaseResult>> DeleteCharacteristic(
-        [FromQuery]CharacteristicCommand command)
+        [FromQuery] CharacteristicCommand command)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success)
             return userResponse;
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);

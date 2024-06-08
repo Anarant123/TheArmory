@@ -18,7 +18,7 @@ public class MediasRepository : BaseRepository<Media>
     {
         FilesPath = Path.Combine(configuration.GetSection("FilesPath").Value ?? "Files");
     }
-    
+
     /// <summary>
     /// Сохраняет фотографии объявления в файловой системе
     /// </summary>
@@ -39,7 +39,7 @@ public class MediasRepository : BaseRepository<Media>
 
         var adFilePath = Path.Combine(adsFilePath, adId.ToString());
         EnsureDirectoryExists(adFilePath);
-        
+
         var medias = new List<Media>();
         foreach (var file in files)
         {
@@ -76,14 +76,14 @@ public class MediasRepository : BaseRepository<Media>
 
         if (media is null)
             return new BaseResult("Такой фотографии не существует");
-        
+
         var userFilePath = Path.Combine(FilesPath, userId.ToString());
         var adsFilePath = Path.Combine(userFilePath, "Ads");
         var adFilePath = Path.Combine(adsFilePath, adId.ToString());
         var mediaFilePath = Path.Combine(adFilePath, media.Name);
-        
+
         if (!File.Exists(mediaFilePath)) return new BaseResult("Файл не найден");
-        
+
         File.Delete(mediaFilePath);
         Context.Medias.Remove(media);
         return await Context.SaveChangesAsync() switch
@@ -107,7 +107,7 @@ public class MediasRepository : BaseRepository<Media>
         var adsFilePath = Path.Combine(userFilePath, "Ads");
         var adFilePath = Path.Combine(adsFilePath, command.Id.ToString());
         var filePath = Path.Combine(adFilePath, command.Photo.FileName);
-        
+
         await using var stream = new FileStream(filePath, FileMode.Create);
         await command.Photo.CopyToAsync(stream);
 
@@ -119,7 +119,7 @@ public class MediasRepository : BaseRepository<Media>
 
         return new BaseResult<Media>(media);
     }
-    
+
     /// <summary>
     /// Добавляет фотографию к объявлению
     /// </summary>
@@ -137,7 +137,7 @@ public class MediasRepository : BaseRepository<Media>
 
         var fileName = Guid.NewGuid() + Path.GetExtension(photo.FileName);
         var filePath = Path.Combine(profileInfoFilePath, fileName);
-    
+
         await using var stream = new FileStream(filePath, FileMode.Create);
         await photo.CopyToAsync(stream);
 
@@ -147,7 +147,7 @@ public class MediasRepository : BaseRepository<Media>
         };
     }
 
-    
+
     public async Task<List<Media>> GetMediaByAdId(Guid adId)
     {
         var medias = await Context.Medias
@@ -157,7 +157,7 @@ public class MediasRepository : BaseRepository<Media>
         return medias;
     }
 
-    
+
     private static void EnsureDirectoryExists(string directoryPath)
     {
         if (!Directory.Exists(directoryPath)) Directory.CreateDirectory(directoryPath);
@@ -177,7 +177,4 @@ public class MediasRepository : BaseRepository<Media>
             Console.WriteLine($"Ошибка при удалении файлов из директории: {ex.Message}");
         }
     }
-
-    
-    
 }

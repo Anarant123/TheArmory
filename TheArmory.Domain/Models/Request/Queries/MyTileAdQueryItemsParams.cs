@@ -5,6 +5,5 @@ namespace TheArmory.Domain.Models.Request.Queries;
 
 public class MyTileAdQueryItemsParams : BaseQueryItemsParams
 {
-    [JsonPropertyName("statusId")]
-    public StateStatus? StatusId { get; set; } = StateStatus.Actively;
+    [JsonPropertyName("statusId")] public StateStatus? StatusId { get; set; } = StateStatus.Actively;
 }

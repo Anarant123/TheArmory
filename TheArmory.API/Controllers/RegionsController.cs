@@ -11,17 +11,17 @@ public class RegionsController : BaseController
 {
     protected readonly ILogger<ConditionsController> Logger;
     private readonly RegionsRepository _regionsRepository;
-    
+
     public RegionsController(
         ILogger<ConditionsController> logger,
         UsersRepository usersRepository,
-        RegionsRepository regionsRepository) 
+        RegionsRepository regionsRepository)
         : base(logger, usersRepository)
     {
         Logger = logger;
         _regionsRepository = regionsRepository;
     }
-    
+
     /// <summary>
     /// Получить список регионов
     /// </summary>

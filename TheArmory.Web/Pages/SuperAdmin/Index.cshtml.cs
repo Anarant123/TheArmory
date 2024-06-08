@@ -13,13 +13,16 @@ public class Index : PageModel
 {
     private readonly AdminsService _adminsService;
     public readonly string BaseUrl;
-    
+
     [BindProperty] public UserCommand Command { get; set; }
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public BaseQueryItemsParams QueryParams { get; set; } = new BaseQueryItemsParams();
     [BindProperty] public BaseQueryResult<UserViewModel> QueryResult { get; set; }
-    [BindProperty] public List<UserViewModel>? Admins => QueryResult.Success ? QueryResult.Items as List<UserViewModel> : new List<UserViewModel>(); 
-    
+
+    [BindProperty]
+    public List<UserViewModel>? Admins =>
+        QueryResult.Success ? QueryResult.Items as List<UserViewModel> : new List<UserViewModel>();
+
     public Index(
         AdminsService adminsService,
         BaseUrlOptions baseUrlOptions)
@@ -27,15 +30,14 @@ public class Index : PageModel
         _adminsService = adminsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
-    
+
     public async Task<ActionResult> OnGetAsync()
     {
         QueryResult = await _adminsService.GetAdmins(QueryParams);
         if (!QueryResult.Success)
         {
-            
         }
-        
+
         return Page();
     }
 
@@ -43,7 +45,7 @@ public class Index : PageModel
     {
         return await OnGetAsync();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteAsync()
     {
         Result = await _adminsService.Delete(Command);

@@ -5,12 +5,9 @@ namespace TheArmory.Domain.Models.Responce.ViewModels.Ad;
 
 public class AdFilterViewModel
 {
-    [JsonPropertyName("regions")]
-    public List<Database.Region> Regions { get; set; }
-    
-    [JsonPropertyName("conditions")]
-    public List<Database.Condition> Conditions { get; set; }
+    [JsonPropertyName("regions")] public List<Database.Region> Regions { get; set; }
 
-    [JsonPropertyName("categories")]
-    public List<Category> Categories { get; set; }
+    [JsonPropertyName("conditions")] public List<Database.Condition> Conditions { get; set; }
+
+    [JsonPropertyName("categories")] public List<Category> Categories { get; set; }
 }

@@ -11,15 +11,16 @@ public class RegionsRepository : BaseRepository<Region>
     public RegionsRepository(
         ApplicationContext context,
         ILogger<BaseRepository<Region>> logger)
-        : base(context, logger) { }
+        : base(context, logger)
+    {
+    }
 
     public async Task<BaseQueryResult<RegionListViewModel>> GetSelectList()
     {
         var conditions = await Context.Regions
             .Select(s => new RegionListViewModel(s))
             .ToListAsync();
-        
+
         return new BaseQueryResult<RegionListViewModel>(conditions);
     }
-
 }

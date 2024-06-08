@@ -64,8 +64,9 @@ namespace TheArmory.Domain.Models.Request.Commands.Ad
         /// <summary>
         /// Набор характеристик
         /// </summary>
-        [JsonPropertyName("сharacteristics")] 
-        public List<CharacteristicCreateCommand> Characteristics { get; set; } = new List<CharacteristicCreateCommand>();
+        [JsonPropertyName("сharacteristics")]
+        public List<CharacteristicCreateCommand> Characteristics { get; set; } =
+            new List<CharacteristicCreateCommand>();
 
         /// <summary>
         /// Фотографии

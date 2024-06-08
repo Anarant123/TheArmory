@@ -65,325 +65,325 @@
 @await Html.PartialAsync("ErrorModelWindow", Model.Result)
 
 <div class="container mt-3">
-    <div class="row mb-3">
-        @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Actively))
-        {
-            <div class="col-md-3">
-                <form method="post" asp-page-handler="Deactivate">
-                    <button type="submit" class="btn btn-primary btn-block">
-                        <i class="bi bi-x-circle"></i> Снять с публикации
-                    </button>
-                </form>
-            </div>
-        }
-        @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Inactive))
-        {
-            <div class="col-md-3">
-                <form method="post" asp-page-handler="Activate">
-                    <button type="submit" class="btn btn-primary btn-block">
-                        <i class="bi bi-check-circle"></i> Опубликовать
-                    </button>
-                </form>
-            </div>
-        }
+<div class="row mb-3">
+    @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Actively))
+    {
         <div class="col-md-3">
-            <form method="post" asp-page-handler="Delete">
-                <button type="submit" class="btn btn-danger btn-block">
-                    <i class="bi bi-trash"></i> Удалить
+            <form method="post" asp-page-handler="Deactivate">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="bi bi-x-circle"></i> Снять с публикации
                 </button>
             </form>
         </div>
+    }
+    @if (Model.MyAdViewModel.StatusId.Equals(StateStatus.Inactive))
+    {
         <div class="col-md-3">
-            <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
-                <i class="bi bi-box-arrow-left"></i> Отменить и выйти
-            </a>
+            <form method="post" asp-page-handler="Activate">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="bi bi-check-circle"></i> Опубликовать
+                </button>
+            </form>
+        </div>
+    }
+    <div class="col-md-3">
+        <form method="post" asp-page-handler="Delete">
+            <button type="submit" class="btn btn-danger btn-block">
+                <i class="bi bi-trash"></i> Удалить
+            </button>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
+            <i class="bi bi-box-arrow-left"></i> Отменить и выйти
+        </a>
+    </div>
+</div>
+
+<form method="post" asp-page-handler="Update">
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Параметры</h2>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
+                <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
+            </div>
+            <div class="col-md-9">
+                <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
+                    <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
+                    @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
+                    {
+                        <option value="@condition.Id">@condition.Name</option>
+                    }
+                </select>
+            </div>
         </div>
     </div>
+</div>
 
-    <form method="post" asp-page-handler="Update">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Параметры</h2>
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
-                        <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
-                    </div>
-                </div>
-
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
-                            <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
-                            @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
-                            {
-                                <option value="@condition.Id">@condition.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Подробности</h2>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
+            </div>
+            <div class="col-md-9">
+                <textarea asp-for="UpdateCommand.Description" class="form-control" placeholder="Введите описание" maxlength="2000">@Model.MyAdViewModel.Description</textarea>
+                <span asp-validation-for="UpdateCommand.Description" class="text-danger"></span>
             </div>
         </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Подробности</h2>
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <textarea asp-for="UpdateCommand.Description" class="form-control" placeholder="Введите описание" maxlength="2000">@Model.MyAdViewModel.Description</textarea>
-                        <span asp-validation-for="UpdateCommand.Description" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" required="Обязательно к заполнению">
-                        <span asp-validation-for="UpdateCommand.Price" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-3">
-                        <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
-                    </div>
-                    <div class="col-md-9">
-                        <select asp-for="UpdateCommand.CategoryId" class="form-select" required="Обязательно к заполнению">
-                            <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
-                            @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
-                            {
-                                <option value="@category.Id">@category.Name</option>
-                            }
-                        </select>
-                    </div>
-                </div>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
+            </div>
+            <div class="col-md-9">
+                <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" required="Обязательно к заполнению">
+                <span asp-validation-for="UpdateCommand.Price" class="text-danger"></span>
             </div>
         </div>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
+            </div>
+            <div class="col-md-9">
+                <select asp-for="UpdateCommand.CategoryId" class="form-select" required="Обязательно к заполнению">
+                    <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
+                    @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Характеристики</h2>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">
-                        <i class="bi bi-plus"></i> Добавить характеристику
-                    </button>
-                </div>
-                @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
-                {
-                    <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
-                        <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
-                        <div class="container mt-2">
-                            @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
-                            {
-                                <div class="row mt-1">
-                                    <div class="col-md-3">
-                                        <label>@characteristic.Name:</label>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <input type="text" class="form-control" readonly value="@characteristic.Description"/>
-                                    </div>
-                                    <div class="col-md-2 text-end">
-                                        <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </form>
-                }
-                <form method="post" asp-page-handler="CreateCharacteristic">
-                    <div class="container d-none" id="addCreateCharacteristicForm">
-                        <div class="row mt-3">
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Характеристики</h2>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">
+                <i class="bi bi-plus"></i> Добавить характеристику
+            </button>
+        </div>
+        @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
+        {
+            <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
+                <input type="hidden" asp-for="DeleteCharacteristicCommand.Id" id="characteristicDeletedInput"/>
+                <div class="container mt-2">
+                    @foreach (var characteristic in Model.MyAdViewModel.Characteristics)
+                    {
+                        <div class="row mt-1">
                             <div class="col-md-3">
-                                <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" maxlength="30" placeholder="Название">
+                                <label>@characteristic.Name:</label>
                             </div>
                             <div class="col-md-7">
-                                <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" maxlength="100" placeholder="Значение">
+                                <input type="text" class="form-control" readonly value="@characteristic.Description"/>
                             </div>
                             <div class="col-md-2 text-end">
-                                <button id="saveContactButton" type="submit" class="btn btn-success">
-                                    <i class="bi bi-check"></i> 
-                                </button>
-                                <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
-                                    <i class="bi bi-x"></i> 
+                                <button type="submit" onclick="deleteCharacteristic(`@characteristic.Id`)" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i>
                                 </button>
                             </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Изображения</h2>
-                <form method="post" asp-page-handler="DeleteMedia">
-                    <div class="row mb-3">
-                        <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                            <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
-                        </div>
-                        <div class="col-md-10 text-center">
-                            @if (Model.MyAdViewModel.Images.Count > 0)
-                            {
-                                <input type="hidden" asp-for="DeleteMediaCommand.MediaId" value="@Model.MyAdViewModel.Images.First().Id"/>
-                                <div id="image-area" class="position-relative">
-                                    <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
-                                </div>
-                            }
-                            else
-                            {
-                                <div id="image-area" class="position-relative">
-                                    <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
-                                </div>
-                            }
-                        </div>
-                        <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
-                            <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
-                        </div>
-                    </div>
-
-                    @if (Model.MyAdViewModel.Images.Count > 0)
-                    {
-                        <div class="row mb-3">
-                            <button type="submit" class="btn btn-danger btn-block">
-                                <i class="bi bi-trash"></i> Удалить
-                            </button>
-                        </div>
-                    }
-                </form>
-
-                <div id="thumbnails-container" class="row mb-3">
-                    @foreach (var image in Model.MyAdViewModel.Images)
-                    {
-                        <div class="col-md-2 text-center image-cell position-relative">
-                            <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid" alt=""/>
                         </div>
                     }
                 </div>
-
-                <form method="post" enctype="multipart/form-data" asp-page-handler="AddMedia">
-                    <div class="row mb-3">
-                        <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
-                        <div class="col-md-12">
-                            <button type="button" id="add-photo-btn" class="btn btn-primary btn-block" onclick="document.getElementById('file-input').click();">
-                                <i class="bi bi-plus-lg"></i> Добавить
-                            </button>
-                        </div>
+            </form>
+        }
+        <form method="post" asp-page-handler="CreateCharacteristic">
+            <div class="container d-none" id="addCreateCharacteristicForm">
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <input type="text" id="CharacteristicNameInput" class="form-control" asp-for="CharacteristicCreateCommand.Name" maxlength="30" placeholder="Название">
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <button type="submit" id="save-photo-btn" class="btn btn-primary btn-block" style="display: none;">
-                                <i class="bi bi-save"></i> Сохранить
-                            </button>
-                        </div>
-                        <div class="col-md-6">
-                            <button type="button" id="cancel-photo-btn" class="btn btn-danger btn-block" style="display: none;" onclick="removeImage(currentImageIndex);">
-                                <i class="bi bi-x-lg"></i> Отмена
-                            </button>
-                        </div>
+                    <div class="col-md-7">
+                        <input type="text" id="CharacteristicDescriptionInput" class="form-control" asp-for="CharacteristicCreateCommand.Description" maxlength="100" placeholder="Значение">
                     </div>
-                </form>
+                    <div class="col-md-2 text-end">
+                        <button id="saveContactButton" type="submit" class="btn btn-success">
+                            <i class="bi bi-check"></i>
+                        </button>
+                        <button id="cancelContactButton" type="button" class="btn btn-danger" onclick="cancelCreateCharacteristic()">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Изображения</h2>
+        <form method="post" asp-page-handler="DeleteMedia">
+            <div class="row mb-3">
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="prevImage()">&#60;</button>
+                </div>
+                <div class="col-md-10 text-center">
+                    @if (Model.MyAdViewModel.Images.Count > 0)
+                    {
+                        <input type="hidden" asp-for="DeleteMediaCommand.MediaId" value="@Model.MyAdViewModel.Images.First().Id"/>
+                        <div id="image-area" class="position-relative">
+                            <img id="current-image" src="@(Model.BaseUrl + '/' + Model.MyAdViewModel.Images.First().LocalPath)" alt="Image" class="img-fluid">
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="image-area" class="position-relative">
+                            <img id="current-image" src="/Default/Images/Ad/DefoultAdImage.png" alt="Image" class="img-fluid">
+                        </div>
+                    }
+                </div>
+                <div class="col-md-1 text-center d-flex align-items-center justify-content-center">
+                    <button type="button" class="btn btn-secondary h-50" onclick="nextImage()">&#62;</button>
+                </div>
+            </div>
+
+            @if (Model.MyAdViewModel.Images.Count > 0)
+            {
+                <div class="row mb-3">
+                    <button type="submit" class="btn btn-danger btn-block">
+                        <i class="bi bi-trash"></i> Удалить
+                    </button>
+                </div>
+            }
+        </form>
+
+        <div id="thumbnails-container" class="row mb-3">
+            @foreach (var image in Model.MyAdViewModel.Images)
+            {
+                <div class="col-md-2 text-center image-cell position-relative">
+                    <img src="@(Model.BaseUrl + '/' + image.LocalPath)" class="img-thumbnail img-fluid" alt=""/>
+                </div>
+            }
         </div>
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Видео</h2>
-                <form method="post" asp-page-handler="ChangeVideo">
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label class="form-label">Ссылка на YouTube видео с обзором:</label>
-                        </div>
-                        <div class="col-md-9">
-                            <input id="youtubeVideoLink" asp-for="ChangeYouTubeLinkCommand.YouTubeLink" type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
-                            <span class="text-danger"></span>
-                            @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
-                            {
-                                var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
-                                <div id="youtubeVideo" class="row mt-3">
-                                    <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            }
-                            else
-                            {
-                                <div id="youtubeVideo" class="row mt-3" style="display: none;">
-                                    <iframe id="videoFrame" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                    <div class="row" id="save-video-btn" style="display: none;">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="bi bi-save"></i> Сохранить
-                            </button>
-                        </div>
-                    </div>
-                </form>
+        <form method="post" enctype="multipart/form-data" asp-page-handler="AddMedia">
+            <div class="row mb-3">
+                <input type="file" id="file-input" asp-for="AddMediaCommand.Photo" accept="image/*" multiple="multiple" style="display: none;">
+                <div class="col-md-12">
+                    <button type="button" id="add-photo-btn" class="btn btn-primary btn-block" onclick="document.getElementById('file-input').click();">
+                        <i class="bi bi-plus-lg"></i> Добавить
+                    </button>
+                </div>
             </div>
-        </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <button type="submit" id="save-photo-btn" class="btn btn-primary btn-block" style="display: none;">
+                        <i class="bi bi-save"></i> Сохранить
+                    </button>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" id="cancel-photo-btn" class="btn btn-danger btn-block" style="display: none;" onclick="removeImage(currentImageIndex);">
+                        <i class="bi bi-x-lg"></i> Отмена
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-        <div class="card mb-3">
-            <div class="card-body">
-                <h2 class="card-title">Место сделки</h2>
-                <form method="post" asp-page-handler="ChangeLocation">
-                    <div class="row mb-3">
-                        <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
-                        <p id="address" class="text-muted"></p>
-                        <div class="col-md-12 mb-3">
-                            <button type="button" onclick="showMap()" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
-                                <i class="bi bi-map"></i> Показать карту
-                            </button>
-                            <button type="button" id="change-location-btn" class="btn btn-primary" style="display: none;" onclick="changeLocation()">
-                                <i class="bi bi-geo-alt"></i> Изменить место сделки
-                            </button>
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Видео</h2>
+        <form method="post" asp-page-handler="ChangeVideo">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Ссылка на YouTube видео с обзором:</label>
+                </div>
+                <div class="col-md-9">
+                    <input id="youtubeVideoLink" asp-for="ChangeYouTubeLinkCommand.YouTubeLink" type="text" value="@Model.MyAdViewModel.YouTubeLink" class="form-control" placeholder="Введите ссылку на YouTube видео">
+                    <span class="text-danger"></span>
+                    @if (!string.IsNullOrEmpty(@Model.MyAdViewModel.YouTubeLink))
+                    {
+                        var videoId = Model.MyAdViewModel.YouTubeLink.Split('/').Last().Split('?')[0];
+                        <div id="youtubeVideo" class="row mt-3">
+                            <iframe id="videoFrame" width="560" height="315" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div id="youtubeVideo" class="row mt-3" style="display: none;">
+                            <iframe id="videoFrame" width="560" height="315" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="row" id="save-video-btn" style="display: none;">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="bi bi-save"></i> Сохранить
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-                    <div class="collapse" id="mapCollapse">
-                        <div class="row mb-3">
-                            <div class="col-md-12">
-                                <input type="text" id="addressInfo" asp-for="LocationCommand.Address" value="@(Model.MyAdViewModel.Location?.Address ?? "")" class="form-control" placeholder="Адрес" readonly="">
-                                <input type="hidden" id="latitude" asp-for="LocationCommand.Latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
-                                <input type="hidden" id="longitude" asp-for="LocationCommand.Longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
-                                <div class="map-container mt-3">
-                                    <div id="map" class="square" style="height: 400px"></div>
-                                    <div class="marker-container">
-                                        <img id="map-marker" src="/icons/map_marker.png" class="marker" alt="" style="display: none;"/>
-                                    </div>
-                                </div>
+<div class="card mb-3">
+    <div class="card-body">
+        <h2 class="card-title">Место сделки</h2>
+        <form method="post" asp-page-handler="ChangeLocation">
+            <div class="row mb-3">
+                <p class="text-muted">(Добавьте данный параметр он поможет привлечь заинтересованных покупателей)</p>
+                <p id="address" class="text-muted"></p>
+                <div class="col-md-12 mb-3">
+                    <button type="button" onclick="showMap()" class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#mapCollapse" aria-expanded="false" aria-controls="mapCollapse">
+                        <i class="bi bi-map"></i> Показать карту
+                    </button>
+                    <button type="button" id="change-location-btn" class="btn btn-primary" style="display: none;" onclick="changeLocation()">
+                        <i class="bi bi-geo-alt"></i> Изменить место сделки
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse" id="mapCollapse">
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <input type="text" id="addressInfo" asp-for="LocationCommand.Address" value="@(Model.MyAdViewModel.Location?.Address ?? "")" class="form-control" placeholder="Адрес" readonly="">
+                        <input type="hidden" id="latitude" asp-for="LocationCommand.Latitude" value="@Model.MyAdViewModel.Location?.Latitude" class="d-none">
+                        <input type="hidden" id="longitude" asp-for="LocationCommand.Longitude" value="@Model.MyAdViewModel.Location?.Longitude" class="d-none">
+                        <div class="map-container mt-3">
+                            <div id="map" class="square" style="height: 400px"></div>
+                            <div class="marker-container">
+                                <img id="map-marker" src="/icons/map_marker.png" class="marker" alt="" style="display: none;"/>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="bi bi-save"></i> Сохранить изменения
-                            </button>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-        </div>
-    </form>
-
-    <div class="row">
-        <div class="col-md-3">
-            <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
-                <i class="bi bi-x-lg"></i> Отменить и выйти
-            </a>
-        </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="bi bi-save"></i> Сохранить изменения
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
+</form>
+
+<div class="row">
+    <div class="col-md-3">
+        <a class="btn btn-danger btn-block" asp-page="/Account/PersonalInfo">
+            <i class="bi bi-x-lg"></i> Отменить и выйти
+        </a>
+    </div>
+</div>
 </div>
 
 <script src="https://api-maps.yandex.ru/2.1/?apikey=d8ed85d4-a4d3-4811-895b-20643a517a47&lang=ru_RU" type="text/javascript"></script>

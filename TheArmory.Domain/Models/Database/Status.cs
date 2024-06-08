@@ -11,19 +11,17 @@ public class Status
     [Column("id")]
     [JsonPropertyName("id")]
     public StateStatus Id { get; set; }
-    
+
     /// <summary>
     /// Название
     /// </summary>
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     // virtual
-    [JsonIgnore]
-    public virtual List<User> Users { get; set; }
-    [JsonIgnore]
-    public virtual List<Ad> Ads { get; set; }
+    [JsonIgnore] public virtual List<User> Users { get; set; }
+    [JsonIgnore] public virtual List<Ad> Ads { get; set; }
 
     public Status(StateStatus id, string name)
     {

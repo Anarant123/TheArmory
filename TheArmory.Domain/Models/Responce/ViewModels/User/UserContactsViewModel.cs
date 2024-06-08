@@ -11,33 +11,35 @@ public class UserContactsViewModel
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Фото профиля
     /// </summary>
     [JsonPropertyName("photoName")]
     public string? PhotoName { get; set; }
-    
+
     /// <summary>
     /// Контакты
     /// </summary>
     [JsonPropertyName("contacts")]
     public List<Contact> Contacts { get; set; }
-    
+
     /// <summary>
     /// Дата создания
     /// </summary>
     [JsonPropertyName("registrationDateTime")]
     public DateTime RegistrationDateTime { get; set; }
-    
+
     /// <summary>
     /// Количество объявлений
     /// </summary>
     [JsonPropertyName("adsCount")]
     public int AdsCount { get; set; }
-    
-    public UserContactsViewModel(){}
-    
+
+    public UserContactsViewModel()
+    {
+    }
+
     public UserContactsViewModel(Database.User user)
     {
         Name = user.Name;

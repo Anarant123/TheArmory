@@ -11,7 +11,9 @@ public class ConditionsRepository : BaseRepository
     public ConditionsRepository(
         ApplicationContext context,
         ILogger<BaseRepository<Condition>> logger)
-        : base(context, logger) { }
+        : base(context, logger)
+    {
+    }
 
     public async Task<BaseQueryResult<ConditionListViewModel>> GetSelectList()
     {
@@ -19,6 +21,6 @@ public class ConditionsRepository : BaseRepository
             .Select(s => new ConditionListViewModel(s))
             .ToListAsync();
 
-         return new BaseQueryResult<ConditionListViewModel>(conditions);
+        return new BaseQueryResult<ConditionListViewModel>(conditions);
     }
 }

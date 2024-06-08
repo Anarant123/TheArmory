@@ -17,17 +17,18 @@ public class CharacteristicsService : BaseService<Characteristic>
         base(httpClientFactory.CreateClient("httpClient"), baseUrlOptions, logger)
     {
     }
-    
+
     public async Task<BaseResult> CreateCharacteristic(CharacteristicCreateCommand command)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            using var content = new StringContent(JsonSerializer.Serialize(command), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(command),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);
@@ -37,17 +38,18 @@ public class CharacteristicsService : BaseService<Characteristic>
             return new BaseResult<UserPersonalInfoViewModel>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> DeleteCharacteristic(CharacteristicCommand command)
     {
         try
         {
             var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl(RootPointName)}");
-            uriBuilder.Query = $"id={command.Id}";;
+            uriBuilder.Query = $"id={command.Id}";
+            ;
             var response = await httpClient.DeleteAsync(uriBuilder.Uri);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult(await response.Content.ReadAsStringAsync());
-            
+
             var responseStream = await response.Content.ReadAsStreamAsync();
             var result = await JsonSerializer.DeserializeAsync<BaseResult>(responseStream);
             return result ?? new BaseResult(ErrorsMessage.SomethingWentWrong);

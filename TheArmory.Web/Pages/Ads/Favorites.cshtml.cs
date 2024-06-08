@@ -12,11 +12,14 @@ public class Favorites : PageModel
 {
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
-    
+
     [BindProperty] public BaseQueryItemsParams QueryParams { get; set; } = new BaseQueryItemsParams();
     [BindProperty] public BaseQueryResult<TileAdViewModel> QueryResult { get; set; }
-    [BindProperty] public List<TileAdViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>(); 
-    
+
+    [BindProperty]
+    public List<TileAdViewModel>? TileAds =>
+        QueryResult.Success ? QueryResult.Items as List<TileAdViewModel> : new List<TileAdViewModel>();
+
     public Favorites(
         AdsService adsService,
         BaseUrlOptions baseUrlOptions)
@@ -24,15 +27,14 @@ public class Favorites : PageModel
         _adsService = adsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
-    
+
     public async Task<ActionResult> OnGetAsync()
     {
         QueryResult = await _adsService.GetFavoritesAds(QueryParams);
         if (!QueryResult.Success)
         {
-            
         }
-        
+
         return Page();
     }
 

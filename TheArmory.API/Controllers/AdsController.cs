@@ -9,24 +9,23 @@ using TheArmory.Repository;
 
 namespace TheArmory.Controllers;
 
-
 [Route("Ads")]
 [ApiController]
 public class AdsController : BaseController
 {
     private readonly ILogger<ConditionsController> Logger;
     private readonly AdsRepository _adsRepository;
-    
+
     public AdsController(
         ILogger<ConditionsController> logger,
         UsersRepository usersRepository,
-        AdsRepository adsRepository) 
+        AdsRepository adsRepository)
         : base(logger, usersRepository)
     {
         Logger = logger;
         _adsRepository = adsRepository;
     }
-    
+
     /// <summary>
     /// Выбранное объявление
     /// </summary>
@@ -49,7 +48,7 @@ public class AdsController : BaseController
         Logger.LogError(result.Error);
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Свое выбранное объявление
     /// </summary>
@@ -82,18 +81,18 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetAds(
-    [FromQuery]TileAdQueryItemsParams queryItemsParams)
+        [FromQuery] TileAdQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
-        
+
         var result = await _adsRepository.GetAds(userResponse.Item?.Id, queryItemsParams);
-        
+
         if (result.Success)
             return Ok(result);
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Забаненные объявления
     /// </summary>
@@ -103,18 +102,18 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("Banned")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetBannedAds(
-        [FromQuery]BaseQueryItemsParams queryItemsParams)
+        [FromQuery] BaseQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
-        
+
         var result = await _adsRepository.GetBunnedAds(queryItemsParams);
-        
+
         if (result.Success)
             return Ok(result);
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Свои объявления
     /// </summary>
@@ -124,20 +123,20 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("My")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetMyAds(
-        [FromQuery]MyTileAdQueryItemsParams queryItemsParams)
+        [FromQuery] MyTileAdQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success || userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var result = await _adsRepository.GetMyAds(userResponse.Item.Id, queryItemsParams);
-        
+
         if (result.Success)
             return Ok(result);
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Избранные объявления
     /// </summary>
@@ -147,20 +146,20 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("Favorites")]
     public async Task<ActionResult<BaseQueryResult<TileAdViewModel>>> GetFavoritesAds(
-        [FromQuery]BaseQueryItemsParams queryItemsParams)
+        [FromQuery] BaseQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success || userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var result = await _adsRepository.GetFavoritesAds(userResponse.Item.Id, queryItemsParams);
-        
+
         if (result.Success)
             return Ok(result);
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Объявления с жалобами
     /// </summary>
@@ -170,14 +169,14 @@ public class AdsController : BaseController
     [HttpGet]
     [Route("Complaints")]
     public async Task<ActionResult<BaseQueryResult<TileAdComplaintViewModel>>> GetComplaintsAds(
-        [FromQuery]BaseQueryItemsParams queryItemsParams)
+        [FromQuery] BaseQueryItemsParams queryItemsParams)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success || userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var result = await _adsRepository.GetComplaintsAds(queryItemsParams);
-        
+
         if (result.Success)
             return Ok(result);
 
@@ -194,7 +193,7 @@ public class AdsController : BaseController
     public async Task<ActionResult<BaseResult<AdPublishInfoViewModel>>> GetPublishInformation()
     {
         var result = await _adsRepository.GetPublishInformation();
-        
+
         if (result.Success)
             return Ok(result);
 
@@ -210,13 +209,13 @@ public class AdsController : BaseController
     public async Task<ActionResult<BaseResult<AdFilterViewModel>>> GetFilterViewModel()
     {
         var result = await _adsRepository.GetFilterViewModel();
-        
+
         if (result.Success)
             return Ok(result);
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Опубликовать объявление
     /// </summary>
@@ -225,7 +224,7 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("")]
     public async Task<ActionResult<BaseResult<MyAdViewModel>>> PostAd(
-        [FromForm]AdCreateCommand command)
+        [FromForm] AdCreateCommand command)
     {
         var userResponse = await GetUser();
 
@@ -251,7 +250,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -265,7 +264,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Подать жалобу
     /// </summary>
@@ -275,12 +274,12 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("Complaint")]
     public async Task<ActionResult<BaseResult>> AdToComplaint(
-        [FromBody]AdToComplaintCommand command)
+        [FromBody] AdToComplaintCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -308,7 +307,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -320,7 +319,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Добавить фото к объявлению
     /// </summary>
@@ -330,12 +329,12 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> AddMedia(
-        [FromForm]AdAddMediaCommand command)
+        [FromForm] AdAddMediaCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -350,7 +349,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Выбор объявления и сохранение его в cookie
     /// </summary>
@@ -359,12 +358,12 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("Select")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> Select(
-        [FromBody]AdSelectCommand command)
+        [FromBody] AdSelectCommand command)
     {
         var userResponse = await GetUser();
 
         var userId = userResponse.Item?.Id;
-        
+
         var result = await _adsRepository.GetAd(userId, command.Id);
 
         if (result.Success)
@@ -377,7 +376,7 @@ public class AdsController : BaseController
         Logger.LogError(result.Error);
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Выбор своего объявления и сохранение его в cookie
     /// </summary>
@@ -387,12 +386,12 @@ public class AdsController : BaseController
     [HttpPost]
     [Route("SelectMy")]
     public async Task<ActionResult<BaseResult<AdViewModel>>> SelectMy(
-        [FromBody]AdSelectCommand command)
+        [FromBody] AdSelectCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var result = await _adsRepository.GetMyAd(userResponse.Item.Id, command.Id);
 
         if (result.Success)
@@ -405,7 +404,7 @@ public class AdsController : BaseController
         Logger.LogError(result.Error);
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Редактировать
     /// </summary>
@@ -414,12 +413,12 @@ public class AdsController : BaseController
     [HttpPut]
     [Route("")]
     public async Task<ActionResult<BaseResult>> UpdateAd(
-        [FromBody]AdUpdateCommand command)
+        [FromBody] AdUpdateCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -434,7 +433,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Изменить видео 
     /// </summary>
@@ -443,12 +442,12 @@ public class AdsController : BaseController
     [HttpPut]
     [Route("YouTubeLink")]
     public async Task<ActionResult<BaseResult>> ChangeYouTubeLinkAd(
-        [FromBody]AdChangeYouTubeLinkCommand command)
+        [FromBody] AdChangeYouTubeLinkCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -463,7 +462,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Изменить геолокацию
     /// </summary>
@@ -472,12 +471,12 @@ public class AdsController : BaseController
     [HttpPut]
     [Route("Location")]
     public async Task<ActionResult<BaseResult>> ChangeLocationAd(
-        [FromBody]AdLocationCommand command)
+        [FromBody] AdLocationCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -492,7 +491,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Снять с публикации
     /// </summary>
@@ -505,7 +504,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -520,7 +519,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Активировать объявление
     /// </summary>
@@ -533,7 +532,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -548,7 +547,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Оправдать объявление
     /// </summary>
@@ -561,7 +560,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -574,7 +573,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Удалить фото объявления
     /// </summary>
@@ -584,12 +583,12 @@ public class AdsController : BaseController
     [HttpDelete]
     [Route("Media")]
     public async Task<ActionResult<BaseResult>> DeleteMedia(
-        [FromQuery]AdDeleteMediaCommand command)
+        [FromQuery] AdDeleteMediaCommand command)
     {
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -604,7 +603,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Удалить объявление из избранного
     /// </summary>
@@ -617,7 +616,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -632,7 +631,7 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
+
     /// <summary>
     /// Удалить объявление
     /// </summary>
@@ -645,7 +644,7 @@ public class AdsController : BaseController
         var userResponse = await GetUser();
         if (userResponse.Item is null)
             return BadRequest(userResponse);
-        
+
         var adIdResponse = GetSelectedMyAdId();
         if (!adIdResponse.Success)
             return BadRequest(adIdResponse);
@@ -661,5 +660,4 @@ public class AdsController : BaseController
 
         return BadRequest(result);
     }
-    
 }

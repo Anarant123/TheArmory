@@ -11,19 +11,19 @@ public class BaseQueryResult<T> : BaseResult
     /// </summary>
     [JsonPropertyName("pageNumber")]
     public int PageNumber { get; set; }
-    
+
     /// <summary>
     /// Общее количество страниц
     /// </summary>
     [JsonPropertyName("totalPages")]
     public int TotalPages { get; set; }
-    
+
     /// <summary>
     /// Количество элементов на странице
     /// </summary>
     [JsonPropertyName("itemsCount")]
     public int ItemsCount { get; set; }
-    
+
     /// <summary>
     /// Общее количество элементов
     /// </summary>
@@ -36,13 +36,15 @@ public class BaseQueryResult<T> : BaseResult
     [JsonPropertyName("items")]
     public IEnumerable<T> Items { get; set; } = default!;
 
-    public BaseQueryResult() {}
+    public BaseQueryResult()
+    {
+    }
 
     public BaseQueryResult(string error)
     {
         Error = error;
     }
-    
+
     public BaseQueryResult(List<T> items)
     {
         Items = items;
@@ -52,7 +54,7 @@ public class BaseQueryResult<T> : BaseResult
         TotalCount = items.Count;
         ItemsCount = Items.Count();
     }
-    
+
     /// <summary>
     /// Идет усечение по QueryParams при помощи Take и Skip
     /// </summary>
@@ -69,9 +71,10 @@ public class BaseQueryResult<T> : BaseResult
         Items = items
             .Skip(queryParams.ItemsOnPage * (queryParams.PageNumber - 1))
             .Take(queryParams.ItemsOnPage);
-        
+
         ItemsCount = Items.Count();
     }
+
     /// <summary>
     /// Нет усечения по количеству
     /// </summary>

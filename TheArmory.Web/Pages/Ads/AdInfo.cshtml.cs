@@ -15,15 +15,15 @@ public class AdInfo : PageModel
     private readonly AdsService _adsService;
     private readonly ComplaintsService _complaintsService;
     public readonly string BaseUrl;
-    
+
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
-    
+
     [BindProperty] public AdToComplaintCommand ToComplaintCommand { get; set; }
-    
+
     [BindProperty] public BaseQueryResult<ComplaintViewModel> Complaints { get; set; }
-    
+
     [BindProperty] public AdViewModel AdViewModel { get; set; }
-    
+
     public AdInfo(AdsService adsService,
         ComplaintsService complaintsService,
         BaseUrlOptions baseUrlOptions)
@@ -35,7 +35,7 @@ public class AdInfo : PageModel
 
     public async Task<ActionResult> OnGetSelectAsync(Guid id)
     {
-        var result = await _adsService.Select(new AdSelectCommand(){Id = id});
+        var result = await _adsService.Select(new AdSelectCommand() { Id = id });
         if (result.Success)
             AdViewModel = result.Item;
 
@@ -44,16 +44,16 @@ public class AdInfo : PageModel
 
         return Page();
     }
-    
+
     public async Task<ActionResult> OnGetSelectedAsync()
     {
         var result = await _adsService.GetSelected();
         if (result.Success)
             AdViewModel = result.Item;
-        
+
         if (User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value == "Admin")
             Complaints = await _complaintsService.GetComplaints();
-        
+
         return Page();
     }
 
@@ -64,22 +64,23 @@ public class AdInfo : PageModel
             RequestResult = new BaseResult("Чтобы добавить в избранное это объявление вам необходимо авторизоваться");
             return await OnGetSelectedAsync();
         }
+
         var result = await _adsService.ToFavorites();
         if (!result.Success)
             RequestResult = result;
-            
+
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteFavoritesAsync()
     {
         var result = await _adsService.DeleteFavorite();
         if (!result.Success)
             RequestResult = result;
-                
+
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostComplainAsync()
     {
         if (User.Identity is { IsAuthenticated: false })
@@ -87,14 +88,14 @@ public class AdInfo : PageModel
             RequestResult = new BaseResult("Чтобы оставить жалобу на данное объявление вам необходимо авторизоваться");
             return await OnGetSelectedAsync();
         }
-        
+
         var result = await _adsService.Complaint(ToComplaintCommand);
         if (!result.Success)
             RequestResult = result;
-            
+
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostBanAsync()
     {
         var result = await _adsService.Ban();
@@ -103,10 +104,10 @@ public class AdInfo : PageModel
             RequestResult = result;
             return await OnGetSelectedAsync();
         }
-            
+
         return RedirectToPage("/Admin/Index");
     }
-    
+
     public async Task<ActionResult> OnPostJustifyAsync()
     {
         var result = await _adsService.Justify();
@@ -115,7 +116,7 @@ public class AdInfo : PageModel
             RequestResult = result;
             return await OnGetSelectedAsync();
         }
-            
+
         return RedirectToPage("/Admin/Index");
     }
 }

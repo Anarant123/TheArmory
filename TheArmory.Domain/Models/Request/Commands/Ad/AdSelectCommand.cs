@@ -1,6 +1,7 @@
-﻿namespace TheArmory.Domain.Models.Request.Commands.Ad;
-
-public class AdSelectCommand : AdCommand
+﻿namespace TheArmory.Domain.Models.Request.Commands.Ad
 {
+    public class AdSelectCommand : AdCommand
+    {
     
+    }
 }

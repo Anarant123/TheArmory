@@ -43,8 +43,12 @@
             </div>
             <div class="col-md-9">
                 <h4 class="card-title">@Model.Name</h4>
-                <p class="card-text"><strong>Зарегистрирован:</strong> @Model.RegistrationDateTime.ToString("dd.MM.yyyy HH:mm")</p>
-                <p class="card-text"><strong>Последнее посещение:</strong> @Model.LastVisitDate.ToString("dd.MM.yyyy HH:mm")</p>
+                <p class="card-text">
+                    <strong>Зарегистрирован:</strong> @Model.RegistrationDateTime.ToString("dd.MM.yyyy HH:mm")
+                </p>
+                <p class="card-text">
+                    <strong>Последнее посещение:</strong> @Model.LastVisitDate.ToString("dd.MM.yyyy HH:mm")
+                </p>
                 <form method="post" asp-page-handler="Delete" class="mt-3">
                     <input type="hidden" asp-for="@command.Id" value="@Model.Id"/>
                     <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Удалить</button>

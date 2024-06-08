@@ -11,17 +11,17 @@ public class ConditionsController : BaseController
 {
     protected readonly ILogger<ConditionsController> Logger;
     private readonly ConditionsRepository _conditionsRepository;
-    
+
     public ConditionsController(
         ILogger<ConditionsController> logger,
         UsersRepository usersRepository,
-        ConditionsRepository conditionsRepository) 
+        ConditionsRepository conditionsRepository)
         : base(logger, usersRepository)
     {
         Logger = logger;
         _conditionsRepository = conditionsRepository;
     }
-    
+
     /// <summary>
     /// Получить список состояний
     /// </summary>

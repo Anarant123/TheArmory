@@ -12,17 +12,17 @@ public class ContactsController : BaseController
 {
     protected readonly ILogger<ConditionsController> Logger;
     private readonly ContactsRepository _contactsRepository;
-    
+
     public ContactsController(
         ILogger<ConditionsController> logger,
         UsersRepository usersRepository,
-        ContactsRepository contactsRepository) 
+        ContactsRepository contactsRepository)
         : base(logger, usersRepository)
     {
         Logger = logger;
         _contactsRepository = contactsRepository;
     }
-    
+
     /// <summary>
     /// Создать контакт
     /// </summary>
@@ -30,7 +30,7 @@ public class ContactsController : BaseController
     [HttpPost]
     [Route("")]
     public async Task<ActionResult<BaseResult<Contact>>> CreateContact(
-        [FromBody]ContactCreateCommand command)
+        [FromBody] ContactCreateCommand command)
     {
         var userResponse = await GetUser();
 
@@ -43,8 +43,8 @@ public class ContactsController : BaseController
 
         return BadRequest(result);
     }
-    
-    
+
+
     /// <summary>
     /// Удалить контакт
     /// </summary>
@@ -52,7 +52,7 @@ public class ContactsController : BaseController
     [HttpDelete]
     [Route("")]
     public async Task<ActionResult<BaseResult>> DeleteContact(
-        [FromQuery]ContactCommand command)
+        [FromQuery] ContactCommand command)
     {
         var userResponse = await GetUser();
         if (!userResponse.Success)

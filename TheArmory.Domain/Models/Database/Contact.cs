@@ -8,17 +8,14 @@ public class Contact : DbEntity
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; }
-   
+
     [Column("description")]
     [JsonPropertyName("description")]
     public string Description { get; set; }
-    
-    [Column("userId")]
-    [JsonIgnore]
-    public Guid UserId { get; set; }
-    
+
+    [Column("userId")] [JsonIgnore] public Guid UserId { get; set; }
+
     // virtual
-    
-    [JsonIgnore]
-    public virtual User User { get; set; }
+
+    [JsonIgnore] public virtual User User { get; set; }
 }

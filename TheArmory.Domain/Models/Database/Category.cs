@@ -10,17 +10,18 @@ public class Category : DbEntity
     /// </summary>
     [Column("name")]
     [JsonPropertyName("name")]
-    public string Name { get; set;}
-    
+    public string Name { get; set; }
+
     // virtual
-    
+
     public virtual List<Ad> Ads { get; set; }
-    
-    public Category(){}
+
+    public Category()
+    {
+    }
 
     public Category(string name)
     {
         Name = name;
     }
-    
 }

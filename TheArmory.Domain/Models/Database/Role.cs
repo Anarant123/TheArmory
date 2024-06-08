@@ -14,17 +14,16 @@ public class Role
     [Column("id")]
     [JsonPropertyName("id")]
     public UserRole Id { get; set; }
-    
+
     /// <summary>
     /// Название
     /// </summary>
     [Column("name")]
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     // virtual
-    [JsonIgnore]
-    public virtual List<User> Users { get; set; }
+    [JsonIgnore] public virtual List<User> Users { get; set; }
 
     public Role(UserRole id, string name)
     {

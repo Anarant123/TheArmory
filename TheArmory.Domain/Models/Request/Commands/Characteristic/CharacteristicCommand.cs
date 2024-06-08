@@ -1,6 +1,7 @@
-﻿namespace TheArmory.Domain.Models.Request.Commands.Characteristic;
-
-public class CharacteristicCommand : EntityCommand
+﻿namespace TheArmory.Domain.Models.Request.Commands.Characteristic
 {
+    public class CharacteristicCommand : EntityCommand
+    {
     
+    }
 }

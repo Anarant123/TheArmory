@@ -15,6 +15,7 @@ public class AdminsRepository : BaseRepository<User>
 {
     private readonly PasswordHasher<User> _passwordHasher;
     private readonly MediasRepository _mediasRepository;
+
     public AdminsRepository(
         ApplicationContext context,
         ILogger<BaseRepository<User>> logger,
@@ -30,14 +31,14 @@ public class AdminsRepository : BaseRepository<User>
         BaseQueryItemsParams queryItemsParams)
     {
         var admins = await Context.Users
-            .Where(u => u.RoleId.Equals(UserRole.Admin) 
+            .Where(u => u.RoleId.Equals(UserRole.Admin)
                         && u.StatusId.Equals(StateStatus.Actively))
             .Select(s => new UserViewModel(s))
             .ToListAsync();
 
         return new BaseQueryResult<UserViewModel>(admins);
     }
-    
+
     /// <summary>
     /// Создает администратора
     /// </summary>
@@ -57,8 +58,8 @@ public class AdminsRepository : BaseRepository<User>
 
         if (await Context.Users.AnyAsync(p => p.Login.Equals(command.Login))!)
             return new BaseResult(ErrorsMessage.InaccessibleLogin);
-        
-        
+
+
         var user = new User()
         {
             Login = command.Login,
@@ -93,7 +94,7 @@ public class AdminsRepository : BaseRepository<User>
         if (admin is null) return new BaseResult("Админ не найден");
 
         admin.StatusId = StateStatus.Deleted;
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),

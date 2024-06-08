@@ -1,9 +1,10 @@
-﻿namespace TheArmory.Domain.Models.Enums;
-
-public enum StateStatus
+﻿namespace TheArmory.Domain.Models.Enums
 {
-    Actively = 0,
-    Inactive = 1,
-    Banned = 2,
-    Deleted = 3
+    public enum StateStatus
+    {
+        Actively = 0,
+        Inactive = 1,
+        Banned = 2,
+        Deleted = 3
+    }
 }

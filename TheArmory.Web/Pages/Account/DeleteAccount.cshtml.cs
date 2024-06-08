@@ -15,12 +15,12 @@ public class DeleteAccount : PageModel
     {
         _userService = userService;
     }
-    
+
     public async Task<ActionResult> OnGetAsync()
     {
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteAsync()
     {
         Result = await _userService.DeleteMe();

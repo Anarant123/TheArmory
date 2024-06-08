@@ -13,13 +13,13 @@ public abstract class BaseService<TEntity> : BaseService
 
     protected readonly BaseUrlOptions baseUrlOptions;
     protected readonly ILogger<BaseService<TEntity>> logger;
-    
+
     protected override string RootPointName => $"{typeof(TEntity).Name}s";
 
     protected BaseService(
         HttpClient httpClient,
         BaseUrlOptions baseUrlOptions,
-        ILogger<BaseService<TEntity>> logger) 
+        ILogger<BaseService<TEntity>> logger)
         : base(httpClient, baseUrlOptions, logger, $"{typeof(TEntity).Name}s")
     {
         this.httpClient = httpClient;
@@ -27,11 +27,11 @@ public abstract class BaseService<TEntity> : BaseService
         this.logger = logger;
     }
 
-    public virtual async Task<HttpResponseMessage> GetItemsResponse(BaseQueryItemsParams? parameters = null) 
+    public virtual async Task<HttpResponseMessage> GetItemsResponse(BaseQueryItemsParams? parameters = null)
         => await base.GetItemsResponse(parameters);
 
     public virtual async Task<BaseQueryResult<TEntity>?> GetItemsResponseResult(
-        Dictionary<string, object>? parameters = null) 
+        Dictionary<string, object>? parameters = null)
         => await base.GetItemsResponseResult<TEntity>(parameters);
 
     public virtual async Task<BaseQueryResult<TEntity>?> GetItemsResponseResultWithCustomPath(
@@ -95,7 +95,7 @@ public class BaseService
             return new HttpResponseMessage();
         }
     }
-    
+
     public async Task<BaseQueryResult<TEntity>?> GetItemsResponseResult<TEntity>(
         Dictionary<string, object>? parameters = null)
     {
@@ -115,7 +115,7 @@ public class BaseService
             return new BaseQueryResult<TEntity>(exception.Message);
         }
     }
-    
+
     public async Task<BaseQueryResult<TEntity>?> GetItemsResponseResultWithCustomPath<TEntity>(
         string path,
         Dictionary<string, object>? parameters = null)
@@ -136,7 +136,7 @@ public class BaseService
             return new BaseQueryResult<TEntity>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<TEntity>?> GetByIdResponseResult<TEntity>(
         int id,
         Dictionary<string, string>? parameters = null)
@@ -156,7 +156,7 @@ public class BaseService
             return new BaseResult<TEntity>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<TEntity>?> UpdateResult<TEntity>(
         int id,
         TEntity model,
@@ -165,7 +165,8 @@ public class BaseService
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/{id}?{parameters?.ToGetParameters()}";
-            using var content = new StringContent(JsonSerializer.Serialize(model), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(model),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PutAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<TEntity>(await response.Content.ReadAsStringAsync());
@@ -178,14 +179,15 @@ public class BaseService
             return new BaseResult<TEntity>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult<TEntity>?> CreateResult<TEntity>(
         TEntity model)
     {
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}";
-            using var content = new StringContent(JsonSerializer.Serialize(model), MediaTypeHeaderValue.Parse("application/json-patch+json"));
+            using var content = new StringContent(JsonSerializer.Serialize(model),
+                MediaTypeHeaderValue.Parse("application/json-patch+json"));
             var response = await httpClient.PostAsync(uri, content);
             if (!response.IsSuccessStatusCode)
                 return new BaseResult<TEntity>(await response.Content.ReadAsStringAsync());
@@ -198,7 +200,7 @@ public class BaseService
             return new BaseResult<TEntity>(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult?> DeleteResult<TEntity>(
         int id)
     {

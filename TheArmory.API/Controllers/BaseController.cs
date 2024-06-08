@@ -24,38 +24,37 @@ public class BaseController : ControllerBase
             return new BaseResult<User?>("Пользователь не аутентифицирован.");
 
         var value = User.FindFirst("Id")?.Value;
-        
-        if (value == null) 
+
+        if (value == null)
             return new BaseResult<User?>("Пользователь не аутентифицирован.");
-        
+
         var userResponse = await _usersRepository
             .Get(Guid.Parse(value));
 
-        return !userResponse.Success ? 
-            new BaseResult<User?>(ErrorsMessage.UserNotFound) 
+        return !userResponse.Success
+            ? new BaseResult<User?>(ErrorsMessage.UserNotFound)
             : new BaseResult<User?>(userResponse.Item);
-
     }
-    
+
     protected virtual BaseResult<Guid> GetSelectedAdId()
     {
         var selectedPhoneIdString = HttpContext.Session.GetString("SelectedAd") ?? string.Empty;
         var adId = !string.IsNullOrEmpty(selectedPhoneIdString)
             ? new Guid(selectedPhoneIdString)
             : Guid.Empty;
-        return adId == Guid.Empty ? 
-            new BaseResult<Guid>("Объявление не выбрано") 
+        return adId == Guid.Empty
+            ? new BaseResult<Guid>("Объявление не выбрано")
             : new BaseResult<Guid>(adId);
     }
-    
+
     protected virtual BaseResult<Guid> GetSelectedMyAdId()
     {
         var selectedPhoneIdString = HttpContext.Session.GetString("SelectedMyAd") ?? string.Empty;
         var adId = !string.IsNullOrEmpty(selectedPhoneIdString)
             ? new Guid(selectedPhoneIdString)
             : Guid.Empty;
-        return adId == Guid.Empty ? 
-            new BaseResult<Guid>("Объявление не выбрано") 
+        return adId == Guid.Empty
+            ? new BaseResult<Guid>("Объявление не выбрано")
             : new BaseResult<Guid>(adId);
     }
 }

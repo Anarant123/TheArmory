@@ -16,10 +16,10 @@ public class MyAd : PageModel
     private readonly AdsService _adsService;
     private readonly CharacteristicsService _characteristicsService;
     public readonly string BaseUrl;
-    
+
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public AdPublishInfoViewModel PublishInfoViewModel { get; set; }
-    
+
     [BindProperty] public AdLocationCommand LocationCommand { get; set; }
     [BindProperty] public AdChangeYouTubeLinkCommand ChangeYouTubeLinkCommand { get; set; }
     [BindProperty] public AdAddMediaCommand AddMediaCommand { get; set; }
@@ -27,10 +27,10 @@ public class MyAd : PageModel
     [BindProperty] public AdDeleteMediaCommand DeleteMediaCommand { get; set; }
     [BindProperty] public CharacteristicCreateCommand CharacteristicCreateCommand { get; set; }
     [BindProperty] public CharacteristicCommand DeleteCharacteristicCommand { get; set; }
-    
+
     [BindProperty] public MyAdViewModel MyAdViewModel { get; set; }
-    
-    public MyAd(UserService userService, 
+
+    public MyAd(UserService userService,
         AdsService adsService,
         ConditionsService conditionsService,
         CharacteristicsService characteristicsService,
@@ -42,30 +42,30 @@ public class MyAd : PageModel
         _characteristicsService = characteristicsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
-    
+
     public async Task<ActionResult> OnGetSelectedAsync()
     {
         var adPublishInfoResult = await _adsService.GetPublishInformation();
         if (adPublishInfoResult.Success)
             PublishInfoViewModel = adPublishInfoResult.Item;
-        
+
         var adResult = await _adsService.GetSelectedMy();
         if (adResult.Success)
             MyAdViewModel = adResult.Item;
-        
+
         return Page();
     }
-    
+
     public async Task<ActionResult> OnGetSelectAsync(Guid id)
     {
         var adPublishInfoResult = await _adsService.GetPublishInformation();
         if (adPublishInfoResult.Success)
             PublishInfoViewModel = adPublishInfoResult.Item;
-        
-        var adResult = await _adsService.SelectMy(new AdSelectCommand(){Id = id});
+
+        var adResult = await _adsService.SelectMy(new AdSelectCommand() { Id = id });
         if (adResult.Success)
             MyAdViewModel = adResult.Item;
-        
+
         return Page();
     }
 
@@ -75,14 +75,14 @@ public class MyAd : PageModel
         if (!Result.Success) return Page();
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostDeactivateAsync()
     {
         Result = await _adsService.DeactivateAd();
         if (!Result.Success) return Page();
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteAsync()
     {
         Result = await _adsService.DeleteAd();
@@ -96,7 +96,7 @@ public class MyAd : PageModel
         if (!Result.Success) return Page();
         return await OnGetSelectedAsync();
     }
-    
+
     public async Task<ActionResult> OnPostCreateCharacteristicAsync()
     {
         Result = await _characteristicsService.CreateCharacteristic(CharacteristicCreateCommand);
@@ -104,7 +104,7 @@ public class MyAd : PageModel
         await OnGetSelectedAsync();
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteCharacteristicAsync()
     {
         Result = await _characteristicsService.DeleteCharacteristic(DeleteCharacteristicCommand);
@@ -112,7 +112,7 @@ public class MyAd : PageModel
         await OnGetSelectedAsync();
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostChangeVideoAsync()
     {
         Result = await _adsService.ChangeYoutubeLink(ChangeYouTubeLinkCommand);
@@ -120,7 +120,7 @@ public class MyAd : PageModel
         await OnGetSelectedAsync();
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostChangeLocationAsync()
     {
         Result = await _adsService.ChangeLocation(LocationCommand);
@@ -128,7 +128,7 @@ public class MyAd : PageModel
         await OnGetSelectedAsync();
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostDeleteMediaAsync()
     {
         Result = await _adsService.DeleteMedia(DeleteMediaCommand);
@@ -136,7 +136,7 @@ public class MyAd : PageModel
         await OnGetSelectedAsync();
         return Page();
     }
-    
+
     public async Task<ActionResult> OnPostAddMediaAsync()
     {
         Result = await _adsService.AddMedia(AddMediaCommand);

@@ -11,7 +11,7 @@ namespace TheArmory.Web.Pages.Auth;
 public class Index : PageModel
 {
     private readonly AuthService _service;
-    
+
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
     [BindProperty] public UserLoginCommand Command { get; set; }
 
@@ -19,15 +19,15 @@ public class Index : PageModel
     {
         _service = service;
     }
-    
+
     public async Task<IActionResult> OnGetAsync()
     {
-        if (User.Identity is {IsAuthenticated: true })
+        if (User.Identity is { IsAuthenticated: true })
             return RedirectToPage("/Account/PersonalInfo");
-        
+
         return Page();
     }
-    
+
     public async Task<IActionResult> OnPostAsync()
     {
         ModelState.Remove("Error");
@@ -41,7 +41,7 @@ public class Index : PageModel
         if (result.Success)
         {
             await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);
-            
+
             // var roleClaim = User.Claims.FirstOrDefault(c => c.Type == "Role");
             // if (roleClaim == null) return Page();
             // var role = roleClaim.Value;
@@ -53,7 +53,7 @@ public class Index : PageModel
             //     "2" => RedirectToPage("/Account/PersonalInfo"),
             //     _ => Page()
             // };
-            
+
             return result.Item.RoleId switch
             {
                 UserRole.SuperAdmin => RedirectToPage("/SuperAdmin/Index"),

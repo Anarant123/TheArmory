@@ -9,25 +9,24 @@ namespace TheArmory.Web.Pages.Auth;
 public class Registration : PageModel
 {
     private readonly AuthService _service;
-    
+
     [BindProperty] public BaseResult RequestResult { get; set; } = new BaseResult();
-    
-    [BindProperty]
-    public UserCreateCommand Command { get; set; }
-    
+
+    [BindProperty] public UserCreateCommand Command { get; set; }
+
     public Registration(AuthService service)
     {
         _service = service;
     }
-    
+
     public async Task<IActionResult> OnGetAsync()
     {
-        if (User.Identity is {IsAuthenticated: true })
+        if (User.Identity is { IsAuthenticated: true })
             return RedirectToPage("/Account/PersonalInfo");
-        
+
         return Page();
     }
-    
+
     public async Task<IActionResult> OnPostAsync()
     {
         ModelState.Remove("Error");

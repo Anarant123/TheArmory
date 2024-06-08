@@ -5,13 +5,10 @@ namespace TheArmory.Domain.Models.Request.Queries;
 
 public class BaseQueryItemsParams : BaseQuery
 {
-    [JsonIgnore]
-    public static int DefaultItemsCount => 40;
-    [JsonIgnore]
-    public static int DefaultPageNumber => 1;
-    [JsonIgnore]
-    public static int DefaultOrderByColumn => -1;
-    
+    [JsonIgnore] public static int DefaultItemsCount => 40;
+    [JsonIgnore] public static int DefaultPageNumber => 1;
+    [JsonIgnore] public static int DefaultOrderByColumn => -1;
+
     /// <summary>
     /// Номер страницы запроса
     /// </summary>
@@ -25,6 +22,7 @@ public class BaseQueryItemsParams : BaseQuery
     [Range(0, int.MaxValue)]
     [JsonPropertyName("itemsOnPage")]
     public int ItemsOnPage { get; set; } = DefaultItemsCount;
+
     /// <summary>
     /// Текстовый фильтр для поиска
     /// </summary>

@@ -34,7 +34,7 @@ public class CharacteristicsRepository : BaseRepository<Characteristic>
             _ => new BaseResult()
         };
     }
-    
+
     public async Task<BaseResult> Delete(
         Guid adId,
         CharacteristicCommand command)
@@ -45,7 +45,7 @@ public class CharacteristicsRepository : BaseRepository<Characteristic>
             return new BaseResult("Контакт не найден");
 
         Context.Characteristics.Remove(contact);
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),

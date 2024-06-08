@@ -10,19 +10,19 @@ public class UserPersonalInfoViewModel
     /// </summary>
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
-    
+
     /// <summary>
     /// Название
     /// </summary>
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-    
+
     /// <summary>
     /// Фото профиля
     /// </summary>
     [JsonPropertyName("photoName")]
     public string? PhotoName { get; set; }
-    
+
     /// <summary>
     /// Id региона
     /// </summary>
@@ -34,20 +34,22 @@ public class UserPersonalInfoViewModel
     /// </summary>
     [JsonPropertyName("status")]
     public Status Status { get; set; }
-    
+
     /// <summary>
     /// Дата создания
     /// </summary>
     [JsonPropertyName("registrationDateTime")]
     public DateTime RegistrationDateTime { get; set; }
-    
+
     /// <summary>
     /// Контакты пользователя
     /// </summary>
     [JsonPropertyName("contacts")]
     public List<Contact> Contacts { get; set; } = new List<Contact>();
-    
-    public UserPersonalInfoViewModel(){}
+
+    public UserPersonalInfoViewModel()
+    {
+    }
 
     public UserPersonalInfoViewModel(Database.User user)
     {

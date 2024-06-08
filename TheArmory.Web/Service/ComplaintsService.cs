@@ -15,7 +15,7 @@ public class ComplaintsService : BaseService<Complaint>
         base(httpClientFactory.CreateClient("httpClient"), baseUrlOptions, logger)
     {
     }
-    
+
     public async Task<BaseQueryResult<ComplaintViewModel>> GetComplaints()
     {
         try

@@ -18,9 +18,15 @@
             <div class="col-10">
                 <div class="card-body p-1">
                     <h5 class="card-title fw-bold mb-0">@Model.Name</h5>
-                    <p class="card-text mb-0"><small class="text-muted">Цена:</small> @Model.Price</p>
-                    <p class="card-text mb-0"><small class="text-muted">Опубликовано:</small>@Model.CreationDateTime.Date.ToString("dd.MM.yyyy")</p>
-                    <p class="card-text mb-0"><small class="text-muted">Жалобы:</small>@Model.CountOfComplaint</p>
+                    <p class="card-text mb-0">
+                        <small class="text-muted">Цена:</small> @Model.Price
+                    </p>
+                    <p class="card-text mb-0">
+                        <small class="text-muted">Опубликовано:</small>@Model.CreationDateTime.Date.ToString("dd.MM.yyyy")
+                    </p>
+                    <p class="card-text mb-0">
+                        <small class="text-muted">Жалобы:</small>@Model.CountOfComplaint
+                    </p>
                     <div class="d-flex justify-content-end">
                         <div class="d-flex align-items-center">
                             <img src="/Default/Images/Ad/Eye.png" alt="Глаз" class="me-2"/>
@@ -33,4 +39,3 @@
         </div>
     </div>
 </a>
-

@@ -53,7 +53,7 @@ builder.Services.TryAddSingleton(s => new BaseUrlOptions
 {
     BaseApiUrl =
         builder.Configuration.GetValue("ApiWebAddress",
-            "https://192.168.20.89:8443") 
+            "https://192.168.20.89:8443")
 });
 
 builder.Services.AddRazorPages();

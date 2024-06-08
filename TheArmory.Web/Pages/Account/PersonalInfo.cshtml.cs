@@ -19,13 +19,20 @@ public class PersonalInfo : PageModel
     private readonly AdsService _adsService;
     private readonly ContactsService _contactsService;
     private readonly AuthService _authService;
-    
+
     public readonly string BaseUrl;
-    
+
     [BindProperty] public UserPersonalInfoViewModel UserInfo { get; set; }
-    [BindProperty] public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    [BindProperty] public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
-    [BindProperty] public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+
+    [BindProperty]
+    public BaseQueryResult<TileAdViewModel> ActiveAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
+
+    [BindProperty]
+    public BaseQueryResult<TileAdViewModel> InactiveAdsQueryResult { get; set; } =
+        new BaseQueryResult<TileAdViewModel>();
+
+    [BindProperty]
+    public BaseQueryResult<TileAdViewModel> BannedAdsQueryResult { get; set; } = new BaseQueryResult<TileAdViewModel>();
 
     [BindProperty] public BaseResult Result { get; set; } = new BaseResult();
     [BindProperty] public UserChangeProfilePhotoCommand ChangeProfilePhotoCommand { get; set; }
@@ -34,7 +41,7 @@ public class PersonalInfo : PageModel
 
     [BindProperty] public ContactCommand DeleteContactCommand { get; set; }
 
-    public PersonalInfo(UserService userService, 
+    public PersonalInfo(UserService userService,
         AdsService adsService,
         BaseUrlOptions baseUrlOptions,
         ContactsService contactsService,
@@ -46,23 +53,26 @@ public class PersonalInfo : PageModel
         _contactsService = contactsService;
         _authService = authService;
     }
-    
+
     public async Task<ActionResult> OnGetAsync()
     {
-        if (User.Identity is {IsAuthenticated: false })
+        if (User.Identity is { IsAuthenticated: false })
             return RedirectToPage("/Auth/Index");
-        
+
         var userResponce = await _userService.GetMe();
         UserInfo = userResponce.Item;
-        
-        
-        ActiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Actively});
-        InactiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Inactive});
-        BannedAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams(){ StatusId = StateStatus.Banned});
+
+
+        ActiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams()
+            { StatusId = StateStatus.Actively });
+        InactiveAdsQueryResult = await _adsService.GetMyAds(new MyTileAdQueryItemsParams()
+            { StatusId = StateStatus.Inactive });
+        BannedAdsQueryResult =
+            await _adsService.GetMyAds(new MyTileAdQueryItemsParams() { StatusId = StateStatus.Banned });
         return Page();
     }
-    
-    
+
+
     public async Task<IActionResult> OnPostChangePhotoAsync()
     {
         var BaseResult = await _userService.ChangePhoto(ChangeProfilePhotoCommand);
@@ -87,7 +97,7 @@ public class PersonalInfo : PageModel
         return Page();
     }
 
-    
+
     public async Task<IActionResult> OnPostExitAsync()
     {
         Result = await _authService.Logout();

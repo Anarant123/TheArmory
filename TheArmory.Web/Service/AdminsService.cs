@@ -40,6 +40,7 @@ public class AdminsService : BaseService<User>
             return new BaseQueryResult<UserViewModel>(exception.Message);
         }
     }
+
     public async Task<BaseResult> Registration(UserAdminCreateCommand command)
     {
         try
@@ -66,13 +67,14 @@ public class AdminsService : BaseService<User>
             return new BaseResult(exception.Message);
         }
     }
-    
+
     public async Task<BaseResult> Delete(UserCommand command)
     {
         try
         {
             var uriBuilder = new UriBuilder($"{baseUrlOptions.GetFullApiUrl("Admins")}");
-            uriBuilder.Query = $"id={command.Id}";;
+            uriBuilder.Query = $"id={command.Id}";
+            ;
             var response = await httpClient.DeleteAsync(uriBuilder.Uri);
             var responseStream = await response.Content.ReadAsStreamAsync();
             if (!response.IsSuccessStatusCode)

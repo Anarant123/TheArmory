@@ -15,7 +15,7 @@ public class AdminsController : ControllerBase
 {
     private readonly AdminsRepository _adminsRepository;
     private readonly ILogger<AdminsController> _logger;
-    
+
     public AdminsController(AdminsRepository adminsRepository, ILogger<AdminsController> logger)
     {
         _adminsRepository = adminsRepository;
@@ -31,16 +31,16 @@ public class AdminsController : ControllerBase
     [HttpGet]
     [Route("Admins")]
     public async Task<ActionResult<BaseQueryResult<UserViewModel>>> Get(
-        [FromQuery]BaseQueryItemsParams queryItemsParams )
+        [FromQuery] BaseQueryItemsParams queryItemsParams)
     {
         var userResponse = await _adminsRepository.Get(queryItemsParams);
 
         if (!userResponse.Success)
             return BadRequest(userResponse);
-        
+
         return Ok(userResponse);
     }
-    
+
     /// <summary>
     /// Регистрация
     /// </summary>
@@ -50,16 +50,16 @@ public class AdminsController : ControllerBase
     [HttpPost]
     [Route("Registration")]
     public async Task<ActionResult<BaseResult>> Register(
-        [FromForm]UserAdminCreateCommand command)
+        [FromForm] UserAdminCreateCommand command)
     {
         var userResponse = await _adminsRepository.Create(command);
 
         if (!userResponse.Success)
             return BadRequest(userResponse);
-        
+
         return Ok(userResponse);
     }
-    
+
     /// <summary>
     /// Удалить
     /// </summary>
@@ -69,13 +69,13 @@ public class AdminsController : ControllerBase
     [HttpDelete]
     [Route("")]
     public async Task<ActionResult<BaseResult>> Register(
-        [FromQuery]UserCommand command)
+        [FromQuery] UserCommand command)
     {
         var userResponse = await _adminsRepository.Delete(command);
 
         if (!userResponse.Success)
             return BadRequest(userResponse);
-        
+
         return Ok(userResponse);
     }
 }

@@ -15,7 +15,7 @@ public class ContactsRepository : BaseRepository
         : base(context, logger)
     {
     }
-    
+
     public async Task<BaseResult> Create(
         Guid userId,
         ContactCreateCommand command)
@@ -24,7 +24,7 @@ public class ContactsRepository : BaseRepository
             .Include(u => u.Region)
             .Include(u => u.Status)
             .FirstOrDefaultAsync(u => u.Id.Equals(userId));
-        
+
         if (user is null)
             return new BaseResult(ErrorsMessage.UserNotFound);
 
@@ -36,14 +36,14 @@ public class ContactsRepository : BaseRepository
         };
 
         Context.Contacts.Add(contact);
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),
             _ => new BaseResult()
         };
     }
-    
+
     public async Task<BaseResult> Delete(
         Guid userId,
         ContactCommand command)
@@ -54,7 +54,7 @@ public class ContactsRepository : BaseRepository
             return new BaseResult("Контакт не найден");
 
         Context.Contacts.Remove(contact);
-        
+
         return await Context.SaveChangesAsync() switch
         {
             0 => new BaseResult(ErrorsMessage.ErrorSavingChanges),

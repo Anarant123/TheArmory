@@ -61,7 +61,7 @@ public class MyAdViewModel
     /// </summary>
     [JsonPropertyName("youTubeLink")]
     public string? YouTubeLink { get; set; }
-    
+
     /// <summary>
     /// Статус
     /// </summary>

@@ -12,11 +12,15 @@ public class Index : PageModel
 {
     private readonly AdsService _adsService;
     public readonly string BaseUrl;
-    
+
     [BindProperty] public BaseQueryItemsParams QueryParams { get; set; } = new BaseQueryItemsParams();
     [BindProperty] public BaseQueryResult<TileAdComplaintViewModel> QueryResult { get; set; }
-    [BindProperty] public List<TileAdComplaintViewModel>? TileAds => QueryResult.Success ? QueryResult.Items as List<TileAdComplaintViewModel> : new List<TileAdComplaintViewModel>(); 
-    
+
+    [BindProperty]
+    public List<TileAdComplaintViewModel>? TileAds => QueryResult.Success
+        ? QueryResult.Items as List<TileAdComplaintViewModel>
+        : new List<TileAdComplaintViewModel>();
+
     public Index(
         AdsService adsService,
         BaseUrlOptions baseUrlOptions)
@@ -24,15 +28,14 @@ public class Index : PageModel
         _adsService = adsService;
         BaseUrl = baseUrlOptions.GetFullApiUrl("Files");
     }
-    
+
     public async Task<ActionResult> OnGetAsync()
     {
         QueryResult = await _adsService.GetComplaintsAds(QueryParams);
         if (!QueryResult.Success)
         {
-            
         }
-        
+
         return Page();
     }
 
