@@ -45,7 +45,6 @@ public class User : DbEntity
     public string? PhotoName { get; set; }
      
     // foreign key
-    // todo заполнить на основе виртуальных свойств ниже
     
     /// <summary>
     /// Id региона

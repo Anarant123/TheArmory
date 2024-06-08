@@ -62,8 +62,6 @@ public class Ad : DbEntity
     [Column("youTubeLink")]
     public string? YouTubeLink { get; set; } = string.Empty;
     
-    //todo поле координатов
-    
     // foreign key
     
     /// <summary>

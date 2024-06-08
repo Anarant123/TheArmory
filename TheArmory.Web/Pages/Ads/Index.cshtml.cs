@@ -56,6 +56,4 @@ public class Index : PageModel
     {
         return await OnGetAsync();
     }
-   
-    // todo доделать пагинацию и фильтрацию
 }

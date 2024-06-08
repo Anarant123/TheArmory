@@ -28,7 +28,6 @@ builder.Services.AddTransient<CharacteristicsRepository>();
 
 builder.Services.AddTransient<PasswordHasher<User>>();
 
-
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.MaxDepth = 2;
@@ -109,7 +108,6 @@ app.UseSession();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 
 using var scope = app.Services.CreateScope();
 await using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();

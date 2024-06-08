@@ -274,7 +274,6 @@ public class AdsService : BaseService<Ad>
 
     public async Task<BaseResult> ToFavorites()
     {
-        // todo сделать аналогичное возвращение ошибки для остальных сервисов
         try
         {
             var uri = $"{baseUrlOptions.GetFullApiUrl(RootPointName)}/ToFavorite";

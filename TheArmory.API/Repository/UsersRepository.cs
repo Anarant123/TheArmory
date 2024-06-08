@@ -25,7 +25,6 @@ public class UsersRepository : BaseRepository
         _mediasRepository = mediasRepository;
     }
     
-    // todo Авторизация
     public async Task<BaseResult<UserViewModel>> Login(
         UserLoginCommand command)
     {
@@ -53,7 +52,6 @@ public class UsersRepository : BaseRepository
         };
     }
     
-    // todo Регистрация
      public async Task<BaseResult> Create(
         UserCreateCommand command)
     {
@@ -175,9 +173,6 @@ public class UsersRepository : BaseRepository
             _ => new BaseResult()
         };
     }
-    
-    // todo Смена пароля
-    
     
     public async Task<BaseResult> ChangeProfilePhoto(
         User user,
