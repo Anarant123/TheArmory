@@ -109,7 +109,7 @@
                 <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
             </div>
             <div class="col-md-9">
-                <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="255" required="Обязательно к заполнению">
+                <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="40" required="Обязательно к заполнению">
                 <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
             </div>
         </div>

@@ -15,15 +15,15 @@
                     <h1 class="card-title">Регистрация</h1>
                     <form method="post" class="mt-4">
                         <div class="mb-3">
-                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required maxlength="32">
                             <span asp-validation-for="Command.Login" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required maxlength="32">
                             <span asp-validation-for="Command.Password" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required>
+                            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required maxlength="32">
                             <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
                         </div>
                         <div class="mb-3">

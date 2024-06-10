@@ -13,17 +13,17 @@
                     <h1 class="card-title">Вход</h1>
                     <form method="post" class="mt-4">
                         <div class="mb-3">
-                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required maxlength="32">
                             <span asp-validation-for="Command.Login" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required maxlength="32">
                             <span asp-validation-for="Command.Password" class="text-danger"></span>
                         </div>
                         <div class="row mb-3">
                             <div class="col-6 text-start">
                                 <div class="form-check">
-                                    <input type="checkbox" id="RememberMe" asp-for="Command.RememberMe" class="form-check-input">
+                                    <input type="checkbox" id="RememberMe" asp-for="Command.RememberMe" class="form-check-input" maxlength="32">
                                     <label for="RememberMe" class="form-check-label">Запомнить меня</label>
                                 </div>
                             </div>
