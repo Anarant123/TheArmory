@@ -41,19 +41,6 @@ public class Index : PageModel
         if (result.Success)
         {
             await AuthUtils.SetLoginClaims(result.Item, HttpContext, Command?.RememberMe == true);
-
-            // var roleClaim = User.Claims.FirstOrDefault(c => c.Type == "Role");
-            // if (roleClaim == null) return Page();
-            // var role = roleClaim.Value;
-            //
-            // return role switch
-            // {
-            //     "0" => RedirectToPage("/SuperAdmin/Index"),
-            //     "1" => RedirectToPage("/Admin/Index"),
-            //     "2" => RedirectToPage("/Account/PersonalInfo"),
-            //     _ => Page()
-            // };
-
             return result.Item.RoleId switch
             {
                 UserRole.SuperAdmin => RedirectToPage("/SuperAdmin/Index"),
