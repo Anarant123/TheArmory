@@ -16,6 +16,12 @@ public class ComplaintsRepository : BaseRepository<Complaint>
     {
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="adId"></param>
+    /// <param name="queryItemsParams"></param>
+    /// <returns></returns>
     public async Task<BaseQueryResult<ComplaintViewModel>> Get(
         Guid adId,
         BaseQueryItemsParams queryItemsParams)

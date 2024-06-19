@@ -93,6 +93,7 @@ public class MediasRepository : BaseRepository<Media>
         };
     }
 
+
     /// <summary>
     /// Добавляет фотографию к объявлению
     /// </summary>
