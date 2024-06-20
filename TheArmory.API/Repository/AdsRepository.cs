@@ -313,10 +313,10 @@ public class AdsRepository : BaseRepository
 
         var newAd = new Ad()
         {
-            Name = command.Name,
+            Name = command.Name.Trim(),
             Price = command.Price,
-            Description = command.Description ?? "",
-            YouTubeLink = command.YouTubeLink,
+            Description = (command.Description ?? "").Trim(),
+            YouTubeLink = (command.YouTubeLink ?? "").Trim(),
             ConditionId = command.ConditionId,
             UserId = userId,
             Characteristics = new List<Characteristic>()
@@ -399,7 +399,7 @@ public class AdsRepository : BaseRepository
             return new BaseResult<MyAdViewModel>("Объявление не найдено");
 
         if (!string.IsNullOrEmpty(command.Name))
-            ad.Name = command.Name;
+            ad.Name = command.Name.Trim();
 
         if (command.Price is not null)
         {
@@ -408,7 +408,7 @@ public class AdsRepository : BaseRepository
         }
 
         if (!string.IsNullOrEmpty(command.Description))
-            ad.Description = command.Description;
+            ad.Description = command.Description.Trim();
 
         if (command.ConditionId is not null)
             ad.ConditionId = command.ConditionId.Value;
@@ -451,7 +451,7 @@ public class AdsRepository : BaseRepository
             return new BaseResult<MyAdViewModel>("Объявление не найдено");
 
         if (!string.IsNullOrEmpty(command.YouTubeLink))
-            ad.YouTubeLink = command.YouTubeLink;
+            ad.YouTubeLink = command.YouTubeLink.Trim();
 
         var result = await Context.SaveChangesAsync();
 

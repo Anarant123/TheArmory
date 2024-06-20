@@ -22,8 +22,8 @@ public class CharacteristicsRepository : BaseRepository<Characteristic>
     {
         var characteristic = new Characteristic()
         {
-            Name = command.Name,
-            Description = command.Description,
+            Name = command.Name.Trim(),
+            Description = command.Description.Trim(),
             AdId = adId
         };
 

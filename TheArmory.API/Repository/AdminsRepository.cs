@@ -62,8 +62,8 @@ public class AdminsRepository : BaseRepository<User>
 
         var user = new User()
         {
-            Login = command.Login,
-            Name = command.Name,
+            Login = command.Login.Trim(),
+            Name = command.Name.Trim(),
             RoleId = UserRole.Admin,
             StatusId = StateStatus.Actively,
             RegistrationDateTime = DateTime.Now,

@@ -30,8 +30,8 @@ public class ContactsRepository : BaseRepository
 
         var contact = new Contact()
         {
-            Name = command.Name,
-            Description = command.Description,
+            Name = command.Name.Trim(),
+            Description = command.Description.Trim(),
             UserId = user.Id
         };
 

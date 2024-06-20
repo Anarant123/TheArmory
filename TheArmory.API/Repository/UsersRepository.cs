@@ -70,7 +70,7 @@ public class UsersRepository : BaseRepository
 
         var user = new User()
         {
-            Login = command.Login,
+            Login = command.Login.Trim(),
             RoleId = UserRole.Client,
             StatusId = StateStatus.Actively,
             RegistrationDateTime = DateTime.Now,
@@ -120,7 +120,7 @@ public class UsersRepository : BaseRepository
         if (user is null)
             return new BaseResult<UserViewModel>(ErrorsMessage.UserNotFound);
 
-        user.Name = command.NewName;
+        user.Name = command.NewName.Trim();
 
         return await Context.SaveChangesAsync() switch
         {
