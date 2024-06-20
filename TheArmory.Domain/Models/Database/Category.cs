@@ -16,9 +16,7 @@ public class Category : DbEntity
 
     public virtual List<Ad> Ads { get; set; }
 
-    public Category()
-    {
-    }
+    public Category() { }
 
     public Category(string name)
     {
