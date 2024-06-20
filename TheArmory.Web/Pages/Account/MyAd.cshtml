@@ -101,82 +101,89 @@
 </div>
 
 <form method="post" asp-page-handler="Update">
-<div class="card mb-3">
-    <div class="card-body">
-        <h2 class="card-title">Параметры</h2>
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
+    <div class="card mb-3">
+        <div class="card-body">
+            <h2 class="card-title">Параметры</h2>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label asp-for="UpdateCommand.Name" class="form-label">Наименование:</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="40" required="Обязательно к заполнению">
+                    <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
+                </div>
             </div>
-            <div class="col-md-9">
-                <input type="text" asp-for="UpdateCommand.Name" class="form-control" value="@Model.MyAdViewModel.Name" placeholder="Введите наименование" maxlength="40" required="Обязательно к заполнению">
-                <span asp-validation-for="UpdateCommand.Name" class="text-danger"></span>
-            </div>
-        </div>
 
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label asp-for="UpdateCommand.ConditionId" class="form-label">Состояние:</label>
+                </div>
+                <div class="col-md-9">
+                    <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
+                        <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
+                        @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
+                        {
+                            <option value="@condition.Id">@condition.Name</option>
+                        }
+                    </select>
+                </div>
             </div>
-            <div class="col-md-9">
-                <select asp-for="UpdateCommand.ConditionId" class="form-select" required="Обязательно к заполнению">
-                    <option value="@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Id">@Model.PublishInfoViewModel.Conditions.First(c => c.Id.Equals(Model.MyAdViewModel.ConditionId)).Name</option>
-                    @foreach (var condition in Model.PublishInfoViewModel.Conditions.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.ConditionId)))
-                    {
-                        <option value="@condition.Id">@condition.Name</option>
-                    }
-                </select>
+        
+            <h2 class="card-title">Подробности</h2>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" asp-for="UpdateCommand.Description" value="@Model.MyAdViewModel.Description" class="form-control" placeholder="Введите описание" maxlength="2000"/>
+                    <span asp-validation-for="UpdateCommand.Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
+                </div>
+                <div class="col-md-9">
+                    <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" required="Обязательно к заполнению">
+                    <span asp-validation-for="UpdateCommand.Price" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-3">
+                    <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
+                </div>
+                <div class="col-md-9">
+                    <select asp-for="UpdateCommand.CategoryId" class="form-select" required="Обязательно к заполнению">
+                        <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
+                        @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="bi bi-save"></i> Сохранить изменения
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="card mb-3">
-    <div class="card-body">
-        <h2 class="card-title">Подробности</h2>
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <label asp-for="UpdateCommand.Description" class="form-label">Описание:</label>
-            </div>
-            <div class="col-md-9">
-                <textarea asp-for="UpdateCommand.Description" class="form-control" placeholder="Введите описание" maxlength="2000">@Model.MyAdViewModel.Description</textarea>
-                <span asp-validation-for="UpdateCommand.Description" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <label asp-for="UpdateCommand.Price" class="form-label">Цена:</label>
-            </div>
-            <div class="col-md-9">
-                <input type="number" asp-for="UpdateCommand.Price" class="form-control" value="@Model.MyAdViewModel.Price" placeholder="Введите цену" required="Обязательно к заполнению">
-                <span asp-validation-for="UpdateCommand.Price" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <div class="col-md-3">
-                <label asp-for="UpdateCommand.CategoryId" class="form-label">Категория:</label>
-            </div>
-            <div class="col-md-9">
-                <select asp-for="UpdateCommand.CategoryId" class="form-select" required="Обязательно к заполнению">
-                    <option value="@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Id">@Model.PublishInfoViewModel.Categories.First(c => c.Id.Equals(Model.MyAdViewModel.CategoryId)).Name</option>
-                    @foreach (var category in Model.PublishInfoViewModel.Categories.Where(condition => !condition.Id.Equals(Model.MyAdViewModel.CategoryId)))
-                    {
-                        <option value="@category.Id">@category.Name</option>
-                    }
-                </select>
-            </div>
-        </div>
-    </div>
-</div>
+</form>
 
 <div class="card mb-3">
     <div class="card-body">
         <h2 class="card-title">Характеристики</h2>
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">
-                <i class="bi bi-plus"></i> Добавить характеристику
-            </button>
-        </div>
+        @if (Model.MyAdViewModel.Characteristics.Any() && Model.MyAdViewModel.Characteristics.Count < 10)
+        {
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button type="button" class="btn btn-primary" onclick="showCreateCharacteristicForm()">
+                    <i class="bi bi-plus"></i> Добавить характеристику
+                </button>
+            </div>
+        }
         @if (Model.MyAdViewModel.Characteristics is not null && Model.MyAdViewModel.Characteristics.Any())
         {
             <form id="deleteСharacteristicForm" method="post" asp-page-handler="DeleteCharacteristic">
@@ -375,7 +382,6 @@
         </form>
     </div>
 </div>
-</form>
 
 <div class="row">
     <div class="col-md-3">
@@ -656,4 +662,16 @@
         }
         return videoId;
     }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+            let forms = document.querySelectorAll('form');
+            forms.forEach(function (form) {
+                form.addEventListener('keydown', function (event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        return false;
+                    }
+                });
+            });
+        });
 </script>

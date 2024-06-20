@@ -9,7 +9,7 @@
     .square-container {
         position: relative;
         width: 100%;
-        padding-top: 100%; /* Высота контейнера равна его ширине, создавая квадрат */
+        padding-top: 100%; 
         overflow: hidden;
     }
 
@@ -45,19 +45,19 @@
             <button type="button" class="btn btn-primary mt-3" onclick="document.getElementById('file-input').click();">Добавить фото</button>
         </div>
         <div class="mb-3">
-            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required>
+            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" maxlength="32" required>
             <span asp-validation-for="Command.Login" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <input type="text" asp-for="Command.Name" class="form-control" placeholder="Имя" required>
+            <input type="text" asp-for="Command.Name" class="form-control" placeholder="Имя" maxlength="32" required>
             <span asp-validation-for="Command.Name" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required>
+            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" maxlength="32" required>
             <span asp-validation-for="Command.Password" class="text-danger"></span>
         </div>
         <div class="mb-3">
-            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" required>
+            <input type="password" asp-for="Command.PasswordConfirm" class="form-control" placeholder="Повторите пароль" maxlength="32" required>
             <span asp-validation-for="Command.PasswordConfirm" class="text-danger"></span>
         </div>
         <div class="mb-3">
@@ -82,4 +82,16 @@
             reader.readAsArrayBuffer(files[0]); // Читаем только первый файл
         }
     });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+                let forms = document.querySelectorAll('form');
+                forms.forEach(function (form) {
+                    form.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            return false;
+                        }
+                    });
+                });
+            });
 </script>

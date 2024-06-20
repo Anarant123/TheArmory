@@ -80,15 +80,15 @@
                     </div>
                 </div>
             </form>
-            @if (Model.UserInfo.Contacts.Any() && Model.UserInfo.Contacts.Count < 5)
-            {
                 <div class="mb-3">
                     <h4>Контакты для связи</h4>
+            @if (Model.UserInfo.Contacts.Any() && Model.UserInfo.Contacts.Count < 5)
+            {
                     <button type="button" class="btn btn-primary mb-3" onclick="showAddContactForm()">
                         <i class="bi bi-plus-circle-fill me-2"></i> Добавить контакт
                     </button>
-                </div>
             }
+                </div>
             @if (Model.UserInfo.Contacts.Any())
             {
                 <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
@@ -369,4 +369,16 @@
         }
         return true;
     }
+    
+    document.addEventListener('DOMContentLoaded', function () {
+                    let forms = document.querySelectorAll('form');
+                    forms.forEach(function (form) {
+                        form.addEventListener('keydown', function (event) {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                return false;
+                            }
+                        });
+                    });
+                });
 </script>
