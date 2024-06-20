@@ -13,11 +13,11 @@
                     <h1 class="card-title">Вход</h1>
                     <form method="post" class="mt-4">
                         <div class="mb-3">
-                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required maxlength="32">
+                            <input type="text" asp-for="Command.Login" class="form-control" placeholder="Логин" required maxlength="32" oninput="removeSpaces(this)">
                             <span asp-validation-for="Command.Login" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required maxlength="32">
+                            <input type="password" asp-for="Command.Password" class="form-control" placeholder="Пароль" required maxlength="32" oninput="removeSpaces(this)">
                             <span asp-validation-for="Command.Password" class="text-danger"></span>
                         </div>
                         <div class="row mb-3">
@@ -51,5 +51,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    function removeSpaces(input) {
+        input.value = input.value.replace(/\s/g, '');
+    }
+</script>
 
 @await Html.PartialAsync("ErrorModelWindow", Model.RequestResult)

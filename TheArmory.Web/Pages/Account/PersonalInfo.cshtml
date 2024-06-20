@@ -62,12 +62,12 @@
         </div>
 
         <div class="col-md-9">
-            <form method="post" asp-page-handler="ChangeName">
+            <form method="post" asp-page-handler="ChangeName" onsubmit="return validateName()">
                 <div class="mb-3">
                     <h4>Ваши данные</h4>
                     <div class="input-group">
                         <span id="nameText" class="form-control">@Model.UserInfo.Name</span>
-                        <input type="text" id="nameInput" class="form-control d-none" asp-for="ChangeNameCommand.NewName">
+                        <input type="text" id="nameInput" class="form-control d-none" asp-for="ChangeNameCommand.NewName" maxlength="32" required pattern=".*\S.*">
                         <button id="editButton" type="button" class="btn btn-secondary" onclick="editName()">
                             <i class="bi bi-pencil-fill"></i>
                         </button>
@@ -80,17 +80,20 @@
                     </div>
                 </div>
             </form>
-            <div class="mb-3">
-                <h4>Контакты для связи</h4>
-                <button type="button" class="btn btn-primary mb-3" onclick="showAddContactForm()">
-                    <i class="bi bi-plus-circle-fill me-2"></i> Добавить контакт
-                </button>
-            </div>
+            @if (Model.UserInfo.Contacts.Any() && Model.UserInfo.Contacts.Count < 5)
+            {
+                <div class="mb-3">
+                    <h4>Контакты для связи</h4>
+                    <button type="button" class="btn btn-primary mb-3" onclick="showAddContactForm()">
+                        <i class="bi bi-plus-circle-fill me-2"></i> Добавить контакт
+                    </button>
+                </div>
+            }
             @if (Model.UserInfo.Contacts.Any())
             {
                 <form id="deleteContactForm" method="post" asp-page-handler="DeleteContact">
                     <input type="hidden" asp-for="DeleteContactCommand.Id" id="contactDeletedInput"/>
-                    <div class="container mb-3">
+                    <div class="container">
                         @foreach (var contact in Model.UserInfo.Contacts)
                         {
                             <div class="rounded bg-light p-2 mb-2 contact-row">
@@ -112,15 +115,15 @@
                     </div>
                 </form>
             }
-            <form method="post" asp-page-handler="CreateContact">
+            <form method="post" asp-page-handler="CreateContact" onsubmit="return validateContact()">
                 <div class="container mb-3 d-none" id="addContactForm">
                     <div class="rounded bg-light p-2 mb-2">
                         <div class="row align-items-center">
                             <div class="col-md-3">
-                                <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" maxlength="32" placeholder="Название сервиса">
+                                <input type="text" id="ContactNameInput" class="form-control" asp-for="ContactCreateCommand.Name" maxlength="32" placeholder="Название сервиса" required pattern=".*\S.*">
                             </div>
                             <div class="col-md-6">
-                                <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" maxlength="32" placeholder="Ваши реквизиты">
+                                <input type="text" id="ContactDescriptionInput" class="form-control" asp-for="ContactCreateCommand.Description" maxlength="32" placeholder="Ваши реквизиты" required pattern=".*\S.*">
                             </div>
                             <div class="col-auto ms-auto">
                                 <button id="saveContactButton" type="submit" class="btn btn-success me-2">
@@ -345,5 +348,25 @@
     function deleteContact(contactId) {
         var input = document.getElementById('contactDeletedInput');
         input.value = contactId;
+    }
+
+    function validateName() {
+        let nameInput = document.getElementById("nameInput");
+        if (!nameInput.value.trim()) {
+            alert("Имя не может состоять только из пробелов.");
+            return false;
+        }
+        return true;
+    }
+
+    function validateContact() {
+        let contactNameInput = document.getElementById("ContactNameInput");
+        let contactDescriptionInput = document.getElementById("ContactDescriptionInput");
+
+        if (!contactNameInput.value.trim() || !contactDescriptionInput.value.trim()) {
+            alert("Поля контактов не могут состоять только из пробелов.");
+            return false;
+        }
+        return true;
     }
 </script>
