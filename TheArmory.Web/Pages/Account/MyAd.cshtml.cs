@@ -92,8 +92,7 @@ public class MyAd : PageModel
 
     public async Task<ActionResult> OnPostUpdateAsync()
     {
-        Result = await _adsService.Update(UpdateCommand);
-        if (!Result.Success) return Page();
+        await _adsService.Update(UpdateCommand);
         return await OnGetSelectedAsync();
     }
 
@@ -116,7 +115,7 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostChangeVideoAsync()
     {
         Result = await _adsService.ChangeYoutubeLink(ChangeYouTubeLinkCommand);
-        if (!Result.Success) return Page();
+        if (!Result.Success) await OnGetSelectedAsync();
         await OnGetSelectedAsync();
         return Page();
     }
@@ -124,7 +123,7 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostChangeLocationAsync()
     {
         Result = await _adsService.ChangeLocation(LocationCommand);
-        if (!Result.Success) return Page();
+        if (!Result.Success) await OnGetSelectedAsync();
         await OnGetSelectedAsync();
         return Page();
     }
@@ -132,7 +131,7 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostDeleteMediaAsync()
     {
         Result = await _adsService.DeleteMedia(DeleteMediaCommand);
-        if (!Result.Success) return Page();
+        if (!Result.Success) await OnGetSelectedAsync();
         await OnGetSelectedAsync();
         return Page();
     }
@@ -140,7 +139,7 @@ public class MyAd : PageModel
     public async Task<ActionResult> OnPostAddMediaAsync()
     {
         Result = await _adsService.AddMedia(AddMediaCommand);
-        if (!Result.Success) return Page();
+        if (!Result.Success) await OnGetSelectedAsync();
         await OnGetSelectedAsync();
         return Page();
     }

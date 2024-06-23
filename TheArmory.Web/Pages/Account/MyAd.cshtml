@@ -374,7 +374,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary btn-block">
+                    <button type="submit" id="save-change-location-btn" style="display: none;" class="btn btn-primary btn-block">
                         <i class="bi bi-save"></i> Сохранить изменения
                     </button>
                 </div>
@@ -465,6 +465,7 @@
     function showMap() {
         document.getElementById('mapCollapse').classList.add('show');
         document.getElementById('change-location-btn').style.display = 'inline-block';
+        document.getElementById('save-change-location-btn').style.display = 'inline-block';
     }
 </script>
 
